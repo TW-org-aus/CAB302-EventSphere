@@ -1,8 +1,8 @@
-# Event Hub — First Draft User Stories
+# Event Hub - First Draft User Stories
 
-This is a simple starting list for our first checkpoint. It focuses on the main things we need first: logging in, saving stuff, and finding events.
+This is a simple starting list for our first checkpoint. It covers the main features we need first: logging in, saving events, and finding events.
 
-We can tweak this as a team later and add more detail when we start planning properly.
+We can change this list later and add more detail when we start planning.
 
 Template we are using:
 ```
@@ -20,10 +20,10 @@ Then ...
 
 ## Authentication
 
-### US-01 — Create an account
+### User Story 1 - Create an account
 **As a** new user
-**I want** to sign up with my email and password
-**so that** I can save my favourite events and keep my details
+**I want** to create an account with my email and password
+**so that** I can save favourite events and keep my details
 
 **Acceptance Criteria**
 - Given I am on the sign-up page
@@ -34,10 +34,10 @@ Then ...
 
 ---
 
-### US-02 — Log in
+### User Story 2 - Log in
 **As a** returning user
 **I want** to log in with my email and password
-**so that** I can access my saved events and settings
+**so that** I can see my saved events and settings
 
 **Acceptance Criteria**
 - Given I already have an account
@@ -48,10 +48,10 @@ Then ...
 
 ---
 
-### US-03 — Log out
+### User Story 3 - Log out
 **As a** logged-in user
 **I want** to log out of my account
-**so that** my session is closed on a shared or public device
+**so that** my account is closed on a shared or public device
 
 **Acceptance Criteria**
 - Given I am logged in
@@ -62,10 +62,10 @@ Then ...
 
 ---
 
-### US-04 — Reset my password
+### User Story 4 - Reset my password
 **As a** user who forgot my password
-**I want** to reset it by email
-**so that** I can get back into my account
+**I want** to reset it using my email
+**so that** I can use my account again
 
 **Acceptance Criteria**
 - Given I ask to reset my password using my registered email
@@ -76,12 +76,12 @@ Then ...
 
 ---
 
-## Persistency
+## Saving information
 
-### US-05 — Save favourite events
+### User Story 5 - Save favourite events
 **As a** logged-in user
-**I want** to save or favourite events I like
-**so that** I can find them again later without searching for them again
+**I want** to save events I like
+**so that** I can find them again later without searching
 
 **Acceptance Criteria**
 - Given I am looking at an event
@@ -92,10 +92,10 @@ Then ...
 
 ---
 
-### US-06 — Remember my preferences
+### User Story 6 - Remember my preferences
 **As a** logged-in user
-**I want** my preferred location and event categories to be saved
-**so that** I do not have to choose them every time I open the app
+**I want** to save my preferred location and event categories
+**so that** I do not have to choose them every time I use the app
 
 **Acceptance Criteria**
 - Given I set my city and category preferences
@@ -108,10 +108,10 @@ Then ...
 
 ## Discovering and browsing events
 
-### US-07 — Browse all events
+### User Story 7 - Browse all events
 **As a** visitor
 **I want** to see a list of upcoming events
-**so that** I can see what is happening without searching first
+**so that** I can see what is happening without searching
 
 **Acceptance Criteria**
 - Given I open the app
@@ -122,10 +122,10 @@ Then ...
 
 ---
 
-### US-08 — Search for an event
+### User Story 8 - Search for an event
 **As a** user
 **I want** to search for events by keyword
-**so that** I can quickly find something I already know about
+**so that** I can quickly find a specific event
 
 **Acceptance Criteria**
 - Given I type a search term
@@ -136,10 +136,10 @@ Then ...
 
 ---
 
-### US-09 — Filter events
+### User Story 9 - Filter events
 **As a** user
 **I want** to filter events by category, date, and location
-**so that** I can narrow things down to what matters to me
+**so that** I can find the events that suit me
 
 **Acceptance Criteria**
 - Given I am on the event list
@@ -150,10 +150,10 @@ Then ...
 
 ---
 
-### US-10 — View event details
+### User Story 10 - View event details
 **As a** user
-**I want** to open an event and see the full details
-**so that** I can decide if I want to go
+**I want** to open an event and see all its details
+**so that** I can decide whether I want to go
 
 **Acceptance Criteria**
 - Given I click on an event
@@ -164,9 +164,9 @@ Then ...
 
 ---
 
-### US-11 — Go to the official booking page
+### User Story 11 - Go to the official booking page
 **As a** user
-**I want** to be sent to the event's official ticketing page
+**I want** to go to the event's official ticket page
 **so that** I can buy tickets
 
 **Acceptance Criteria**
@@ -178,10 +178,10 @@ Then ...
 
 ---
 
-### US-12 — Sort events
+### User Story 12 - Sort events
 **As a** user
-**I want** to sort the event list by date, popularity, or distance
-**so that** I can browse in the order that is most useful to me
+**I want** to sort events by date, popularity, or distance
+**so that** I can see them in the order I prefer
 
 **Acceptance Criteria**
 - Given I am on the event list
@@ -194,10 +194,10 @@ Then ...
 
 ## Extras / future ideas
 
-### US-13 — Reminder for saved events
+### User Story 13 - Reminder for saved events
 **As a** logged-in user
-**I want** to get a reminder before a saved event
-**so that** I do not forget about it
+**I want** to get a reminder before a saved event starts
+**so that** I do not forget to attend
 
 **Acceptance Criteria**
 - Given I have saved an event
@@ -208,10 +208,10 @@ Then ...
 
 ---
 
-### US-14 — Submit an event
+### User Story 14 - Submit an event
 **As an** event organiser
-**I want** to add my event to the site
-**so that** it can appear in Event Hub's listings
+**I want** to add my event to the website
+**so that** people can find it on Event Hub
 
 **Acceptance Criteria**
 - Given I have organiser access
@@ -223,8 +223,8 @@ Then ...
 ---
 
 ## Quick notes for the team
-- The main things we need first are Authentication (US-01 to US-04) and Persistency (US-05 and US-06).
-- We can do a rough estimate on effort later as a team during checkpoint prep.
+- The main things we need first are Authentication (User Stories 1 to 4) and Saving information (User Stories 5 and 6).
+- We can estimate the work later as a team during checkpoint preparation.
 - MoSCoW labels are only a starting idea, not final.
-- If a story feels too big, we can split it up into smaller pieces before building it.
+- If a story feels too big, we can split it into smaller pieces before building it.
 
