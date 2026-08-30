@@ -30,3 +30,5 @@ CLAUDE.local.md
 # IDE
 .idea/
 
+# Maven build output
+target/
