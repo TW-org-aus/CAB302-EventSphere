@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EventSphere — Event Comments (Desktop)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  :root {
+    --bg: #F4502F;
+    --black: #000000;
+    --white: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --accent: #2F80ED;
+    --accent-light: #E3F0FF;
+    --yellow: #FFD400;
+    --border: #E5E7EB;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .topbar {
+    background: var(--black);
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .logo {
+    color: var(--white);
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .search {
+    flex: 1;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border-radius: 999px;
+    padding: 10px 18px;
+    gap: 10px;
+  }
+  .search input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    background: transparent;
+  }
+  .icon-btn {
+    font-size: 18px;
+    color: var(--muted);
+  }
+  .nav-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .nav-actions button {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    position: relative;
+  }
+  .nav-actions button.profile {
+    background: var(--accent);
+  }
+  .nav-actions .dot {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--black);
+  }
+
+  .page {
+    max-width: 1240px;
+    margin: 40px auto 80px;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  }
+
+  /* Left column: event summary card, sticky */
+  .left-col {
+    position: sticky;
+    top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .event-thumb {
+    width: 100%;
+    height: 200px;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .event-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .event-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 14px 0 8px;
+  }
+  .event-meta {
+    font-size: 13.5px;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .event-meta span { display: flex; align-items: center; gap: 8px; }
+  .host-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .host-name {
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .badge { color: var(--accent); font-size: 13px; }
+
+  .filter-card h3 {
+    font-size: 14px;
+    margin: 0 0 12px;
+  }
+  .filter-list { display: flex; flex-direction: column; gap: 10px; }
+  .filter-list button {
+    text-align: left;
+    border: 1px solid var(--border);
+    background: var(--white);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    color: var(--text);
+    cursor: default;
+  }
+  .filter-list button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  /* Right column: comments */
+  .comments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .comments-header h2 {
+    font-size: 22px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .count-pill {
+    background: rgba(0,0,0,0.08);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .sort-link {
+    color: var(--white);
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+  .tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    background: var(--white);
+    color: var(--text);
+    border: none;
+  }
+  .tab.active {
+    background: var(--accent);
+    color: var(--white);
+  }
+
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .comment {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+  }
+  .comment.pinned {
+    background: var(--accent-light);
+  }
+  .comment .avatar { width: 36px; height: 36px; font-size: 14px; }
+  .comment-body { flex: 1; }
+  .comment-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .comment-top .user { font-weight: 700; font-size: 14px; }
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .tag.host { background: var(--accent); color: var(--white); }
+  .tag.pinned { color: var(--muted); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .comment-time { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .comment-text { font-size: 14px; line-height: 1.5; margin-bottom: 8px; }
+  .comment-actions {
+    display: flex;
+    gap: 18px;
+    font-size: 12.5px;
+    color: var(--muted);
+    align-items: center;
+  }
+  .comment-actions .replies { color: var(--accent); font-weight: 700; margin-left: auto; }
+
+  .composer {
+    margin-top: 20px;
+    background: var(--white);
+    border-radius: 999px;
+    padding: 10px 12px 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .composer input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
+  .composer-icons {
+    display: flex;
+    gap: 12px;
+    color: var(--muted);
+  }
+  .post-btn {
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 13.5px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="logo" href="main-maps-desktop.html">EVENTSPHERE</a>
+    <div class="search">
+      <i class="bi bi-search icon-btn"></i>
+      <input type="text" placeholder="Search events, hosts, locations..." disabled>
+      <i class="bi bi-sliders icon-btn"></i>
+    </div>
+    <div class="nav-actions">
+      <button aria-label="Notifications">
+        <i class="bi bi-bell"></i>
+        <span class="dot"></span>
+      </button>
+      <button aria-label="Messages">
+        <i class="bi bi-chat-dots"></i>
+      </button>
+      <button class="profile" aria-label="Profile">
+        <i class="bi bi-person-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="left-col">
+      <div class="card">
+        <div class="event-thumb">
+          <img src="../placeholderPhoto.png" alt="Event photo">
+        </div>
+        <div class="event-title">Brisbane Car Meet</div>
+        <div class="event-meta">
+          <span><i class="bi bi-calendar-event"></i> Saturday, February 21st, 2026</span>
+          <span><i class="bi bi-clock"></i> 5:00 PM — 7:00 PM</span>
+          <span><i class="bi bi-geo-alt-fill"></i> Motor Culture HQ, Morningside QLD</span>
+        </div>
+        <div class="host-row">
+          <div class="avatar"><i class="bi bi-person-fill"></i></div>
+          <div>
+            <div class="host-name">@carmeetsbrisbane <span class="badge"><i class="bi bi-patch-check-fill"></i></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card filter-card">
+        <h3>Filter comments</h3>
+        <div class="filter-list">
+          <button class="active"><i class="bi bi-star-fill"></i> Top</button>
+          <button><i class="bi bi-clock-history"></i> Latest</button>
+          <button><i class="bi bi-chat-dots"></i> Host Replies</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="comments-header">
+        <h2 style="color:#fff;">Community Comments <span class="count-pill">120</span></h2>
+        <span class="sort-link">Sort: Relevant <i class="bi bi-chevron-down"></i></span>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active"><i class="bi bi-star-fill"></i> Top</button>
+        <button class="tab"><i class="bi bi-clock-history"></i> Latest</button>
+        <button class="tab"><i class="bi bi-chat-dots"></i> Host Replies</button>
+      </div>
+
+      <div class="comments-list">
+        <div class="comment pinned">
+          <div class="avatar"><i class="bi bi-person-fill"></i></div>
+          <div class="comment-body">
+            <div class="comment-top">
+              <span class="user">@carmeetsbrisbane</span>
+              <span class="tag host">Host</span>
+              <span class="tag pinned"><i class="bi bi-pin-angle-fill"></i> Pinned</span>
+              <span class="comment-time">5h ago</span>
+            </div>
+            <div class="comment-text">Parking will be available on local side streets. Please be respectful to the local residents. See you all there!</div>
+            <div class="comment-actions">
+              <span><i class="bi bi-hand-thumbs-up-fill"></i> 26</span>
+              <span><i class="bi bi-chat-dots"></i> Reply</span>
+              <span class="replies">View 3 replies <i class="bi bi-chevron-down"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div class="avatar"><i class="bi bi-person-fill"></i></div>
+          <div class="comment-body">
+            <div class="comment-top">
+              <span class="user">@user.0916</span>
+              <span class="comment-time">3h ago</span>
+            </div>
+            <div class="comment-text">Can't wait! Any idea what kind of cars are expected this month? Hoping to see some classics!</div>
+            <div class="comment-actions">
+              <span><i class="bi bi-hand-thumbs-up-fill"></i> 12</span>
+              <span><i class="bi bi-chat-dots"></i> Reply</span>
+              <span class="replies">View 1 replies <i class="bi bi-chevron-down"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div class="avatar"><i class="bi bi-person-fill"></i></div>
+          <div class="comment-body">
+            <div class="comment-top">
+              <span class="user">@user.0402</span>
+              <span class="comment-time">4h ago</span>
+            </div>
+            <div class="comment-text">Are spectators welcomed even if we're not bringing a car? Would love to come check it out.</div>
+            <div class="comment-actions">
+              <span><i class="bi bi-hand-thumbs-up-fill"></i> 9</span>
+              <span><i class="bi bi-chat-dots"></i> Reply</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div class="avatar"><i class="bi bi-person-fill"></i></div>
+          <div class="comment-body">
+            <div class="comment-top">
+              <span class="user">@user.0610</span>
+              <span class="comment-time">3h ago</span>
+            </div>
+            <div class="comment-text">Will there be a convoy leaving from the city like last month? That was unreal!</div>
+            <div class="comment-actions">
+              <span><i class="bi bi-hand-thumbs-up-fill"></i> 4</span>
+              <span><i class="bi bi-chat-dots"></i> Reply</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div class="avatar"><i class="bi bi-person-fill"></i></div>
+          <div class="comment-body">
+            <div class="comment-top">
+              <span class="user">@user.1127</span>
+              <span class="comment-time">4h ago</span>
+            </div>
+            <div class="comment-text">Bring extra water! Its going to be hot there. See you all there!</div>
+            <div class="comment-actions">
+              <span><i class="bi bi-hand-thumbs-up-fill"></i> 3</span>
+              <span><i class="bi bi-chat-dots"></i> Reply</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="composer">
+        <div class="avatar" style="background:var(--accent-light);"><i class="bi bi-person-fill"></i></div>
+        <input type="text" placeholder="Write a comment...." disabled>
+        <div class="composer-icons">
+          <span><i class="bi bi-image"></i></span>
+          <span><i class="bi bi-emoji-smile"></i></span>
+        </div>
+        <button class="post-btn">Post</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

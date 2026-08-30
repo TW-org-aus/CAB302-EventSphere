@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EventSphere — Event Details (Desktop)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  :root {
+    --bg: #F4502F;
+    --black: #000000;
+    --white: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --accent: #2F80ED;
+    --accent-light: #E3F0FF;
+    --yellow: #FFD400;
+    --border: #E5E7EB;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .topbar {
+    background: var(--black);
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .logo {
+    color: var(--white);
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .search {
+    flex: 1;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border-radius: 999px;
+    padding: 10px 18px;
+    gap: 10px;
+  }
+  .search input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    background: transparent;
+  }
+  .icon-btn {
+    font-size: 18px;
+    color: var(--muted);
+  }
+  .nav-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .nav-actions button {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    position: relative;
+  }
+  .nav-actions button.profile {
+    background: var(--accent);
+  }
+  .nav-actions .dot {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--black);
+  }
+
+  .page-wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .back-btn {
+    margin-top: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: default;
+    padding: 0;
+  }
+  .back-btn i { font-size: 18px; }
+
+  .page {
+    margin: 16px auto 80px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 32px;
+  }
+
+  .carousel {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    height: 100%;
+    min-height: 460px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  }
+  .carousel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .dots {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+  }
+  .dots span.active { background: var(--white); }
+
+  .right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  .meta-row .dt {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .meta-row .dt span { display: flex; align-items: center; gap: 6px; }
+  .heart {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  h1.title {
+    font-size: 30px;
+    margin: 0 0 6px;
+  }
+
+  .price-pill {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  .desc {
+    color: var(--text);
+    font-size: 14.5px;
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    flex: 1;
+    min-width: 130px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: default;
+  }
+  .btn-primary { background: var(--accent); color: var(--white); }
+  .btn-secondary { background: var(--accent-light); color: var(--accent); }
+
+  .host-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--accent-light);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+  }
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .host-info { flex: 1; }
+  .host-info .label { font-size: 12px; color: var(--muted); }
+  .host-info .name { font-weight: 700; font-size: 14.5px; display: flex; align-items: center; gap: 6px; }
+  .badge {
+    color: var(--accent);
+    font-size: 14px;
+  }
+  .view-host {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .location-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+  }
+  .location-row .loc-text { font-weight: 700; font-size: 15px; }
+  .location-row .loc-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .location-left { display: flex; gap: 12px; align-items: flex-start; }
+  .open-map { color: var(--accent); font-size: 14px; font-weight: 700; white-space: nowrap; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--border);
+    padding: 16px 0;
+    gap: 12px;
+  }
+  .stat { text-align: center; }
+  .stat .stat-icon { color: var(--accent); margin-bottom: 6px; }
+  .stat .stat-value { font-weight: 700; font-size: 14.5px; }
+  .stat .stat-label { font-size: 12px; color: var(--muted); }
+
+  .info-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+  .info-cards h3 {
+    font-size: 14px;
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-cards p, .info-cards ul {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    line-height: 1.6;
+  }
+
+  .website-link {
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent);
+    border: 1px solid var(--accent-light);
+    background: var(--accent-light);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="logo" href="main-maps-desktop.html">EVENTSPHERE</a>
+    <div class="search">
+      <i class="bi bi-search icon-btn"></i>
+      <input type="text" placeholder="Search events, hosts, locations..." disabled>
+      <i class="bi bi-sliders icon-btn"></i>
+    </div>
+    <div class="nav-actions">
+      <button aria-label="Notifications">
+        <i class="bi bi-bell"></i>
+        <span class="dot"></span>
+      </button>
+      <button aria-label="Messages">
+        <i class="bi bi-chat-dots"></i>
+      </button>
+      <button class="profile" aria-label="Profile">
+        <i class="bi bi-person-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <button class="back-btn"><i class="bi bi-arrow-left"></i> Back</button>
+  </div>
+
+  <div class="page-wrap page">
+    <div class="carousel">
+      <img src="../placeholderPhoto.png" alt="Event photo">
+      <div class="dots">
+        <span class="active"></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="card">
+        <div class="meta-row">
+          <div class="dt">
+            <span><i class="bi bi-calendar-event"></i> Saturday, February 21st, 2026</span>
+            <span><i class="bi bi-clock"></i> 5:00 PM — 7:00 PM</span>
+          </div>
+          <div class="heart"><i class="bi bi-heart"></i></div>
+        </div>
+
+        <h1 class="title">Brisbane Car Meet</h1>
+        <span class="price-pill">$0</span>
+
+        <p class="desc">
+          Brisbane Car Meet brings together local car enthusiasts for an evening of builds,
+          classics, JDM, Euro, muscle and supercars.<br>
+          Come check out the lineup, meet other enthusiasts and enjoy a relaxed social
+          night with the Brisbane car community.
+        </p>
+
+        <div class="actions">
+          <button class="btn btn-primary"><i class="bi bi-ticket-perforated"></i> Sign up</button>
+          <button class="btn btn-secondary"><i class="bi bi-bell"></i> Notifications</button>
+          <button class="btn btn-secondary">Follow</button>
+        </div>
+
+        <div class="host-row">
+          <div class="avatar"><i class="bi bi-person-fill"></i></div>
+          <div class="host-info">
+            <div class="label">Hosted by</div>
+            <div class="name">@carmeetsbrisbane <span class="badge"><i class="bi bi-patch-check-fill"></i></span></div>
+            <div class="label">4.8km away</div>
+          </div>
+          <div class="view-host">View Host <i class="bi bi-chevron-right"></i></div>
+        </div>
+
+        <div class="location-row">
+          <div class="location-left">
+            <span><i class="bi bi-geo-alt-fill"></i></span>
+            <div>
+              <div class="loc-text">Motor Culture HQ</div>
+              <div class="loc-sub">87 Dunhill Crescent, Morningside QLD 4170</div>
+            </div>
+          </div>
+          <div class="open-map">Open Map <i class="bi bi-box-arrow-up-right"></i></div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-value">100+</div>
+            <div class="stat-label">Attending</div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon"><i class="bi bi-clock-history"></i></div>
+            <div class="stat-value">3 hours</div>
+            <div class="stat-label">Duration</div>
+          </div>
+        </div>
+
+        <div class="info-cards">
+          <div>
+            <h3><i class="bi bi-bag"></i> What to bring</h3>
+            <p>Reusable water bottle, your own car if you want!</p>
+          </div>
+          <div>
+            <h3><i class="bi bi-star-fill"></i> Event Highlights</h3>
+            <ul>
+              <li><i class="bi bi-check2"></i> Curated &amp; VIP Displays</li>
+              <li><i class="bi bi-check2"></i> Show &amp; Shine Competitions</li>
+              <li><i class="bi bi-check2"></i> Cruise Runs &amp; Convoys</li>
+              <li><i class="bi bi-check2"></i> Live Entertainment &amp; Podcasts</li>
+            </ul>
+          </div>
+        </div>
+
+        <a class="website-link"><i class="bi bi-globe2"></i> Event Website <i class="bi bi-box-arrow-up-right"></i></a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

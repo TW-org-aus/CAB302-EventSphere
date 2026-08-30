@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EventSphere — Login (Desktop)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  :root {
+    --bg: #F4502F;
+    --black: #000000;
+    --white: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --accent: #2F80ED;
+    --accent-light: #E3F0FF;
+    --yellow: #FFD400;
+    --border: #E5E7EB;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .topbar {
+    background: var(--black);
+    padding: 20px 48px;
+  }
+  .logo {
+    color: var(--white);
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .center-wrap {
+    min-height: calc(100vh - 74px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .auth-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 44px 48px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    text-align: center;
+  }
+  .auth-card h1 {
+    font-size: 22px;
+    margin: 0 0 28px;
+  }
+  .field-label {
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .field-input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    margin-bottom: 20px;
+    outline: none;
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: default;
+    margin-bottom: 18px;
+  }
+  .alt-link {
+    font-size: 13.5px;
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 12px;
+    margin: 26px 0 18px;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .socials {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+  .socials i {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="logo" href="main-maps-desktop.html">EVENTSPHERE</a>
+  </div>
+
+  <div class="center-wrap">
+    <div class="auth-card">
+      <h1>Log in to your account</h1>
+
+      <div class="field-label">Username</div>
+      <input class="field-input" type="text" disabled>
+
+      <div class="field-label">Password</div>
+      <input class="field-input" type="password" disabled>
+
+      <button class="submit-btn">Login</button>
+      <a class="alt-link">Register</a>
+
+      <div class="divider">or continue with</div>
+      <div class="socials">
+        <i class="bi bi-facebook"></i>
+        <i class="bi bi-instagram"></i>
+        <i class="bi bi-google"></i>
+        <i class="bi bi-tiktok"></i>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

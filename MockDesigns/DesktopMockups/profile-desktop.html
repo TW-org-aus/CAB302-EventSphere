@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EventSphere — Profile (Desktop)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  :root {
+    --bg: #F4502F;
+    --black: #000000;
+    --white: #FFFFFF;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --accent: #2F80ED;
+    --accent-light: #E3F0FF;
+    --yellow: #FFD400;
+    --border: #E5E7EB;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .topbar {
+    background: var(--black);
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .logo {
+    color: var(--white);
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .search {
+    flex: 1;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border-radius: 999px;
+    padding: 10px 18px;
+    gap: 10px;
+  }
+  .search input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    background: transparent;
+  }
+  .icon-btn { font-size: 18px; color: var(--muted); }
+
+  .nav-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .nav-actions button {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    position: relative;
+  }
+  .nav-actions button.profile { background: var(--accent); }
+  .nav-actions .dot {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--black);
+  }
+
+  .page-wrap {
+    max-width: 1000px;
+    margin: 40px auto 80px;
+    padding: 0 32px;
+  }
+
+  .profile-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 28px 32px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    margin-bottom: 24px;
+  }
+  .profile-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .avatar-lg {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--white);
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .profile-name-block { flex: 1; }
+  .profile-name-block h1 {
+    font-size: 26px;
+    margin: 0 0 4px;
+  }
+  .profile-sub {
+    color: var(--muted);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .edit-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    cursor: default;
+    flex-shrink: 0;
+  }
+
+  .bio {
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+
+  .stats {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 18px;
+  }
+  .stats .stat-num { font-size: 18px; font-weight: 800; }
+  .stats .stat-label { font-size: 12.5px; color: var(--muted); }
+  .stats .stat-label.link { color: var(--accent); text-decoration: underline; }
+
+  .tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tag-pill {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .events-card {
+    background: var(--white);
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    overflow: hidden;
+  }
+  .tabs-row {
+    display: flex;
+    gap: 10px;
+    padding: 18px 24px 0;
+  }
+  .tab-pill {
+    padding: 9px 22px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 700;
+    background: var(--accent-light);
+    color: var(--text);
+    border: none;
+    cursor: default;
+  }
+  .tab-pill.active { background: var(--accent); color: var(--white); }
+
+  .event-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .event-row:first-of-type { margin-top: 18px; }
+  .event-thumb-sm {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .event-thumb-sm img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .event-row-info { flex: 1; min-width: 0; }
+  .event-row-title { font-weight: 700; font-size: 14.5px; margin-bottom: 3px; }
+  .event-row-sub { font-size: 13px; color: var(--muted); }
+  .event-row .chev { color: var(--muted); }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="logo" href="main-maps-desktop.html">EVENTSPHERE</a>
+    <div class="search">
+      <i class="bi bi-search icon-btn"></i>
+      <input type="text" placeholder="Search events, hosts, locations..." disabled>
+      <i class="bi bi-sliders icon-btn"></i>
+    </div>
+    <div class="nav-actions">
+      <button aria-label="Notifications">
+        <i class="bi bi-bell"></i>
+        <span class="dot"></span>
+      </button>
+      <button aria-label="Messages">
+        <i class="bi bi-chat-dots"></i>
+      </button>
+      <button class="profile" aria-label="Profile">
+        <i class="bi bi-person-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="profile-card">
+      <div class="profile-top">
+        <div class="avatar-lg">AC</div>
+        <div class="profile-name-block">
+          <h1>Ava Chen</h1>
+          <div class="profile-sub"><i class="bi bi-geo-alt-fill"></i> West End &middot; 27</div>
+        </div>
+        <button class="edit-btn"><i class="bi bi-pencil"></i></button>
+      </div>
+
+      <p class="bio">Runs a lot before everyone else is awake. Always down for something loud after.</p>
+
+      <div class="stats">
+        <div>
+          <div class="stat-num">128</div>
+          <div class="stat-label link">Friends</div>
+        </div>
+        <div>
+          <div class="stat-num">14</div>
+          <div class="stat-label">Joined</div>
+        </div>
+      </div>
+
+      <div class="tags">
+        <span class="tag-pill">Live music</span>
+        <span class="tag-pill">Coffee</span>
+        <span class="tag-pill">Running club</span>
+      </div>
+    </div>
+
+    <div class="events-card">
+      <div class="tabs-row">
+        <button class="tab-pill active">Going</button>
+        <button class="tab-pill">Been</button>
+      </div>
+
+      <div class="event-row" style="margin-top:18px; border-top:none;">
+        <div class="event-thumb-sm"><img src="../placeholderPhoto.png" alt="Event thumbnail"></div>
+        <div class="event-row-info">
+          <div class="event-row-title">Warehouse night: local DJs and a rooftop bar after</div>
+          <div class="event-row-sub">Fri 20:00 &middot; The Milk Factory</div>
+        </div>
+        <i class="bi bi-chevron-right chev"></i>
+      </div>
+      <div class="event-row">
+        <div class="event-thumb-sm"><img src="../placeholderPhoto.png" alt="Event thumbnail"></div>
+        <div class="event-row-info">
+          <div class="event-row-title">Sunrise 5k along the river, coffee after for everyone who turns up</div>
+          <div class="event-row-sub">Sat 06:00 &middot; Riverwalk</div>
+        </div>
+        <i class="bi bi-chevron-right chev"></i>
+      </div>
+      <div class="event-row">
+        <div class="event-thumb-sm"><img src="../placeholderPhoto.png" alt="Event thumbnail"></div>
+        <div class="event-row-info">
+          <div class="event-row-title">Trivia night, teams of four, first round is free</div>
+          <div class="event-row-sub">Sun 19:30 &middot; The Grey Fox</div>
+        </div>
+        <i class="bi bi-chevron-right chev"></i>
+      </div>
+      <div class="event-row">
+        <div class="event-thumb-sm"><img src="../placeholderPhoto.png" alt="Event thumbnail"></div>
+        <div class="event-row-info">
+          <div class="event-row-title">Warehouse night: local DJs and a rooftop bar after</div>
+          <div class="event-row-sub">Fri 20:00 &middot; The Milk Factory</div>
+        </div>
+        <i class="bi bi-chevron-right chev"></i>
+      </div>
+      <div class="event-row">
+        <div class="event-thumb-sm"><img src="../placeholderPhoto.png" alt="Event thumbnail"></div>
+        <div class="event-row-info">
+          <div class="event-row-title">Sunrise 5k along the river, coffee after for everyone who turns up</div>
+          <div class="event-row-sub">Sat 06:00 &middot; Riverwalk</div>
+        </div>
+        <i class="bi bi-chevron-right chev"></i>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
