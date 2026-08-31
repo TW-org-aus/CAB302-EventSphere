@@ -25,6 +25,7 @@ replay_pid*
 
 # Claude Code
 .claude/
+CLAUDE.md
 CLAUDE.local.md
 
 # IDE
