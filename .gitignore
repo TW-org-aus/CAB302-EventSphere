@@ -23,10 +23,7 @@
 hs_err_pid*
 replay_pid*
 
-# Claude Code
-.claude/
-CLAUDE.md
-CLAUDE.local.md
+
 
 # IDE
 .idea/
