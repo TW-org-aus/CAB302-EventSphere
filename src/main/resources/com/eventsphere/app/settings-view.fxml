@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.eventsphere.app.SettingsController"
+            stylesheets="@app.css">
+    <content>
+        <VBox styleClass="page-bg" alignment="TOP_CENTER" spacing="24">
+            <padding>
+                <Insets top="40.0" bottom="80.0" left="32.0" right="32.0"/>
+            </padding>
+
+            <HBox maxWidth="860">
+                <Button text="&#8592; Back" styleClass="secondary-button" onAction="#onBackClick"/>
+            </HBox>
+
+            <VBox styleClass="card" maxWidth="860" spacing="0">
+                <Label text="Settings" styleClass="card-title"/>
+
+                <Label text="Account Settings" styleClass="section-heading" style="-fx-padding: 20 0 10 0;"/>
+                <Button text="Username: Ava Chen" styleClass="setting-row" maxWidth="Infinity" onAction="#onUsernameClick"/>
+                <Button text="Password: ••••••••" styleClass="setting-row" maxWidth="Infinity" onAction="#onPasswordClick"/>
+                <Button text="Email: ava.chen@example.com" styleClass="setting-row" maxWidth="Infinity" onAction="#onEmailClick"/>
+                <Button text="Name: Ava Chen" styleClass="setting-row" maxWidth="Infinity" onAction="#onNameClick"/>
+
+                <Label text="Notifications" styleClass="section-heading" style="-fx-padding: 20 0 10 0;"/>
+                <HBox styleClass="setting-row" alignment="CENTER_LEFT">
+                    <Label text="Notify me about replies, messages and reminders" styleClass="body-text" HBox.hgrow="ALWAYS"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ToggleButton fx:id="notificationsToggle" text="On" selected="true" onAction="#onNotificationsToggle"/>
+                </HBox>
+
+                <Label text="Accessibility Settings" styleClass="section-heading" style="-fx-padding: 20 0 10 0;"/>
+                <HBox styleClass="setting-row" alignment="CENTER_LEFT">
+                    <Label text="Night Mode" styleClass="body-text" HBox.hgrow="ALWAYS"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ToggleButton text="Off" onAction="#onNightModeToggle"/>
+                </HBox>
+
+                <Button text="Log Out" styleClass="setting-row" maxWidth="Infinity" onAction="#onLogOutClick"
+                        style="-fx-padding: 20 0 14 0;"/>
+
+                <Button text="Delete Account" styleClass="danger-button" maxWidth="Infinity"
+                        onAction="#onDeleteAccountClick" style="-fx-margin-top: 24;">
+                    <VBox.margin>
+                        <Insets top="24.0"/>
+                    </VBox.margin>
+                </Button>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>
