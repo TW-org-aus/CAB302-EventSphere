@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800" prefWidth="1280" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
+    <top>
+        <Region prefHeight="70" style="-fx-background-color: #000000;" />
+    </top>
+   <center>
+      <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+        <content>
+            <VBox>
+               <children>
+                  <Region prefHeight="400.0" style="-fx-background-color: #cccccc;" />
+                  <Region prefHeight="400.0" style="-fx-background-color: #999999;" />
+                  <Region prefHeight="400.0" style="-fx-background-color: #666666;" />
+               </children>
+            </VBox>
+        </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
