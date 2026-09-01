@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.eventsphere.app.ProfileController"
+            stylesheets="@app.css">
+    <content>
+        <VBox styleClass="page-bg" alignment="TOP_CENTER" spacing="24">
+            <padding>
+                <Insets top="40.0" bottom="80.0" left="32.0" right="32.0"/>
+            </padding>
+
+            <!-- Profile card -->
+            <VBox styleClass="card" maxWidth="1000" spacing="18">
+                <HBox spacing="18" alignment="TOP_LEFT">
+                    <Label text="AC" styleClass="avatar"/>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Ava Chen" styleClass="card-title"/>
+                        <Label text="West End · 27" styleClass="muted-text"/>
+                    </VBox>
+                    <Button text="Edit" styleClass="secondary-button" onAction="#onEditProfileClick"/>
+                    <Button text="Settings" styleClass="primary-button" onAction="#onSettingsClick"/>
+                </HBox>
+
+                <Label text="Runs a lot before everyone else is awake. Always down for something loud after."
+                       styleClass="body-text" wrapText="true"/>
+
+                <HBox spacing="32">
+                    <VBox>
+                        <Label text="128" styleClass="stat-num"/>
+                        <Label text="Friends" styleClass="stat-label"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="14" styleClass="stat-num"/>
+                        <Label text="Joined" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="10">
+                    <Label text="Live music" styleClass="tag-pill"/>
+                    <Label text="Coffee" styleClass="tag-pill"/>
+                    <Label text="Running club" styleClass="tag-pill"/>
+                </HBox>
+            </VBox>
+
+            <!-- Events card -->
+            <VBox styleClass="card" maxWidth="1000" spacing="0">
+                <HBox spacing="10">
+                    <Button text="Going" styleClass="tab-pill, tab-pill-active" onAction="#onGoingTabClick"/>
+                    <Button text="Been" styleClass="tab-pill" onAction="#onBeenTabClick"/>
+                </HBox>
+
+                <VBox spacing="0" style="-fx-padding: 18 0 0 0;">
+                    <HBox styleClass="event-row" spacing="16" alignment="CENTER_LEFT" onMouseClicked="#onWarehouseEventClick">
+                        <Region styleClass="event-thumb"/>
+                        <VBox HBox.hgrow="ALWAYS">
+                            <Label text="Warehouse night: local DJs and a rooftop bar after" styleClass="body-text" wrapText="true"/>
+                            <Label text="Fri 20:00 · The Milk Factory" styleClass="muted-text"/>
+                        </VBox>
+                    </HBox>
+                    <HBox styleClass="event-row" spacing="16" alignment="CENTER_LEFT" onMouseClicked="#onSunriseEventClick">
+                        <Region styleClass="event-thumb"/>
+                        <VBox HBox.hgrow="ALWAYS">
+                            <Label text="Sunrise 5k along the river, coffee after for everyone who turns up" styleClass="body-text" wrapText="true"/>
+                            <Label text="Sat 06:00 · Riverwalk" styleClass="muted-text"/>
+                        </VBox>
+                    </HBox>
+                    <HBox styleClass="event-row" spacing="16" alignment="CENTER_LEFT" onMouseClicked="#onTriviaEventClick">
+                        <Region styleClass="event-thumb"/>
+                        <VBox HBox.hgrow="ALWAYS">
+                            <Label text="Trivia night, teams of four, first round is free" styleClass="body-text" wrapText="true"/>
+                            <Label text="Sun 19:30 · The Grey Fox" styleClass="muted-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>
