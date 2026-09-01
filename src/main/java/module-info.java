@@ -1,9 +1,9 @@
-module org.example.demo {
+module com.eventsphere.app {
     requires javafx.controls;
     requires javafx.fxml;
 
     requires org.kordamp.bootstrapfx.core;
 
-    opens org.example.demo to javafx.fxml;
-    exports org.example.demo;
+    opens com.eventsphere.app to javafx.fxml;
+    exports com.eventsphere.app;
 }
