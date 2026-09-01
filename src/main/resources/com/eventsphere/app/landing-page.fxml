@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
@@ -14,9 +20,44 @@
         <content>
             <VBox>
                <children>
-                  <Region prefHeight="400.0" style="-fx-background-color: #cccccc;" />
-                  <Region prefHeight="400.0" style="-fx-background-color: #999999;" />
-                  <Region prefHeight="400.0" style="-fx-background-color: #666666;" />
+                   <StackPane prefHeight="400.0" maxHeight="400.0" VBox.vgrow="NEVER">
+                       <ImageView fx:id="heroImage" fitHeight="400.0" preserveRatio="false"/>
+
+                       <Region style="-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.85), transparent);"/>
+
+                       <VBox spacing="8.0" maxWidth="700" StackPane.alignment="BOTTOM_LEFT">
+                           <padding><Insets bottom="60.0" left="48.0"/></padding>
+                           <Label text="FEATURED" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                           <Label fx:id="heroTitle" text="BOILER ROOM" style="-fx-text-fill: white; -fx-font-size: 40px; -fx-font-weight: bold;"/>
+                           <Label fx:id="heroBlurb" text="Event description goes here." wrapText="true" style="-fx-text-fill: white; -fx-font-size: 15px;"/>
+                           <Button text="MORE INFO" style="-fx-background-radius: 24; -fx-padding: 12 28 12 28;"/>
+                       </VBox>
+
+                       <HBox fx:id="heroNav" spacing="12.0" alignment="CENTER" maxHeight="40" StackPane.alignment="BOTTOM_CENTER">
+                           <Button text="‹" onAction="#onPrevHero"/>
+                           <Button text="›" onAction="#onNextHero"/>
+                       </HBox>
+                   </StackPane>
+                   <HBox alignment="CENTER" spacing="60.0" prefHeight="120.0" maxHeight="120.0" style="-fx-background-color: #E8503A;">
+                       <Button text="TRENDING"/>
+                       <Button text="FREE"/>
+                       <Button text="MUSIC"/>
+                       <Button text="SUSTAINABLE"/>
+                   </HBox>
+                   <VBox spacing="16.0">
+                       <padding><Insets top="32.0" right="48.0" bottom="32.0" left="48.0"/></padding>
+                       <Label text="THIS WEEKEND" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                       <ScrollPane fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                   style="-fx-background-color: transparent;">
+                           <HBox spacing="16.0">
+                               <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
+                               <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
+                               <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
+                               <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
+                               <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
+                           </HBox>
+                       </ScrollPane>
+                   </VBox>
                </children>
             </VBox>
         </content>
