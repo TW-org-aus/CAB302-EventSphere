@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="920.0" prefWidth="1380.0" style="-fx-background-color: #F0512B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="72.0" spacing="16.0" style="-fx-background-color: #0B0B0B;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" text="EVENTSPHERE">
+               <HBox.margin>
+                  <Insets left="24.0" />
+               </HBox.margin>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="709.0" pickOnBounds="false" prefHeight="41.0" prefWidth="647.0" spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 21; -fx-padding: 0 16 0 16;">
+               <children>
+                  <Label style="-fx-font-size: 14px;" text="🔍" />
+                  <TextField promptText="Search events, hosts, locations..." style="-fx-background-color: transparent; -fx-border-color: transparent;" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER" spacing="14.0">
+               <children>
+                  <StackPane alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0" prefHeight="38.0" prefWidth="38.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+                     <children>
+                        <Label style="-fx-font-size: 15px;" text="🔔" />
+                     </children>
+                  </StackPane>
+                  <StackPane alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0" prefHeight="38.0" prefWidth="38.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+                     <children>
+                        <Label style="-fx-font-size: 15px;" text="💬" />
+                     </children>
+                  </StackPane>
+                  <StackPane alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0" prefHeight="38.0" prefWidth="38.0" style="-fx-background-color: #2E6BE8; -fx-background-radius: 50px;">
+                     <children>
+                        <Label style="-fx-font-size: 15px; -fx-text-fill: white;" text="👤" />
+                     </children>
+                  </StackPane>
+               </children>
+               <HBox.margin>
+                  <Insets right="24.0" />
+               </HBox.margin>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox spacing="36.0" style="-fx-padding: 28 40 24 40;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+         <children>
+            <VBox prefWidth="500.0" spacing="26.0">
+               <children>
+                  <VBox spacing="14.0" style="-fx-background-color: white; -fx-background-radius: 16px; -fx-padding: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.2, 0, 4);">
+                     <children>
+                        <StackPane alignment="CENTER" prefHeight="180.0" style="-fx-background-color: #161616; -fx-background-radius: 10px;">
+                           <children>
+                              <ImageView fitHeight="180.0" fitWidth="464.0" preserveRatio="false">
+                                 <image>
+                                    <Image url="@edit2.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="Brisbane Car Meet" />
+                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                           <children>
+                              <Label style="-fx-font-size: 13px;" text="📅" />
+                              <Label style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="Saturday, February 21st, 2026" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                           <children>
+                              <Label style="-fx-font-size: 13px;" text="🕒" />
+                              <Label style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="5:00 PM — 7:00 PM" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                           <children>
+                              <Label style="-fx-font-size: 13px;" text="📍" />
+                              <Label style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="Motor Culture HQ, Morningside QLD" />
+                           </children>
+                        </HBox>
+                        <Region prefHeight="1.0" style="-fx-background-color: #ECECEC;" />
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <StackPane alignment="CENTER" maxHeight="36.0" maxWidth="36.0" minHeight="36.0" minWidth="36.0" prefHeight="36.0" prefWidth="36.0" style="-fx-background-color: #E7EAEF; -fx-background-radius: 50px;">
+                                 <children>
+                                    <Label style="-fx-font-size: 14px;" text="👤" />
+                                 </children>
+                              </StackPane>
+                              <Label style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="\@carmeetsbrisbane" />
+                              <Label style="-fx-text-fill: #2E6BE8; -fx-font-size: 13px;" text="✔" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 16px; -fx-padding: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.2, 0, 4);">
+                     <children>
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="Filter comments" />
+                        <Button maxWidth="Infinity" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-background-radius: 8px; -fx-padding: 10px; -fx-font-size: 13px;" text="★ Top" />
+                        <Button maxWidth="Infinity" style="-fx-background-color: white; -fx-text-fill: #222222; -fx-background-radius: 8px; -fx-border-color: #DDDDDD; -fx-border-radius: 8px; -fx-padding: 10px; -fx-font-size: 13px;" text="🕒 Latest" />
+                        <Button maxWidth="Infinity" style="-fx-background-color: white; -fx-text-fill: #222222; -fx-background-radius: 8px; -fx-border-color: #DDDDDD; -fx-border-radius: 8px; -fx-padding: 10px; -fx-font-size: 13px;" text="💬 Host Replies" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox maxWidth="Infinity" spacing="14.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Community Comments" />
+                        <StackPane style="-fx-background-color: #D8431F; -fx-background-radius: 12px; -fx-padding: 2 9 2 9;">
+                           <children>
+                              <Label style="-fx-text-fill: white; -fx-font-size: 12px;" text="120" />
+                           </children>
+                        </StackPane>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label style="-fx-text-fill: white; -fx-font-size: 13px;" text="Sort: Relevant ⌄" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="12.0">
+                     <children>
+                        <Button style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-background-radius: 18px; -fx-padding: 8 20 8 20; -fx-font-size: 13px;" text="★ Top" />
+                        <Button style="-fx-background-color: white; -fx-text-fill: #222222; -fx-background-radius: 18px; -fx-border-color: #DDDDDD; -fx-border-radius: 18px; -fx-padding: 8 20 8 20; -fx-font-size: 13px;" text="🕒 Latest" />
+                        <Button style="-fx-background-color: white; -fx-text-fill: #222222; -fx-background-radius: 18px; -fx-border-color: #DDDDDD; -fx-border-radius: 18px; -fx-padding: 8 20 8 20; -fx-font-size: 13px;" text="💬 Host Replies" />
+                     </children>
+                  </HBox>
+                  <VBox spacing="8.0" style="-fx-background-color: #E9F0FB; -fx-background-radius: 12px; -fx-padding: 14px;">
+                     <children>
+                        <HBox spacing="10.0">
+                           <children>
+                              <StackPane alignment="CENTER" maxHeight="34.0" maxWidth="34.0" minHeight="34.0" minWidth="34.0" prefHeight="34.0" prefWidth="34.0" style="-fx-background-color: #D7DEE8; -fx-background-radius: 50px;">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px;" text="👤" />
+                                 </children>
+                              </StackPane>
+                              <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                       <children>
+                                          <Label style="-fx-font-size: 13px; -fx-font-weight: bold;" text="\@carmeetsbrisbane" />
+                                          <Label style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-font-size: 10px; -fx-background-radius: 9px; -fx-padding: 2 8 2 8;" text="Host" />
+                                          <Label style="-fx-text-fill: #8A8A8A; -fx-font-size: 11px;" text="📌 Pinned" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <Label style="-fx-text-fill: #9A9A9A; -fx-font-size: 11px;" text="5h ago" />
+                                       </children>
+                                    </HBox>
+                                    <Label style="-fx-text-fill: #222222; -fx-font-size: 13px;" text="Parking will be available on local side streets. Please be respectful to the local residents. See you all there!" wrapText="true" />
+                                    <HBox alignment="CENTER_LEFT" spacing="18.0">
+                                       <children>
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="👍 26" />
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="💬 Reply" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <Label style="-fx-text-fill: #2E6BE8; -fx-font-size: 12px;" text="View 3 replies ⌄" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12px; -fx-padding: 14px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0.2, 0, 2);">
+                     <children>
+                        <HBox spacing="10.0">
+                           <children>
+                              <StackPane alignment="CENTER" maxHeight="34.0" maxWidth="34.0" minHeight="34.0" minWidth="34.0" prefHeight="34.0" prefWidth="34.0" style="-fx-background-color: #E7EAEF; -fx-background-radius: 50px;">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px;" text="👤" />
+                                 </children>
+                              </StackPane>
+                              <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                       <children>
+                                          <Label style="-fx-font-size: 13px; -fx-font-weight: bold;" text="\@user.0916" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <Label style="-fx-text-fill: #9A9A9A; -fx-font-size: 11px;" text="3h ago" />
+                                       </children>
+                                    </HBox>
+                                    <Label style="-fx-text-fill: #222222; -fx-font-size: 13px;" text="Can't wait! Any idea what kind of cars are expected this month? Hoping to see some classics!" wrapText="true" />
+                                    <HBox alignment="CENTER_LEFT" spacing="18.0">
+                                       <children>
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="👍 12" />
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="💬 Reply" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <Label style="-fx-text-fill: #2E6BE8; -fx-font-size: 12px;" text="View 1 replies ⌄" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12px; -fx-padding: 14px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0.2, 0, 2);">
+                     <children>
+                        <HBox spacing="10.0">
+                           <children>
+                              <StackPane alignment="CENTER" maxHeight="34.0" maxWidth="34.0" minHeight="34.0" minWidth="34.0" prefHeight="34.0" prefWidth="34.0" style="-fx-background-color: #E7EAEF; -fx-background-radius: 50px;">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px;" text="👤" />
+                                 </children>
+                              </StackPane>
+                              <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                       <children>
+                                          <Label style="-fx-font-size: 13px; -fx-font-weight: bold;" text="\@user.0402" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <Label style="-fx-text-fill: #9A9A9A; -fx-font-size: 11px;" text="4h ago" />
+                                       </children>
+                                    </HBox>
+                                    <Label style="-fx-text-fill: #222222; -fx-font-size: 13px;" text="Are spectators welcomed even if we're not bringing a car? Would love to come check it out." wrapText="true" />
+                                    <HBox alignment="CENTER_LEFT" spacing="18.0">
+                                       <children>
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="👍 9" />
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="💬 Reply" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12px; -fx-padding: 14px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0.2, 0, 2);">
+                     <children>
+                        <HBox spacing="10.0">
+                           <children>
+                              <StackPane alignment="CENTER" maxHeight="34.0" maxWidth="34.0" minHeight="34.0" minWidth="34.0" prefHeight="34.0" prefWidth="34.0" style="-fx-background-color: #E7EAEF; -fx-background-radius: 50px;">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px;" text="👤" />
+                                 </children>
+                              </StackPane>
+                              <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                       <children>
+                                          <Label style="-fx-font-size: 13px; -fx-font-weight: bold;" text="\@user.0610" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <Label style="-fx-text-fill: #9A9A9A; -fx-font-size: 11px;" text="3h ago" />
+                                       </children>
+                                    </HBox>
+                                    <Label style="-fx-text-fill: #222222; -fx-font-size: 13px;" text="Will there be a convoy leaving from the city like last month? That was unreal!" wrapText="true" />
+                                    <HBox alignment="CENTER_LEFT" spacing="18.0">
+                                       <children>
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="👍 4" />
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="💬 Reply" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 12px; -fx-padding: 14px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0.2, 0, 2);">
+                     <children>
+                        <HBox spacing="10.0">
+                           <children>
+                              <StackPane alignment="CENTER" maxHeight="34.0" maxWidth="34.0" minHeight="34.0" minWidth="34.0" prefHeight="34.0" prefWidth="34.0" style="-fx-background-color: #E7EAEF; -fx-background-radius: 50px;">
+                                 <children>
+                                    <Label style="-fx-font-size: 13px;" text="👤" />
+                                 </children>
+                              </StackPane>
+                              <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                       <children>
+                                          <Label style="-fx-font-size: 13px; -fx-font-weight: bold;" text="\@user.1127" />
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <Label style="-fx-text-fill: #9A9A9A; -fx-font-size: 11px;" text="4h ago" />
+                                       </children>
+                                    </HBox>
+                                    <Label style="-fx-text-fill: #222222; -fx-font-size: 13px;" text="Bring extra water! Its going to be hot there. See you all there!" wrapText="true" />
+                                    <HBox alignment="CENTER_LEFT" spacing="18.0">
+                                       <children>
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="👍 3" />
+                                          <Label style="-fx-text-fill: #555555; -fx-font-size: 12px;" text="💬 Reply" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <Region VBox.vgrow="ALWAYS" />
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 25px; -fx-padding: 10 16 10 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.2, 0, 3);">
+                     <children>
+                        <StackPane alignment="CENTER" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #E7EAEF; -fx-background-radius: 50px;">
+                           <children>
+                              <Label style="-fx-font-size: 12px;" text="👤" />
+                           </children>
+                        </StackPane>
+                        <TextField promptText="Write a comment....." style="-fx-background-color: transparent; -fx-border-color: transparent;" HBox.hgrow="ALWAYS" />
+                        <Label style="-fx-font-size: 14px; -fx-text-fill: #777777;" text="🖼" />
+                        <Label style="-fx-font-size: 14px; -fx-text-fill: #777777;" text="☺" />
+                        <Button style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-background-radius: 18px; -fx-padding: 8 22 8 22; -fx-font-size: 13px;" text="Post" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
