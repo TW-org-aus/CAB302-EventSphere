@@ -1,4 +1,4 @@
-# CAB302-chicken-joes-repo-
+# CAB302-EventSphere
 
 assignment for CAB302
 
