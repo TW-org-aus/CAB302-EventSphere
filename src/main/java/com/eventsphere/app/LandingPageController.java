@@ -1,56 +1,76 @@
 package com.eventsphere.app;
 
-import javafx.event.ActionEvent;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import java.io.IOException;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 public class LandingPageController {
+
+    @FXML private ImageView heroImage;
+    @FXML private Label heroTitle;
+    @FXML private Label heroBlurb;
+    @FXML private HBox heroNav;
+
+    @FXML private HBox drawer;
+    @FXML private Button drawerTab;
+    @FXML private VBox detailsPanel;
+    @FXML private StackPane mapPanel;
+
+    private double mapX;
+    private double closedX;
+    private int state = 0;   // 0 = closed, 1 = map, 2 = map + details
+
     @FXML
-    protected void onProfileClick(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("profile-view.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 1280, 800));
+    public void initialize() {
+        drawer.widthProperty().addListener((obs, oldVal, newVal) -> {
+            mapX = detailsPanel.getWidth();
+            closedX = mapX + mapPanel.getWidth();
+            if (state == 0) {
+                drawer.setTranslateX(closedX);
+            }
+        });
+    }
+
+    private void slideTo(double x) {
+        TranslateTransition tt = new TranslateTransition(Duration.millis(280), drawer);
+        tt.setToX(x);
+        tt.setInterpolator(Interpolator.EASE_BOTH);
+        tt.play();
     }
 
     @FXML
-    protected void onMessagesClick(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("messages-list-view.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 1280, 800));
+    protected void onToggleDrawer() {
+        if (state == 0) {
+            state = 1;
+            drawerTab.setText("›");
+            slideTo(mapX);
+        } else {
+            state = 0;
+            drawerTab.setText("‹");
+            slideTo(closedX);
+        }
+    }
+
+    public void showEventDetails() {
+        state = 2;
+        drawerTab.setText("›");
+        slideTo(0);
     }
 
     @FXML
-    protected void onNotificationsClick(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("notifications-view.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 1280, 800));
-    }
-
-
-    @FXML
-    protected void onLoginClick(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login-view.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 1280, 800));
+    protected void onPrevHero() {
+        System.out.println("prev");
     }
 
     @FXML
-    protected void onEventCommentsClick(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("event-comments-view.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root, 1280, 800));
+    protected void onNextHero() {
+        System.out.println("next");
     }
-
-
 }
