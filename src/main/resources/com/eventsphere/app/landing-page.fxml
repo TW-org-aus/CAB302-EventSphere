@@ -12,8 +12,10 @@
         <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #000000; -fx-padding: 16;">
 
             <Button text="Profile" onAction="#onProfileClick"/>
+            <Button text="Login" onAction="#onLoginClick"/>
             <Button text="Messages" onAction="#onMessagesClick"/>
             <Button text="Notifications" onAction="#onNotificationsClick"/>
+            <Button text="Event Comments" onAction="#onEventCommentsClick"/>
         </HBox>
     </top>
    <center>

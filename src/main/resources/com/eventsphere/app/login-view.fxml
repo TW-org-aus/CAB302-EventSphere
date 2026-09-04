@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" fitToHeight="true"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.eventsphere.app.LoginController"
+            stylesheets="@app.css">
+    <content>
+        <VBox styleClass="page-bg" alignment="TOP_CENTER" spacing="24">
+            <padding>
+                <Insets top="40.0" bottom="80.0" left="32.0" right="32.0"/>
+            </padding>
+
+            <HBox maxWidth="480">
+                <Button text="&#8592; Back" styleClass="secondary-button" onAction="#onBackClick"/>
+            </HBox>
+
+            <VBox styleClass="card" maxWidth="480" spacing="18">
+                <Label text="Log In" styleClass="card-title"/>
+
+                <VBox spacing="6">
+                    <Label text="Email" styleClass="muted-text"/>
+                    <TextField fx:id="emailField" promptText="you@example.com"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Password" styleClass="muted-text"/>
+                    <PasswordField fx:id="passwordField" promptText="Password"/>
+                </VBox>
+
+                <Button text="Log In" styleClass="primary-button" maxWidth="Infinity" onAction="#onLoginClick"/>
+
+                <Hyperlink text="Sign Up" onAction="#onSignUpClick"/>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>
