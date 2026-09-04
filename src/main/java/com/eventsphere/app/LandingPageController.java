@@ -36,4 +36,21 @@ public class LandingPageController {
     }
 
 
+    @FXML
+    protected void onLoginClick(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login-view.fxml"));
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 1280, 800));
+    }
+
+    @FXML
+    protected void onEventCommentsClick(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("event-comments-view.fxml"));
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 1280, 800));
+    }
+
+
 }
