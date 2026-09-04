@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" fitToHeight="true"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.eventsphere.app.EventCommentsController"
+            stylesheets="@app.css">
+    <content>
+        <VBox styleClass="page-bg" alignment="TOP_CENTER" spacing="24">
+            <padding>
+                <Insets top="40.0" bottom="80.0" left="32.0" right="32.0"/>
+            </padding>
+
+            <HBox maxWidth="700">
+                <Button text="&#8592; Back" styleClass="secondary-button" onAction="#onBackClick"/>
+            </HBox>
+
+            <VBox styleClass="card" maxWidth="700" spacing="6">
+                <Label text="Warehouse night: local DJs and a rooftop bar after" styleClass="card-title" wrapText="true"/>
+                <Label text="Fri 20:00 · The Milk Factory" styleClass="muted-text"/>
+            </VBox>
+
+            <VBox styleClass="card" maxWidth="700" spacing="0">
+                <Label text="Comments" styleClass="card-title"/>
+
+                <VBox spacing="0" style="-fx-padding: 18 0 0 0;">
+                    <HBox styleClass="event-row" spacing="16" alignment="TOP_LEFT">
+                        <Label text="AC" styleClass="avatar"/>
+                        <VBox HBox.hgrow="ALWAYS" spacing="2">
+                            <Label text="Ava Chen" styleClass="body-text"/>
+                            <Label text="Can't wait for this one, last one was so good" styleClass="body-text" wrapText="true"/>
+                            <Label text="3 hours ago" styleClass="muted-text"/>
+                        </VBox>
+                    </HBox>
+                    <HBox styleClass="event-row" spacing="16" alignment="TOP_LEFT">
+                        <Label text="JL" styleClass="avatar"/>
+                        <VBox HBox.hgrow="ALWAYS" spacing="2">
+                            <Label text="Jordan Lee" styleClass="body-text"/>
+                            <Label text="Is there a coat check?" styleClass="body-text" wrapText="true"/>
+                            <Label text="5 hours ago" styleClass="muted-text"/>
+                        </VBox>
+                    </HBox>
+                    <HBox styleClass="event-row" spacing="16" alignment="TOP_LEFT">
+                        <Label text="SM" styleClass="avatar"/>
+                        <VBox HBox.hgrow="ALWAYS" spacing="2">
+                            <Label text="Sam Ortiz" styleClass="body-text"/>
+                            <Label text="Rooftop bar view is unreal, get there early" styleClass="body-text" wrapText="true"/>
+                            <Label text="1 day ago" styleClass="muted-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <HBox spacing="10" alignment="CENTER" style="-fx-padding: 18 0 0 0;">
+                    <TextField fx:id="commentInput" promptText="Add a comment..." HBox.hgrow="ALWAYS"/>
+                    <Button text="Post" styleClass="primary-button" onAction="#onPostCommentClick"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>
