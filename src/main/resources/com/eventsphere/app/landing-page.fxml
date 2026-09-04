@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="800" prefWidth="1280" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
+<StackPane fx:id="rootPane" prefHeight="800" prefWidth="1280" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
 
     <BorderPane>
         <top>
-            <Region prefHeight="70" style="-fx-background-color: #000000;" />
+            <fx:include source="nav-bar.fxml"/>
         </top>
         <center>
             <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
@@ -32,7 +32,7 @@
                                     <Label text="FEATURED" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
                                     <Label fx:id="heroTitle" text="BOILER ROOM" style="-fx-text-fill: white; -fx-font-size: 40px; -fx-font-weight: bold;"/>
                                     <Label fx:id="heroBlurb" text="Event description goes here." wrapText="true" style="-fx-text-fill: white; -fx-font-size: 15px;"/>
-                                    <Button text="MORE INFO" style="-fx-background-radius: 24; -fx-padding: 12 28 12 28;"/>
+                                    <Button text="MORE INFO" onAction="#onMoreInfoClick" style="-fx-background-radius: 24; -fx-padding: 12 28 12 28;"/>
                                 </VBox>
 
                                 <HBox fx:id="heroNav" spacing="12.0" alignment="CENTER" maxHeight="40" StackPane.alignment="BOTTOM_CENTER">
@@ -81,7 +81,7 @@
             <Label text="Event details" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
         </VBox>
 
-        <StackPane fx:id="mapPanel" prefWidth="1280.0" style="-fx-background-color: #e8e8e8;">
+        <StackPane fx:id="mapPanel" style="-fx-background-color: #e8e8e8;">
             <Label text="Map goes here" style="-fx-text-fill: #888888;"/>
         </StackPane>
     </HBox>

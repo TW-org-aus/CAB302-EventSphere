@@ -13,18 +13,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="730.0" prefWidth="1200.0" style="-fx-background-color: #F0512B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="730.0" prefWidth="1200.0" style="-fx-background-color: #F0512B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.SignUpController">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="60.0" style="-fx-background-color: #0B0B0B;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="EVENTSPHERE">
-               <HBox.margin>
-                  <Insets left="24.0" />
-               </HBox.margin>
-            </Label>
-         </children>
-      </HBox>
-      <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+      <fx:include source="nav-bar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+      <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
          <children>
             <VBox maxHeight="-Infinity" maxWidth="380.0" prefHeight="581.0" prefWidth="380.0" spacing="14.0" style="-fx-background-color: white; -fx-background-radius: 20px; -fx-padding: 32 40 36 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0.2, 0, 6);">
                <children>
@@ -39,20 +31,20 @@
                      <font>
                         <Font size="18.0" />
                      </font></Label>
-                  <TextField maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                  <TextField fx:id="emailField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
                   <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="Username">
                      <font>
                         <Font size="18.0" />
                      </font></Label>
-                  <TextField maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                  <TextField fx:id="usernameField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
                   <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="Password">
                      <font>
                         <Font size="18.0" />
                      </font></Label>
-                  <PasswordField maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                  <PasswordField fx:id="passwordField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
                   <Region prefHeight="4.0" />
-                  <Button maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="Sign UP" />
-                  <Hyperlink alignment="CENTER" maxWidth="Infinity" style="-fx-font-size: 13px;" text="Login" />
+                  <Button onAction="#onSignUpClick" maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="Sign UP" />
+                  <Hyperlink onAction="#onLoginClick" alignment="CENTER" maxWidth="Infinity" style="-fx-font-size: 13px;" text="Login" />
                   <HBox alignment="CENTER" spacing="10.0">
                      <children>
                         <Region maxHeight="-Infinity" prefHeight="1.0" style="-fx-background-color: #E2E2E2;" HBox.hgrow="ALWAYS" />
@@ -62,10 +54,10 @@
                   </HBox>
                   <HBox alignment="CENTER" spacing="18.0">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #1877F2; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="f" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #C13584; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="◉" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #4285F4; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="G" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #111111; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="♪" />
+                        <Button onAction="#onFacebookClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #1877F2; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="f" />
+                        <Button onAction="#onInstagramClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #C13584; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="◉" />
+                        <Button onAction="#onGoogleClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #4285F4; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="G" />
+                        <Button onAction="#onTikTokClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #111111; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="♪" />
                      </children>
                   </HBox>
                </children>

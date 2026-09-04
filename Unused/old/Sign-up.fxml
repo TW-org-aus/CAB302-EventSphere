@@ -12,7 +12,7 @@
 
 
 <?import javafx.scene.control.TextField?>
-<ScrollPane fitToWidth="true" stylesheets="@app.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.SettingsController">
+<ScrollPane fitToWidth="true" stylesheets="@../../src/main/resources/com/eventsphere/app/app.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.SettingsController">
     <content>
         <VBox alignment="TOP_CENTER" spacing="24" styleClass="page-bg">
             <padding>
