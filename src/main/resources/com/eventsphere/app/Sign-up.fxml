@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<?import javafx.scene.control.TextField?>
+<ScrollPane fitToWidth="true" stylesheets="@app.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.SettingsController">
+    <content>
+        <VBox alignment="TOP_CENTER" spacing="24" styleClass="page-bg">
+            <padding>
+                <Insets bottom="80.0" left="32.0" right="32.0" top="40.0" />
+            </padding>
+
+            <HBox maxWidth="860">
+                <Button onAction="#onBackClick" styleClass="secondary-button" text="← Back" />
+            </HBox> 
+
+            <VBox maxWidth="860" spacing="0" styleClass="card">
+            <AnchorPane prefHeight="0.0" prefWidth="319.0">
+               <children>
+                      <Label layoutX="80.0" layoutY="-2.0" styleClass="card-title" text="Create Account" />
+               </children>
+            </AnchorPane>
+
+                <Label style="-fx-padding: 20 0 10 0;" styleClass="section-heading" text="Email:" />
+            <TextField />
+            <Label style="-fx-padding: 20 0 10 0;" styleClass="section-heading" text="Username:" />
+            <TextField />
+            <Label style="-fx-padding: 20 0 10 0;" styleClass="section-heading" text="Password:" />
+            <TextField />
+                <HBox alignment="CENTER_LEFT" styleClass="setting-row">
+               <AnchorPane prefHeight="18.0" prefWidth="315.0">
+                  <children>
+                          <ToggleButton fx:id="notificationsToggle" layoutX="126.0" onAction="#onNotificationsToggle" selected="true" text="Sign Up" />
+                     <ToggleButton layoutX="132.0" layoutY="42.0" onAction="#onNightModeToggle" style="-fx-background-color: clear;" text="Log In" />
+                  </children>
+               </AnchorPane>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" styleClass="setting-row">
+               <children>
+                  <AnchorPane prefHeight="27.0" prefWidth="320.0">
+                     <children>
+                        <Button layoutX="22.0" layoutY="5.0" mnemonicParsing="false" text="Facebook" />
+                        <Button layoutX="98.0" layoutY="5.0" mnemonicParsing="false" text="Instagram" />
+                        <Button layoutX="178.0" layoutY="5.0" mnemonicParsing="false" text="Google" />
+                        <Button layoutX="241.0" layoutY="5.0" mnemonicParsing="false" text="TikTok" />
+                     </children>
+                  </AnchorPane>
+               </children>
+                </HBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>

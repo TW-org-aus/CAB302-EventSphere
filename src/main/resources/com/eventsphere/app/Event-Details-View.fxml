@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane fitToWidth="true" prefHeight="741.0" prefWidth="824.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.ProfileController">
+    <content>
+        <VBox alignment="TOP_CENTER" prefHeight="841.0" prefWidth="724.0" spacing="24.0" styleClass="page-bg">
+            <padding>
+                <Insets bottom="80.0" left="32.0" right="32.0" top="40.0" />
+            </padding>
+         <AnchorPane prefHeight="9.0" prefWidth="802.0">
+            <children>
+               <Button layoutX="3.0" layoutY="-21.0" onAction="#onBackClick" styleClass="secondary-button" text="← Back" />
+            </children>
+         </AnchorPane>
+         <HBox prefHeight="703.0" prefWidth="744.0">
+            <children>
+               <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                        <children>
+                  
+                              <!-- Events card -->
+                              <VBox maxWidth="1000" prefHeight="620.0" prefWidth="298.0" spacing="0" styleClass="card" VBox.vgrow="ALWAYS">
+                              <children>
+                                 <AnchorPane prefHeight="400.0" prefWidth="285.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <ToolBar layoutX="4.0" layoutY="524.0" prefHeight="40.0" prefWidth="285.0">
+                                          <items>
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                             <RadioButton mnemonicParsing="false" />
+                                          </items>
+                                       </ToolBar>
+                                       <ImageView fitHeight="307.0" fitWidth="200.0" layoutX="46.0" layoutY="201.0" pickOnBounds="true" preserveRatio="true">
+                                          <image>
+                                             <Image url="@../../../../../../../../../../../../../Downloads/every-detail-of-a-sleek-modern-car-captured-in-close-up-photo.jpg" />
+                                          </image>
+                                       </ImageView>
+                                    </children>
+                                 </AnchorPane>
+                              </children>
+                              </VBox>
+                        </children>
+                     </VBox>
+                     <VBox prefHeight="620.0" prefWidth="372.0" />
+                  </children>
+               </AnchorPane>
+               <VBox maxWidth="1000" prefHeight="690.0" prefWidth="227.0" spacing="0" styleClass="card">
+                  <children>
+                     <AnchorPane prefHeight="155.0" prefWidth="474.0">
+                        <children>
+                           <HBox spacing="10.0" />
+                           <Text layoutX="3.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date: (e.g. Saturday, December 27th 2026)" />
+                           <Button layoutX="264.0" mnemonicParsing="false" text="Like" />
+                           <Text layoutX="3.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Event Name: (e.g. Brisbane Car Meet)">
+                              <font>
+                                 <Font size="20.0" />
+                              </font>
+                           </Text>
+                           <Text layoutX="5.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price: $0" />
+                           <Text layoutX="5.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
+                           <Text layoutX="5.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text filler text " wrappingWidth="300.0" />
+                           <Text layoutX="4.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time: (e.g. 10am-2pm)" />
+                        </children>
+                     </AnchorPane>
+                     <AnchorPane prefHeight="73.0" prefWidth="285.0">
+                        <children>
+                           <HBox layoutX="12.0" spacing="10.0">
+                              <children>
+                                 <Button onAction="#onGoingTabClick" styleClass="tab-pill, tab-pill-active" text="Sign up" />
+                                 <Button onAction="#onBeenTabClick" styleClass="tab-pill" text="Notification" />
+                                 <Button onAction="#onBeenTabClick" styleClass="tab-pill" text="Follow" />
+                              </children>
+                           </HBox>
+                           <Button layoutX="64.0" layoutY="40.0" onAction="#onBeenTabClick" styleClass="tab-pill" text="Hosted by: (e.g. daniel larson))" />
+                        </children>
+                     </AnchorPane>
+                     <VBox spacing="0" style="-fx-padding: 18 0 0 0;">
+                        <children>
+                           <HBox alignment="CENTER_LEFT" onMouseClicked="#onWarehouseEventClick" spacing="16" styleClass="event-row">
+                              <children>
+                                 <VBox HBox.hgrow="ALWAYS">
+                                    <children>
+                                       <Label styleClass="body-text" text="General Name: (e.g. Bunnings brisbane)" wrapText="true" />
+                                       <Label styleClass="muted-text" text="Address" />
+                                    </children>
+                                 </VBox>
+                                 <Button onAction="#onGoingTabClick" prefHeight="36.0" prefWidth="123.0" styleClass="tab-pill, tab-pill-active" text="Open Map" />
+                              </children>
+                           </HBox>
+                           <HBox alignment="CENTER_LEFT" onMouseClicked="#onSunriseEventClick" spacing="16" styleClass="event-row">
+                              <children>
+                                 <VBox HBox.hgrow="ALWAYS">
+                                    <children>
+                                       <AnchorPane prefHeight="74.0" prefWidth="367.0">
+                                          <children>
+                                             <Label layoutX="95.0" layoutY="12.0" styleClass="body-text" text="Number Attending: (e.g. 2k) " wrapText="true" />
+                                             <Separator layoutX="-4.0" layoutY="45.0" prefHeight="3.0" prefWidth="370.0" />
+                                             <Label layoutX="121.0" layoutY="62.0" styleClass="muted-text" text="Duration: (e.g. 4 hours)" textAlignment="CENTER" />
+                                          </children>
+                                       </AnchorPane>
+                                    </children>
+                                 </VBox>
+                              </children>
+                           </HBox>
+                        </children>
+                     </VBox>
+                     <VBox prefHeight="85.0" prefWidth="321.0">
+                        <children>
+                           <AnchorPane prefHeight="85.0" prefWidth="277.0">
+                              <children>
+                                 <Label layoutX="-1.0" layoutY="1.0" styleClass="body-text" text="What to bring:" wrapText="true" />
+                                 <Separator layoutX="164.0" layoutY="2.0" orientation="VERTICAL" prefHeight="73.0" prefWidth="6.0" />
+                                 <Label layoutX="177.0" layoutY="3.0" styleClass="body-text" text="Highlights:" wrapText="true" />
+                              </children>
+                           </AnchorPane>
+                        </children>
+                     </VBox>
+                  </children>
+               </VBox>
+            </children>
+         </HBox>
+        </VBox>
+    </content>
+</ScrollPane>
