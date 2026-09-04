@@ -5,9 +5,16 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
 <BorderPane prefHeight="800" prefWidth="1280" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
     <top>
-        <Region prefHeight="70" style="-fx-background-color: #000000;" />
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #000000; -fx-padding: 16;">
+
+            <Button text="Profile" onAction="#onProfileClick"/>
+            <Button text="Messages" onAction="#onMessagesClick"/>
+            <Button text="Notifications" onAction="#onNotificationsClick"/>
+        </HBox>
     </top>
    <center>
       <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">

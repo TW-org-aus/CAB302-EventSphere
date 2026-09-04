@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" fitToHeight="true"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.eventsphere.app.MessagesListController"
+            stylesheets="@app.css">
+    <content>
+        <VBox styleClass="page-bg" alignment="TOP_CENTER" spacing="24">
+            <padding>
+                <Insets top="40.0" bottom="80.0" left="32.0" right="32.0"/>
+            </padding>
+
+            <HBox maxWidth="700">
+                <Button text="&#8592; Back" styleClass="secondary-button" onAction="#onBackClick"/>
+            </HBox>
+
+            <VBox styleClass="card" maxWidth="700" spacing="0">
+                <Label text="Messages" styleClass="card-title"/>
+
+                <VBox spacing="0" style="-fx-padding: 18 0 0 0;">
+                    <HBox styleClass="event-row" spacing="16" alignment="CENTER_LEFT" onMouseClicked="#onConversationRowClick">
+                        <Label text="JL" styleClass="avatar"/>
+                        <VBox HBox.hgrow="ALWAYS">
+                            <Label text="Jordan Lee" styleClass="card-title" style="-fx-font-size: 15px;"/>
+                            <Label text="See you at the warehouse show!" styleClass="muted-text"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>
