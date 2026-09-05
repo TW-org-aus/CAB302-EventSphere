@@ -30,3 +30,9 @@ replay_pid*
 
 # Maven build output
 target/
+
+
+#DB files
+database.db
+database.db-wal
+database.db-shm
