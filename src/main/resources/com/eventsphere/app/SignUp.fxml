@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <AnchorPane prefHeight="730.0" prefWidth="1200.0" style="-fx-background-color: #F0512B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.SignUpController">
    <children>
@@ -28,7 +29,7 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" spacing="14.0">
                                  <children>
-                                    <Label style="-fx-font-size: 20px; -fx-text-fill: #111111;" text="←" />
+                                    <FontIcon iconLiteral="bi-arrow-left" iconSize="20" iconColor="#111111" />
                                     <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="Create your account" />
                                  </children>
                               </HBox>
@@ -103,10 +104,21 @@
                         </HBox>
                         <HBox alignment="CENTER" spacing="18.0">
                            <children>
-                              <Button onAction="#onFacebookClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #1877F2; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="f" />
-                              <Button onAction="#onInstagramClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #C13584; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="◉" />
-                              <Button onAction="#onGoogleClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #4285F4; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="G" />
-                              <Button onAction="#onTikTokClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-text-fill: #111111; -fx-background-radius: 50px; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0;" text="♪" />
+                              <Button onAction="#onFacebookClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-background-radius: 50px; -fx-padding: 0;">
+                                 <graphic>
+                                    <FontIcon iconLiteral="bi-facebook" iconSize="16" iconColor="#1877F2" />
+                                 </graphic>
+                              </Button>
+                              <Button onAction="#onInstagramClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-background-radius: 50px; -fx-padding: 0;">
+                                 <graphic>
+                                    <FontIcon iconLiteral="bi-instagram" iconSize="16" iconColor="#C13584" />
+                                 </graphic>
+                              </Button>
+                              <Button onAction="#onGoogleClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-background-radius: 50px; -fx-padding: 0;">
+                                 <graphic>
+                                    <FontIcon iconLiteral="bi-google" iconSize="16" iconColor="#4285F4" />
+                                 </graphic>
+                              </Button>
                            </children>
                         </HBox>
                      </children>
