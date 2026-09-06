@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class LandingPageController {
 
@@ -22,6 +23,7 @@ public class LandingPageController {
 
     @FXML private HBox drawer;
     @FXML private Button drawerTab;
+    @FXML private FontIcon drawerTabIcon;
     @FXML private VBox detailsPanel;
     @FXML private StackPane mapPanel;
 
@@ -63,18 +65,18 @@ public class LandingPageController {
     protected void onToggleDrawer() {
         if (state == 0) {
             state = 1;
-            drawerTab.setText("›");
+            drawerTabIcon.setIconLiteral("bi-chevron-right");
             slideTo(mapX);
         } else {
             state = 0;
-            drawerTab.setText("‹");
+            drawerTabIcon.setIconLiteral("bi-chevron-left");
             slideTo(closedX);
         }
     }
 
     public void showEventDetails() {
         state = 2;
-        drawerTab.setText("›");
+        drawerTabIcon.setIconLiteral("bi-chevron-right");
         slideTo(0);
     }
 

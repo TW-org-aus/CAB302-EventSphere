@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <StackPane fx:id="rootPane" prefHeight="800" prefWidth="1280" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
 
@@ -36,8 +37,12 @@
                                 </VBox>
 
                                 <HBox fx:id="heroNav" spacing="12.0" alignment="CENTER" maxHeight="40" StackPane.alignment="BOTTOM_CENTER">
-                                    <Button text="‹" onAction="#onPrevHero"/>
-                                    <Button text="›" onAction="#onNextHero"/>
+                                    <Button onAction="#onPrevHero">
+                                        <graphic><FontIcon iconLiteral="bi-chevron-left"/></graphic>
+                                    </Button>
+                                    <Button onAction="#onNextHero">
+                                        <graphic><FontIcon iconLiteral="bi-chevron-right"/></graphic>
+                                    </Button>
                                 </HBox>
                             </StackPane>
 
@@ -71,9 +76,11 @@
 
     <HBox fx:id="drawer" alignment="CENTER" pickOnBounds="false" maxWidth="-Infinity"
           StackPane.alignment="CENTER_RIGHT">
-        <Button fx:id="drawerTab" text="‹" prefWidth="28.0" maxHeight="80.0"
+        <Button fx:id="drawerTab" prefWidth="28.0" maxHeight="80.0"
                 onAction="#onToggleDrawer"
-                style="-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;"/>
+                style="-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;">
+            <graphic><FontIcon fx:id="drawerTabIcon" iconLiteral="bi-chevron-left"/></graphic>
+        </Button>
 
         <VBox fx:id="detailsPanel" prefWidth="420.0"
               style="-fx-background-color: white; -fx-border-color: #dddddd; -fx-border-width: 0 1 0 1;">

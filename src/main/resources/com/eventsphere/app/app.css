@@ -158,6 +158,22 @@
     -fx-cursor: hand;
 }
 
+.icon-text {
+    -fx-icon-color: -text;
+}
+
+.icon-muted {
+    -fx-icon-color: -muted;
+}
+
+.icon-accent {
+    -fx-icon-color: -accent;
+}
+
+.icon-white {
+    -fx-icon-color: -white;
+}
+
 .event-thumb {
     -fx-background-color: derive(-muted, 40%);
     -fx-background-radius: 10;

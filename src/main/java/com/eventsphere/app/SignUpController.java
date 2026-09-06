@@ -117,9 +117,4 @@ public class SignUpController {
     protected void onGoogleClick() {
         System.out.println("Sign up with Google clicked");
     }
-
-    @FXML
-    protected void onTikTokClick() {
-        System.out.println("Sign up with TikTok clicked");
-    }
 }
