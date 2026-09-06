@@ -85,10 +85,15 @@ public class DBController {
             "    CreatedAt   DATETIME NOT NULL DEFAULT (datetime('now'))," +
             "    Content     TEXT     NOT NULL," +
             "    UpdatedAt   DATETIME," +
+            // NULL = top-level comment, non-null = tagged reply. Still flat - no nesting, no recursion.
+            // SET NULL on delete: deleting the tagged comment leaves the reply standing, just untagged.
+            "    ReplyToCommentID INTEGER," +
             "    FOREIGN KEY (UserID) REFERENCES Users (UserID)" +
             "        ON DELETE CASCADE ON UPDATE CASCADE," +
             "    FOREIGN KEY (EventsID) REFERENCES Events (EventID)" +
-            "        ON DELETE CASCADE ON UPDATE CASCADE" +
+            "        ON DELETE CASCADE ON UPDATE CASCADE," +
+            "    FOREIGN KEY (ReplyToCommentID) REFERENCES Comments (CommentID)" +
+            "        ON DELETE SET NULL ON UPDATE CASCADE" +
             ");" +
             "CREATE INDEX IF NOT EXISTS idx_comments_userid   ON Comments (UserID);" +
             "CREATE INDEX IF NOT EXISTS idx_comments_eventsid ON Comments (EventsID);" +
@@ -162,6 +167,7 @@ public class DBController {
             "    RelatedCommentID        INTEGER," +
             "    RelatedConversationID   INTEGER," +
             "    CreatedAt               DATETIME NOT NULL DEFAULT (datetime('now'))," +
+            "    IsRead                  INTEGER  NOT NULL DEFAULT 0 CHECK (IsRead IN (0, 1))," +
             "    FOREIGN KEY (UserID) REFERENCES Users (UserID)" +
             "        ON DELETE CASCADE ON UPDATE CASCADE," +
             "    FOREIGN KEY (RelatedEventID) REFERENCES Events (EventID)" +
