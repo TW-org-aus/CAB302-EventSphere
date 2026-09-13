@@ -10,8 +10,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class LandingPageController {
+
+    @FXML private StackPane rootPane;
 
     @FXML private ImageView heroImage;
     @FXML private Label heroTitle;
@@ -20,6 +23,7 @@ public class LandingPageController {
 
     @FXML private HBox drawer;
     @FXML private Button drawerTab;
+    @FXML private FontIcon drawerTabIcon;
     @FXML private VBox detailsPanel;
     @FXML private StackPane mapPanel;
 
@@ -29,6 +33,13 @@ public class LandingPageController {
 
     @FXML
     public void initialize() {
+        // Map fills whatever width is left after the drawer tab and details panel,
+        // rather than assuming the window's full default width.
+        mapPanel.prefWidthProperty().bind(
+                rootPane.widthProperty()
+                        .subtract(detailsPanel.widthProperty())
+                        .subtract(drawerTab.widthProperty()));
+
         drawer.widthProperty().addListener((obs, oldVal, newVal) -> {
             mapX = detailsPanel.getWidth();
             closedX = mapX + mapPanel.getWidth();
@@ -36,6 +47,11 @@ public class LandingPageController {
                 drawer.setTranslateX(closedX);
             }
         });
+    }
+
+    @FXML
+    protected void onMoreInfoClick() {
+        Router.navigateTo("EventPage.fxml");
     }
 
     private void slideTo(double x) {
@@ -49,18 +65,18 @@ public class LandingPageController {
     protected void onToggleDrawer() {
         if (state == 0) {
             state = 1;
-            drawerTab.setText("›");
+            drawerTabIcon.setIconLiteral("bi-chevron-right");
             slideTo(mapX);
         } else {
             state = 0;
-            drawerTab.setText("‹");
+            drawerTabIcon.setIconLiteral("bi-chevron-left");
             slideTo(closedX);
         }
     }
 
     public void showEventDetails() {
         state = 2;
-        drawerTab.setText("›");
+        drawerTabIcon.setIconLiteral("bi-chevron-right");
         slideTo(0);
     }
 

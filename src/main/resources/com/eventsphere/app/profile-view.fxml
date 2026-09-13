@@ -8,11 +8,13 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true"
-            xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.eventsphere.app.ProfileController"
-            stylesheets="@app.css">
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.eventsphere.app.ProfileController"
+      stylesheets="@app.css">
+    <children>
+        <fx:include source="nav-bar.fxml"/>
+        <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS">
     <content>
         <VBox styleClass="page-bg" alignment="TOP_CENTER" spacing="24">
             <padding>
@@ -85,4 +87,6 @@
             </VBox>
         </VBox>
     </content>
-</ScrollPane>
+        </ScrollPane>
+    </children>
+</VBox>

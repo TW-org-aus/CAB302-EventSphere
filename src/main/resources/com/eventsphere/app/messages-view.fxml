@@ -9,20 +9,18 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" fitToHeight="true"
-            xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.eventsphere.app.MessagesController"
-            stylesheets="@app.css">
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.eventsphere.app.MessagesController"
+      stylesheets="@app.css">
+    <children>
+        <fx:include source="nav-bar.fxml"/>
+        <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS">
     <content>
         <VBox styleClass="page-bg" alignment="TOP_CENTER" spacing="24">
             <padding>
                 <Insets top="40.0" bottom="80.0" left="32.0" right="32.0"/>
             </padding>
-
-            <HBox maxWidth="700">
-                <Button text="&#8592; Back" styleClass="secondary-button" onAction="#onBackClick"/>
-            </HBox>
 
             <VBox styleClass="card" maxWidth="700" spacing="18">
                 <HBox spacing="14" alignment="CENTER_LEFT">
@@ -58,4 +56,6 @@
             </VBox>
         </VBox>
     </content>
-</ScrollPane>
+        </ScrollPane>
+    </children>
+</VBox>

@@ -1,0 +1,244 @@
+/* EventSphere - JavaFX stylesheet for Messages and Notifications */
+
+.root {
+    -fx-font-family: "Segoe UI", "Nunito", sans-serif;
+    -fx-background-color: #F04E29;
+}
+
+/* ---------- Top bar ---------- */
+
+.topbar {
+    -fx-background-color: #000000;
+}
+
+.logo {
+    -fx-text-fill: white;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.search {
+    -fx-background-color: white;
+    -fx-background-radius: 999;
+    -fx-padding: 8 18 8 18;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-font-size: 15px;
+    -fx-padding: 2 0 2 0;
+    -fx-prompt-text-fill: #6B7280;
+}
+
+.search-field:focused {
+    -fx-background-color: transparent;
+}
+
+.icon-button {
+    -fx-background-color: white;
+    -fx-background-radius: 999;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-cursor: hand;
+}
+
+.icon-button-accent {
+    -fx-background-color: #2F7FF5;
+}
+
+.icon-dark { -fx-fill: #111111; }
+.icon-muted { -fx-fill: #6B7280; }
+.icon-white { -fx-fill: white; }
+.icon-blue  { -fx-fill: #2563EB; }
+
+.badge-dot {
+    -fx-fill: #2F7FF5;
+    -fx-translate-x: 13;
+    -fx-translate-y: -13;
+}
+
+/* ---------- Shared card ---------- */
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 18, 0, 0, 6);
+}
+
+.page-padding {
+    -fx-padding: 40;
+}
+
+/* ---------- Messages: conversation list ---------- */
+
+.conversations {
+    -fx-border-color: transparent #E5E7EB transparent transparent;
+    -fx-border-width: 1;
+}
+
+.conv-search {
+    -fx-background-color: #E8F1FC;
+    -fx-background-radius: 10;
+    -fx-padding: 6 14 6 14;
+}
+
+.conv-search-field {
+    -fx-background-color: transparent;
+    -fx-font-size: 15px;
+    -fx-prompt-text-fill: #6B7280;
+}
+
+.conv-search-field:focused {
+    -fx-background-color: transparent;
+}
+
+.conversation {
+    -fx-padding: 14 16 14 16;
+    -fx-border-color: #E5E7EB transparent transparent transparent;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.conversation:hover {
+    -fx-background-color: #F5F8FD;
+}
+
+.conversation-active {
+    -fx-background-color: #E8F1FC;
+}
+
+.avatar {
+    -fx-background-color: #CFE2FA;
+    -fx-background-radius: 999;
+    -fx-min-width: 38;
+    -fx-min-height: 38;
+}
+
+.conv-name {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A1A;
+}
+
+.conv-preview {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+/* ---------- Messages: chat panel ---------- */
+
+.chat-header {
+    -fx-padding: 16;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-width: 1;
+}
+
+.chat-name {
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+}
+
+.chat-sub {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.thread {
+    -fx-background-color: #E1EDFB;
+    -fx-padding: 24;
+}
+
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.bubble {
+    -fx-background-radius: 999;
+    -fx-padding: 11 18 11 18;
+    -fx-font-size: 15px;
+    -fx-text-fill: white;
+}
+
+.sent          { -fx-background-color: #2F7FF5; }
+.sent-latest   { -fx-background-color: #2563EB; }
+.received      { -fx-background-color: #5A6068; }
+.received-dark { -fx-background-color: #4B5158; }
+
+.receipt {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B7280;
+    -fx-padding: 0 4 8 0;
+}
+
+.composer {
+    -fx-background-color: white;
+    -fx-padding: 16 24 16 24;
+    -fx-background-radius: 0 0 14 14;
+}
+
+.add-button {
+    -fx-background-color: #000000;
+    -fx-background-radius: 999;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-cursor: hand;
+}
+
+.composer-field-box {
+    -fx-background-color: #E1EDFB;
+    -fx-background-radius: 999;
+    -fx-padding: 8 20 8 20;
+}
+
+.composer-field {
+    -fx-background-color: transparent;
+    -fx-font-size: 15px;
+    -fx-prompt-text-fill: #6B7280;
+}
+
+.composer-field:focused {
+    -fx-background-color: transparent;
+}
+
+/* ---------- Notifications ---------- */
+
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 18 0;
+}
+
+.notification {
+    -fx-padding: 18 22 18 22;
+    -fx-border-color: #E5E7EB transparent transparent transparent;
+    -fx-border-width: 1;
+}
+
+.notification-first {
+    -fx-border-width: 0;
+}
+
+.notification-text {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1A1A1A;
+}
+
+.notification-actor {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A1A;
+}
+
+.notification-time {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
