@@ -1,18 +1,27 @@
 package com.eventsphere.app.Database;
 
 
+import com.eventsphere.app.model.Category;
+import com.eventsphere.app.model.NotificationType;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class DBController {
     private final Connection connect;
 
 
-    // Catagories list: keep both CHECK lists in sync if this set changes.
-    private static final String CATEGORY_LIST =
-            "'Music','Sports','Arts & Theatre','Film','Family','Community','Food & Drink','Nightlife','Other'";
+    // enums from models
+    private static String CATEGORY_LIST = Arrays.stream(Category.values())
+            .map(category -> "'" + category.getDbValue() + "'")
+            .collect(Collectors.joining(","));
 
+    private static String NOTIFICATION_TYPE_LIST = Arrays.stream(NotificationType.values())
+            .map(type -> "'" + type.getDbValue() + "'")
+            .collect(Collectors.joining(", "));
 
     public DBController(Connection connection) {
         this.connect = connection;
