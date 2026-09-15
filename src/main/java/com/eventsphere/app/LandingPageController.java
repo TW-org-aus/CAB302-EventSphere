@@ -1,5 +1,6 @@
 package com.eventsphere.app;
 
+import javafx.scene.Node;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -27,26 +28,29 @@ public class LandingPageController {
     @FXML private VBox detailsPanel;
     @FXML private StackPane mapPanel;
 
-    private double mapX;
-    private double closedX;
-    private int state = 0;   // 0 = closed, 1 = map, 2 = map + details
+    private static final double TAB_W = 28.0;
+    private static final double DETAILS_W = 420.0;
+
+    private int state = 0;   // 0 closed, 1 map, 2 map + details
 
     @FXML
     public void initialize() {
-        // Map fills whatever width is left after the drawer tab and details panel,
-        // rather than assuming the window's full default width.
-        mapPanel.prefWidthProperty().bind(
-                rootPane.widthProperty()
-                        .subtract(detailsPanel.widthProperty())
-                        .subtract(drawerTab.widthProperty()));
+        drawer.prefWidthProperty().bind(rootPane.widthProperty());
+        drawer.maxWidthProperty().bind(rootPane.widthProperty());
 
-        drawer.widthProperty().addListener((obs, oldVal, newVal) -> {
-            mapX = detailsPanel.getWidth();
-            closedX = mapX + mapPanel.getWidth();
-            if (state == 0) {
-                drawer.setTranslateX(closedX);
-            }
+        detailsPanel.setTranslateX(-DETAILS_W);
+        drawer.setTranslateX(2000);
+
+        rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            if (state == 0) drawer.setTranslateX(newVal.doubleValue() - TAB_W);
         });
+    }
+
+    private void slide(Node node, double x) {
+        TranslateTransition tt = new TranslateTransition(Duration.millis(280), node);
+        tt.setToX(x);
+        tt.setInterpolator(Interpolator.EASE_BOTH);
+        tt.play();
     }
 
     @FXML
@@ -54,30 +58,24 @@ public class LandingPageController {
         Router.navigateTo("EventPage.fxml");
     }
 
-    private void slideTo(double x) {
-        TranslateTransition tt = new TranslateTransition(Duration.millis(280), drawer);
-        tt.setToX(x);
-        tt.setInterpolator(Interpolator.EASE_BOTH);
-        tt.play();
-    }
-
     @FXML
     protected void onToggleDrawer() {
         if (state == 0) {
             state = 1;
             drawerTabIcon.setIconLiteral("bi-chevron-right");
-            slideTo(mapX);
+            slide(drawer, 0);
         } else {
             state = 0;
             drawerTabIcon.setIconLiteral("bi-chevron-left");
-            slideTo(closedX);
+            slide(drawer, rootPane.getWidth() - TAB_W);
+            slide(detailsPanel, -DETAILS_W);
         }
     }
 
     public void showEventDetails() {
         state = 2;
         drawerTabIcon.setIconLiteral("bi-chevron-right");
-        slideTo(0);
+        slide(detailsPanel, TAB_W);
     }
 
     @FXML
