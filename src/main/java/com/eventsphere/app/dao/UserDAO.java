@@ -2,37 +2,35 @@ package com.eventsphere.app.dao;
 
 import com.eventsphere.app.model.User;
 
-import java.sql.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Reference pattern for all DAOs: concrete class, no interface,
- * Connection injected via constructor. Tests pass a
- * jdbc:sqlite::memory: connection; production passes Database.DBConnect().
- */
-public class UserDAO {
+import static com.eventsphere.app.dao.DaoHelpers.*;
 
-    /** Every column of Users, in the order mapRow reads them. */
-    private static String COLUMNS =
+public class UserDAO implements IUserDAO {
+
+    // Every column of Users, in the order mapRow reads them.
+    static final String COLUMNS =
             "UserID, FirstName, LastName, Email, PasswordHash, " +
             "HomeLat, HomeLong, DateCreated, IsActive, NotifyEnabled";
 
-    private static Connection connection;
+    private final Connection connection;
 
     public UserDAO(Connection connection) {
         this.connection = connection;
     }
 
-    //Inserts a user and returns the generated UserID. DateCreated, IsActive and NotifyEnabled are left to their schema defaults (today, 1, 1).
+    @Override
     public int insert(String firstName, String lastName, String email, String passwordHash) {
         return insert(firstName, lastName, email, passwordHash, null, null);
     }
 
-    // As above, with an optional home location. Pass nulls is user has no home location.
+    @Override
     public int insert(String firstName, String lastName, String email, String passwordHash,
                       Double homeLat, Double homeLong) {
         String sql = "INSERT INTO Users (FirstName, LastName, Email, PasswordHash, HomeLat, HomeLong) " +
@@ -56,6 +54,7 @@ public class UserDAO {
         }
     }
 
+    @Override
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT " + COLUMNS + " FROM Users WHERE Email = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -68,6 +67,7 @@ public class UserDAO {
         }
     }
 
+    @Override
     public Optional<User> findById(int userId) {
         String sql = "SELECT " + COLUMNS + " FROM Users WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -80,7 +80,7 @@ public class UserDAO {
         }
     }
 
-    // Active users only, ordered by surname then first name.
+    @Override
     public List<User> findAllActive() {
         String sql = "SELECT " + COLUMNS + " FROM Users WHERE IsActive = 1 ORDER BY LastName, FirstName";
         try (PreparedStatement ps = connection.prepareStatement(sql);
@@ -95,7 +95,7 @@ public class UserDAO {
         }
     }
 
-    //replaces user objects feilds with the feilds in the new user object provided
+    @Override
     public void update(User user) {
         String sql = "UPDATE Users SET FirstName = ?, LastName = ?, Email = ?, PasswordHash = ?, " +
                 "HomeLat = ?, HomeLong = ?, IsActive = ?, NotifyEnabled = ? WHERE UserID = ?";
@@ -115,6 +115,7 @@ public class UserDAO {
         }
     }
 
+    @Override
     public void setHomeLocation(int userId, Double homeLat, Double homeLong) {
         String sql = "UPDATE Users SET HomeLat = ?, HomeLong = ? WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -127,6 +128,7 @@ public class UserDAO {
         }
     }
 
+    @Override
     public void setNotifyEnabled(int userId, boolean enabled) {
         String sql = "UPDATE Users SET NotifyEnabled = ? WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -138,7 +140,7 @@ public class UserDAO {
         }
     }
 
-    // Soft delete. Rows are kept so comments and messages keep their author.
+    @Override
     public void deactivate(int userId) {
         String sql = "UPDATE Users SET IsActive = 0 WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -149,8 +151,8 @@ public class UserDAO {
         }
     }
 
-
-    private User mapRow(ResultSet rs) throws SQLException {
+    // Package-private and static so other DAOs (e.g. GoingDAO) can map joined User rows.
+    static User mapRow(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("UserID"),
                 rs.getString("FirstName"),
@@ -163,34 +165,5 @@ public class UserDAO {
                 rs.getInt("IsActive") == 1,
                 rs.getInt("NotifyEnabled") == 1
         );
-    }
-
-
-    // user does not HAVE to have a home lat and long it could be null.
-    private static void setNullableDouble(PreparedStatement ps, int index, Double value) throws SQLException {
-        if (value == null) {
-            ps.setNull(index, Types.REAL);
-        } else {
-            ps.setDouble(index, value);
-        }
-    }
-
-    private static Double getNullableDouble(ResultSet rs, String column) throws SQLException {
-        double value = rs.getDouble(column);
-        return rs.wasNull() ? null : value;
-    }
-
-   // helper method to parse date since SQLite has no date type. DateCreated is of type "text" written by the schema
-
-    private static LocalDate parseDate(String raw) throws SQLException {
-        if (raw == null) {
-            return null;
-        }
-        String datePart = raw.length() > 10 ? raw.substring(0, 10) : raw;
-        try {
-            return LocalDate.parse(datePart);
-        } catch (DateTimeParseException e) {
-            throw new SQLException("Unreadable DateCreated value: " + raw, e);
-        }
     }
 }

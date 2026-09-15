@@ -14,12 +14,12 @@ public class DBController {
     private final Connection connect;
 
 
-    // enums from models
-    private static String CATEGORY_LIST = Arrays.stream(Category.values())
+    // CHECK lists built from the enums, so Java and the DB constraints are constant.
+    private static final String CATEGORY_LIST = Arrays.stream(Category.values())
             .map(category -> "'" + category.getDbValue() + "'")
             .collect(Collectors.joining(","));
 
-    private static String NOTIFICATION_TYPE_LIST = Arrays.stream(NotificationType.values())
+    private static final String NOTIFICATION_TYPE_LIST = Arrays.stream(NotificationType.values())
             .map(type -> "'" + type.getDbValue() + "'")
             .collect(Collectors.joining(", "));
 
@@ -49,7 +49,7 @@ public class DBController {
                         "    NotifyEnabled   INTEGER  NOT NULL DEFAULT 1 CHECK (NotifyEnabled IN (0, 1))" +
                         ");" +
 
-                        // Preference: per-User city + preferred Categories.
+                        // Preference: User city + preferred Categories.
                         "CREATE TABLE IF NOT EXISTS Preferences (" +
                         "    UserID      INTEGER PRIMARY KEY," +
                         "    City        TEXT," +
@@ -95,8 +95,8 @@ public class DBController {
                         "    CreatedAt   DATETIME NOT NULL DEFAULT (datetime('now'))," +
                         "    Content     TEXT     NOT NULL," +
                         "    UpdatedAt   DATETIME," +
-                        // NULL = top-level comment, non-null = tagged reply. Still flat - no nesting, no recursion.
-                        // SET NULL on delete: deleting the tagged comment leaves the reply standing, just untagged.
+                        // NULL = parent comment, non-null = tagged reply.
+                        // SET NULL on delete: deleting the tagged comment leaves the reply standing.
                         "    ReplyToCommentID INTEGER," +
                         "    FOREIGN KEY (UserID) REFERENCES Users (UserID)" +
                         "        ON DELETE CASCADE ON UPDATE CASCADE," +
@@ -108,7 +108,7 @@ public class DBController {
                         "CREATE INDEX IF NOT EXISTS idx_comments_userid   ON Comments (UserID);" +
                         "CREATE INDEX IF NOT EXISTS idx_comments_eventsid ON Comments (EventsID);" +
 
-                        // Likes apply only to Events, not Comments.
+
                         "CREATE TABLE IF NOT EXISTS Likes (" +
                         "    LikeID      INTEGER  PRIMARY KEY AUTOINCREMENT," +
                         "    UserID      INTEGER  NOT NULL," +
@@ -123,7 +123,7 @@ public class DBController {
                         "CREATE INDEX IF NOT EXISTS idx_likes_userid   ON Likes (UserID);" +
                         "CREATE INDEX IF NOT EXISTS idx_likes_eventsid ON Likes (EventsID);" +
 
-                        // Going: a row = Going is true for that (User, Event) pair. Table created to store an event a user is going to.
+
                         "CREATE TABLE IF NOT EXISTS Going (" +
                         "    UserID          INTEGER  NOT NULL," +
                         "    EventID         INTEGER  NOT NULL," +
@@ -172,7 +172,7 @@ public class DBController {
                         "CREATE TABLE IF NOT EXISTS Notifications (" +
                         "    NotificationID          INTEGER  PRIMARY KEY AUTOINCREMENT," +
                         "    UserID                  INTEGER  NOT NULL," +
-                        "    Type                    TEXT     NOT NULL CHECK (Type IN ('CommentReply', 'NewMessage', 'EventReminder'))," +
+                        "    Type                    TEXT     NOT NULL CHECK (Type IN (" + NOTIFICATION_TYPE_LIST + "))," +
                         "    RelatedEventID          INTEGER," +
                         "    RelatedCommentID        INTEGER," +
                         "    RelatedConversationID   INTEGER," +
