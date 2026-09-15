@@ -36,3 +36,7 @@ target/
 database.db
 database.db-wal
 database.db-shm
+
+
+#.env
+.env

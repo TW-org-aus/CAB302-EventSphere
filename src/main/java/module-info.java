@@ -7,6 +7,8 @@ module com.eventsphere.app {
     requires org.kordamp.ikonli.bootstrapicons;
     requires java.sql;
     requires org.xerial.sqlitejdbc;
+    requires java.net.http;
+    requires com.fasterxml.jackson.databind;
 
     opens com.eventsphere.app to javafx.fxml;
     exports com.eventsphere.app;
