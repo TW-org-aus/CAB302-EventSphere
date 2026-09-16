@@ -114,23 +114,24 @@ public class DatabaseSeeder {
             // Dates are relative to the present so a freshly seeded database always has future events.
             seedEventIfAbsent(eventDAO, sourceId, "Boiler Room Brisbane",
                     "Warehouse party", Category.NIGHTLIFE, 3,
-                    "Brisbane Showgrounds", "600 Gregory Terrace, Bowen Hills", -27.4573, 153.0345, "boiler-room.jpeg");
+                    "Brisbane Showgrounds", "600 Gregory Terrace, Bowen Hills", -27.4503, 153.0331, "boiler-room.jpeg");
 
             seedEventIfAbsent(eventDAO, sourceId, "Sunrise Run Club 5k",
                     "River run, coffee and vibes", Category.COMMUNITY, 5,
-                    "Riverwalk", "New Farm", -27.4679, 153.0459, "runclub.jpg");
+                    "Riverwalk", "New Farm", -27.4682, 153.0436, "runclub.jpg");
 
             seedEventIfAbsent(eventDAO, sourceId, "South Bank Night Market",
                     "Food stalls and live music", Category.FOOD_DRINK, 8,
-                    "South Bank Parklands", "Stanley St Plaza, South Brisbane", -27.4809, 153.0176, "nightmarket.jpg");
+                    "South Bank Parklands", "Stanley St Plaza, South Brisbane", -27.4764, 153.0212, "nightmarket.jpg");
 
             seedEventIfAbsent(eventDAO, sourceId, "Trivia Night",
                     "Teams of four, first round is free", Category.COMMUNITY, 11,
-                    "Botanic Bar", "P Block, Level 3/2 George St, Brisbane City", -27.4820, 153.0090, "trivia.jpeg");
+                    "Botanic Bar", "P Block, Level 3/2 George St, Brisbane City", -27.4772, 153.0283, "trivia.jpeg");
 
             seedEventIfAbsent(eventDAO, sourceId, "Brisbane Car Meet",
                     "Car meet and social night for enthusiasts", Category.COMMUNITY, 14,
-                    "Motorculture HQ", "84 Dunhill Crescent, Morningside", -27.4665, 153.0490, "edit2.png");
+                    "Motorculture HQ", "84 Dunhill Crescent, Morningside", -27.4633, 153.0732, "edit2.png");
+
 
             System.out.println("Database seeding completed successfully.");
 

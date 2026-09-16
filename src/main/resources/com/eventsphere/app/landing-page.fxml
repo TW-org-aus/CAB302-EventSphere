@@ -74,22 +74,23 @@
 
     <HBox fx:id="drawer" alignment="CENTER" pickOnBounds="false"
           StackPane.alignment="CENTER_RIGHT">
-        <Button fx:id="drawerTab" prefWidth="28.0" maxHeight="80.0"
-                onAction="#onToggleDrawer"
-                style="-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;">
-            <graphic><FontIcon fx:id="drawerTabIcon" iconLiteral="bi-chevron-left"/></graphic>
-        </Button>
-
         <StackPane fx:id="mapPanel" HBox.hgrow="ALWAYS" style="-fx-background-color: #e8e8e8;">
             <Label text="Map goes here" style="-fx-text-fill: #888888;"/>
         </StackPane>
     </HBox>
 
-    <VBox fx:id="detailsPanel" prefWidth="420.0" maxWidth="420.0"
+    <VBox fx:id="detailsPanel" prefWidth="420.0" maxWidth="420.0 " spacing="12.0"
           StackPane.alignment="CENTER_LEFT"
           style="-fx-background-color: white; -fx-border-color: #dddddd; -fx-border-width: 0 1 0 0;">
         <padding><Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/></padding>
         <Label text="Event details" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
     </VBox>
+
+    <Button fx:id="drawerTab" prefWidth="28.0" maxWidth="28.0" maxHeight="80.0"
+            onAction="#onToggleDrawer"
+            StackPane.alignment="CENTER_RIGHT"
+            style="-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;">
+        <graphic><FontIcon fx:id="drawerTabIcon" iconLiteral="bi-chevron-left"/></graphic>
+    </Button>
 
 </StackPane>

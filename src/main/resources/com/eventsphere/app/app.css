@@ -208,3 +208,14 @@
 .category-button:hover {
     -fx-background-color: derive(-white, -8%);
 }
+
+.close-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 4;
+}
+
+.close-button:hover {
+    -fx-background-color: derive(-border, 40%);
+    -fx-background-radius: 999;
+}

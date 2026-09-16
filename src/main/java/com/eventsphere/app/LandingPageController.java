@@ -4,6 +4,8 @@ import com.eventsphere.app.Database.Database;
 import com.eventsphere.app.dao.EventDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
+import com.gluonhq.maps.MapPoint;
+import com.gluonhq.maps.MapView;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -18,14 +20,15 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.geometry.Pos;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Comparator;
@@ -54,6 +57,10 @@ public class LandingPageController {
     private static final double CARD_W = 280.0;
     private static final double THUMB_H = 150.0;
     private static final double HERO_H = 400.0;
+    private static final String TAB_RIGHT =
+            "-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;";
+    private static final String TAB_LEFT =
+            "-fx-background-radius: 0 8 8 0; -fx-background-color: #dddddd;";
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("EEE d MMM, h:mm a").withZone(ZoneId.systemDefault());
@@ -62,6 +69,7 @@ public class LandingPageController {
 
     private List<Event> heroEvents = List.of();
     private int heroIndex = 0;
+    private Event selectedEvent;
 
     @FXML
     public void initialize() {
@@ -72,16 +80,18 @@ public class LandingPageController {
         drawer.setTranslateX(2000);
 
         rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-            if (state == 0) drawer.setTranslateX(newVal.doubleValue() - TAB_W);
+            if (state == 0) drawer.setTranslateX(newVal.doubleValue());
         });
 
         heroImage.fitWidthProperty().bind(heroPane.widthProperty());
 
+        initMap();
         loadHeroEvents();
         loadUpcomingEvents();
     }
 
     // ----- hero carousel -----
+
     private void loadHeroEvents() {
         try {
             List<Event> upcoming = new EventDAO(Database.DBConnect()).findUpcoming();
@@ -216,29 +226,33 @@ public class LandingPageController {
     }
 
     private Node buildThumb(Event event) {
+        return buildThumb(event, CARD_W, THUMB_H);
+    }
+
+    private Node buildThumb(Event event, double width, double height) {
         String url = resolveImageUrl(event.getImageUrl());
         if (url == null) {
             Region placeholder = new Region();
             placeholder.getStyleClass().add("event-card-thumb");
-            placeholder.setPrefSize(CARD_W, THUMB_H);
-            placeholder.setMinHeight(THUMB_H);
+            placeholder.setPrefSize(width, height);
+            placeholder.setMinHeight(height);
             return placeholder;
         }
 
-        ImageView view = new ImageView(new Image(url, CARD_W, THUMB_H, false, true, true));
-        view.setFitWidth(CARD_W);
-        view.setFitHeight(THUMB_H);
+        ImageView view = new ImageView(new Image(url, width, height, false, true, true));
+        view.setFitWidth(width);
+        view.setFitHeight(height);
         view.setPreserveRatio(false);
 
-        Rectangle clip = new Rectangle(CARD_W, THUMB_H);
+        Rectangle clip = new Rectangle(width, height);
         clip.setArcWidth(24);
         clip.setArcHeight(24);
         view.setClip(clip);
 
         StackPane wrapper = new StackPane(view);
         wrapper.getStyleClass().add("event-card-thumb");
-        wrapper.setPrefSize(CARD_W, THUMB_H);
-        wrapper.setMinHeight(THUMB_H);
+        wrapper.setPrefSize(width, height);
+        wrapper.setMinHeight(height);
         return wrapper;
     }
 
@@ -260,6 +274,81 @@ public class LandingPageController {
 
     // ----- map drawer -----
 
+    private void initMap() {
+        MapView mapView = new MapView();
+        mapView.setZoom(11);
+        mapView.flyTo(0, new MapPoint(-27.4698, 153.0251), 0.1);
+
+        EventMapLayer layer = new EventMapLayer(this::onPinClick);
+        mapView.addLayer(layer);
+        mapPanel.getChildren().setAll(mapView);
+
+        try {
+            layer.setEvents(new EventDAO(Database.DBConnect()).findUpcoming());
+        } catch (Exception e) {
+            System.err.println("Could not load map pins: " + e.getMessage());
+        }
+    }
+
+    private void onPinClick(Event event) {
+        selectedEvent = event;
+        showEventSummary(event);
+        showEventDetails();
+    }
+
+    private void showEventSummary(Event event) {
+        detailsPanel.getChildren().clear();
+
+        FontIcon closeIcon = new FontIcon("bi-x");
+        closeIcon.setIconSize(22);
+
+        Button close = new Button();
+        close.setGraphic(closeIcon);
+        close.getStyleClass().add("close-button");
+        close.setOnAction(e -> hideEventDetails());
+
+        HBox topRow = new HBox(close);
+        topRow.setAlignment(Pos.CENTER_RIGHT);
+        detailsPanel.getChildren().add(topRow);
+
+        Node thumb = buildThumb(event, 372, 200);
+
+        Label title = new Label(event.getTitle());
+        title.getStyleClass().add("card-title");
+        title.setWrapText(true);
+
+        Label when = new Label(DATE_FORMAT.format(event.getStartTime()));
+        when.getStyleClass().add("muted-text");
+
+        detailsPanel.getChildren().addAll(thumb, title, when);
+
+        if (event.getVenueName() != null) {
+            Label venue = new Label(event.getVenueName());
+            venue.getStyleClass().add("body-text");
+            detailsPanel.getChildren().add(venue);
+        }
+
+        if (event.getAddress() != null) {
+            Label address = new Label(event.getAddress());
+            address.getStyleClass().add("muted-text");
+            address.setWrapText(true);
+            detailsPanel.getChildren().add(address);
+        }
+
+        if (event.getDescription() != null) {
+            Label blurb = new Label(event.getDescription());
+            blurb.getStyleClass().add("body-text");
+            blurb.setWrapText(true);
+            detailsPanel.getChildren().add(blurb);
+        }
+
+        Button moreInfo = new Button("MORE INFO");
+        moreInfo.getStyleClass().add("primary-button");
+        moreInfo.setMaxWidth(Double.MAX_VALUE);
+        moreInfo.setOnAction(e -> Router.navigateTo("EventPage.fxml"));
+        detailsPanel.getChildren().add(moreInfo);
+    }
+
     private void slide(Node node, double x) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(280), node);
         tt.setToX(x);
@@ -277,12 +366,16 @@ public class LandingPageController {
         if (state == 0) {
             state = 1;
             drawerTabIcon.setIconLiteral("bi-chevron-right");
+            drawerTab.setStyle(TAB_LEFT);
             slide(drawer, 0);
+            slide(drawerTab, -(rootPane.getWidth() - TAB_W));
         } else {
             state = 0;
             drawerTabIcon.setIconLiteral("bi-chevron-left");
-            slide(drawer, rootPane.getWidth() - TAB_W);
+            drawerTab.setStyle(TAB_RIGHT);
+            slide(drawer, rootPane.getWidth());
             slide(detailsPanel, -DETAILS_W);
+            slide(drawerTab, 0);
         }
     }
 
@@ -290,5 +383,9 @@ public class LandingPageController {
         state = 2;
         drawerTabIcon.setIconLiteral("bi-chevron-right");
         slide(detailsPanel, TAB_W);
+    }
+    public void hideEventDetails() {
+        state = 1;
+        slide(detailsPanel, -DETAILS_W);
     }
 }
