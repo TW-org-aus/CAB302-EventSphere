@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 // Batch job that pulls upcoming Events from Ticketmaster and upserts them by Ticketmaster id.
-// The app runs it on launch when the last full pull is older than STALE_AFTER;
 public class TicketmasterIngestor {
 
     static final String SOURCE_NAME = "Ticketmaster";
@@ -27,10 +26,10 @@ public class TicketmasterIngestor {
 
     private static final List<String> CITIES = List.of("Brisbane", "Sydney", "Melbourne");
     private static final Duration WINDOW = Duration.ofDays(60);
-    private static final Duration STALE_AFTER = Duration.ofHours(12);
+    private static final Duration STALE_AFTER = Duration.ofHours(24);
     private static final int PAGE_SIZE = 200;
     // so to limit/burnout api usage
-    private static final int MAX_RESULTS = 1000;
+    private static final int MAX_RESULTS = 500;
     // Keeps us under the API's limit of 5 requests a second.
     private static final long REQUEST_GAP_MS = 250;
 
@@ -46,8 +45,7 @@ public class TicketmasterIngestor {
         this.sources = new SourceDAO(connection);
     }
 
-    // Refreshes on a daemon thread with its own connection. Errors are logged and swallowed, so a
-    // missing API key or no network never stops the app launching.
+
     public static void refreshInBackgroundIfStale() {
         Thread.ofPlatform().daemon().name("ticketmaster-ingest").start(() -> {
             try (Connection connection = Database.openConnection()) {
@@ -58,7 +56,7 @@ public class TicketmasterIngestor {
         });
     }
 
-    // Returns false without calling the API when the last full pull is recent enough.
+
     public boolean runIfStale() throws InterruptedException {
         int sourceId = ticketmasterSourceId();
         Optional<Instant> lastSynced = sources.findLastSyncedAt(sourceId);
@@ -69,7 +67,7 @@ public class TicketmasterIngestor {
         return true;
     }
 
-    // Pulls every city now and returns how many Events were upserted.
+
     public int run() throws InterruptedException {
         return run(ticketmasterSourceId());
     }
@@ -111,7 +109,7 @@ public class TicketmasterIngestor {
         return count;
     }
 
-    // One transaction per page, so a failure rolls back that page instead of leaving it half-written.
+    // One transaction per page, so faliure only effects one page and not the whole section
     private int upsertPage(JsonNode page, int sourceId) {
         List<Event> mapped = new ArrayList<>();
         for (JsonNode node : page) {
