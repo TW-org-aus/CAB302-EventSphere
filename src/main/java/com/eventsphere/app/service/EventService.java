@@ -1,8 +1,15 @@
 package com.eventsphere.app.service;
 
 import com.eventsphere.app.dao.IEventDAO;
+import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
 
+import java.time.Clock;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,10 +18,64 @@ public class EventService {
 
     private static final double EARTH_RADIUS_KM = 6371.0;
 
+    // Filter values the landing page buttons carry as their FXML userData.
+    // Anything else is read as a Category db value.
+    public static final String FILTER_ALL = "ALL";
+    public static final String FILTER_WEEKEND = "WEEKEND";
+
     private final IEventDAO events;
+    private final Clock clock;
 
     public EventService(IEventDAO events) {
+        this(events, Clock.systemDefaultZone());
+    }
+
+    // Tests pass a fixed Clock so the weekend window does not move with the real date.
+    public EventService(IEventDAO events, Clock clock) {
         this.events = events;
+        this.clock = clock;
+    }
+
+    public List<Event> findUpcoming() {
+        return events.findUpcoming();
+    }
+
+    // Backing list for the hero carousel: the most liked upcoming events, most liked first.
+    public List<Event> topByLikes(int limit) {
+        return events.findUpcoming().stream()
+                .sorted(Comparator.comparingInt(Event::getLikesCount).reversed())
+                .limit(limit)
+                .toList();
+    }
+
+    // Resolves one of the landing page filter buttons to the events it should show.
+    public List<Event> findByFilter(String filterValue) {
+        if (FILTER_ALL.equals(filterValue)) {
+            return events.findUpcoming();
+        }
+        if (FILTER_WEEKEND.equals(filterValue)) {
+            return events.search(null, null, weekendStart(), weekendEnd());
+        }
+        // findByCategory returns past events too, so they are dropped here.
+        return events.findByCategory(Category.fromDbValue(filterValue)).stream()
+                .filter(event -> !event.hasOccurred())
+                .toList();
+    }
+
+    // The coming weekend: midnight on the next Friday (today if it is already Friday)
+    // through to midnight on the Monday after it.
+    Instant weekendStart() {
+        return ZonedDateTime.now(clock)
+                .with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY))
+                .truncatedTo(ChronoUnit.DAYS)
+                .toInstant();
+    }
+
+    Instant weekendEnd() {
+        return ZonedDateTime.now(clock)
+                .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
+                .truncatedTo(ChronoUnit.DAYS)
+                .toInstant();
     }
 
     public List<Event> findUpcomingNearby(double userLat, double userLng, double radiusKm) {
