@@ -182,3 +182,14 @@
     -fx-max-width: 48;
     -fx-max-height: 48;
 }
+
+.event-card {
+    -fx-background-color: -white;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+
+.event-card-thumb {
+    -fx-background-color: derive(-muted, 60%);
+    -fx-background-radius: 12;
+}
