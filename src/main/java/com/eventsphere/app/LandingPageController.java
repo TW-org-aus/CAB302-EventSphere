@@ -1,9 +1,7 @@
 package com.eventsphere.app;
 
-import com.eventsphere.app.Database.Database;
-import com.eventsphere.app.dao.EventDAO;
-import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
+import com.eventsphere.app.service.EventService;
 import com.gluonhq.maps.MapPoint;
 import com.gluonhq.maps.MapView;
 import javafx.animation.Interpolator;
@@ -24,14 +22,8 @@ import javafx.geometry.Pos;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.time.DayOfWeek;
-import java.time.Instant;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Comparator;
 import java.util.List;
 
 public class LandingPageController {
@@ -57,6 +49,7 @@ public class LandingPageController {
     private static final double CARD_W = 280.0;
     private static final double THUMB_H = 150.0;
     private static final double HERO_H = 400.0;
+    private static final int HERO_COUNT = 3;
     private static final String TAB_RIGHT =
             "-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;";
     private static final String TAB_LEFT =
@@ -70,6 +63,14 @@ public class LandingPageController {
     private List<Event> heroEvents = List.of();
     private int heroIndex = 0;
     private Event selectedEvent;
+
+    private final EventService eventService;
+
+    // Router's controller factory supplies this. There is deliberately no no-arg
+    // constructor, so the controller cannot reach for a database on its own.
+    public LandingPageController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @FXML
     public void initialize() {
@@ -94,11 +95,7 @@ public class LandingPageController {
 
     private void loadHeroEvents() {
         try {
-            List<Event> upcoming = new EventDAO(Database.DBConnect()).findUpcoming();
-            heroEvents = upcoming.stream()
-                    .sorted(Comparator.comparingInt(Event::getLikesCount).reversed())
-                    .limit(3)
-                    .toList();
+            heroEvents = eventService.topByLikes(HERO_COUNT);
             showHeroEvent(0);
         } catch (Exception e) {
             System.err.println("Could not load hero events: " + e.getMessage());
@@ -135,7 +132,7 @@ public class LandingPageController {
 
     private void loadUpcomingEvents() {
         try {
-            renderRow(new EventDAO(Database.DBConnect()).findUpcoming());
+            renderRow(eventService.findUpcoming());
         } catch (Exception e) {
             System.err.println("Could not load events: " + e.getMessage());
             weekendRow.getChildren().setAll(emptyMessage("Events unavailable right now."));
@@ -148,36 +145,11 @@ public class LandingPageController {
         String value = String.valueOf(clicked.getUserData());
 
         try {
-            EventDAO dao = new EventDAO(Database.DBConnect());
             sectionTitle.setText(clicked.getText());
-
-            if ("ALL".equals(value)) {
-                renderRow(dao.findUpcoming());
-            } else if ("WEEKEND".equals(value)) {
-                renderRow(dao.search(null, null, weekendStart(), weekendEnd()));
-            } else {
-                renderRow(dao.findByCategory(Category.fromDbValue(value))
-                        .stream()
-                        .filter(event -> !event.hasOccurred())
-                        .toList());
-            }
+            renderRow(eventService.findByFilter(value));
         } catch (Exception e) {
             System.err.println("Filter failed: " + e.getMessage());
         }
-    }
-
-    private Instant weekendStart() {
-        return ZonedDateTime.now()
-                .with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY))
-                .truncatedTo(ChronoUnit.DAYS)
-                .toInstant();
-    }
-
-    private Instant weekendEnd() {
-        return ZonedDateTime.now()
-                .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
-                .truncatedTo(ChronoUnit.DAYS)
-                .toInstant();
     }
 
     private void renderRow(List<Event> events) {
@@ -284,7 +256,7 @@ public class LandingPageController {
         mapPanel.getChildren().setAll(mapView);
 
         try {
-            layer.setEvents(new EventDAO(Database.DBConnect()).findUpcoming());
+            layer.setEvents(eventService.findUpcoming());
         } catch (Exception e) {
             System.err.println("Could not load map pins: " + e.getMessage());
         }
@@ -388,4 +360,4 @@ public class LandingPageController {
         state = 1;
         slide(detailsPanel, -DETAILS_W);
     }
-}
+}
