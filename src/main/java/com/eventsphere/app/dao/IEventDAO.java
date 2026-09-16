@@ -12,6 +12,10 @@ public interface IEventDAO {
     // Returns the generated EventID. The id on the passed Event is ignored (an unsaved event has id 0).
     int insert(Event event);
 
+    // Inserts the Event, or updates the row that already has its Ticketmaster id. The EventID of an
+    // existing row never changes.
+    void upsertByTicketmasterId(Event event);
+
     Optional<Event> findById(int eventId);
 
 

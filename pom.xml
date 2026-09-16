@@ -79,6 +79,12 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!-- Surefire 2.x (Maven's default) doesn't find JUnit 5 tests -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
+            <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>

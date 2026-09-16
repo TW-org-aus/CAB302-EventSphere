@@ -19,17 +19,25 @@ public class Database {
      //Foreign key enforcement and WAL journalling are set on the connection
     public static Connection DBConnect() {
         if (instance == null) {
-            try {
-                instance = DriverManager.getConnection(DB_URL);
-                try (Statement stmt = instance.createStatement()) {
-                    stmt.execute("PRAGMA foreign_keys = ON;");
-                    stmt.execute("PRAGMA journal_mode = WAL;");
-                }
-            } catch (SQLException sqlEx) {
-                throw new RuntimeException("Failed to connect to " + DB_FILE, sqlEx);
-            }
+            instance = openConnection();
         }
         return instance;
+    }
+
+    // A new connection, separate from the shared instance, for batch pulls from ticketmaster and for seeding if needed
+    public static Connection openConnection() {
+        try {
+            Connection connection = DriverManager.getConnection(DB_URL);
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("PRAGMA foreign_keys = ON;");
+                stmt.execute("PRAGMA journal_mode = WAL;");
+                // With two connections writing, wait up to 5s for the lock instead of failing with SQLITE_BUSY.
+                stmt.execute("PRAGMA busy_timeout = 5000;");
+            }
+            return connection;
+        } catch (SQLException sqlEx) {
+            throw new RuntimeException("Failed to connect to " + DB_FILE, sqlEx);
+        }
     }
 
     public static void close() {
