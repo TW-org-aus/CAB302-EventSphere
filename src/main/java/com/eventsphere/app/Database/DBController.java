@@ -5,6 +5,7 @@ import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.NotificationType;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -26,6 +27,35 @@ public class DBController {
     public DBController(Connection connection) {
         this.connect = connection;
         createTables();
+        migrate();
+    }
+
+    // CREATE TABLE IF NOT EXISTS skips tables that already exist, so a database.db created before a
+    // column was added needs it added here. checks for if the event exists by checking ticketmasted ID before inserting
+    private void migrate() {
+        addColumnIfMissing("Source", "LastSyncedAt", "DATETIME");
+        addColumnIfMissing("Events", "TicketmasterID", "TEXT");
+        try (Statement statement = connect.createStatement()) {
+            statement.executeUpdate(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS idx_events_ticketmasterid ON Events (TicketmasterID);");
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    private void addColumnIfMissing(String table, String column, String type) {
+        try (Statement statement = connect.createStatement()) {
+            try (ResultSet columns = statement.executeQuery("PRAGMA table_info(" + table + ")")) {
+                while (columns.next()) {
+                    if (columns.getString("name").equalsIgnoreCase(column)) {
+                        return;
+                    }
+                }
+            }
+            statement.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + column + " " + type);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
     }
 
     public void createTables() {
@@ -33,7 +63,8 @@ public class DBController {
                 "CREATE TABLE IF NOT EXISTS Source (" +
                         "    SourceID    INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "    SiteName    TEXT    NOT NULL," +
-                        "    SiteURL     TEXT    NOT NULL" +
+                        "    SiteURL     TEXT    NOT NULL," +
+                        "    LastSyncedAt DATETIME" + // last full ingestion pull from ticketmaster
                         ");" +
 
                         "CREATE TABLE IF NOT EXISTS Users (" +
@@ -81,6 +112,7 @@ public class DBController {
                         "    CreatedAt       DATETIME NOT NULL DEFAULT (datetime('now'))," +
                         "    HasOccured      INTEGER  NOT NULL DEFAULT 0 CHECK (HasOccured IN (0, 1))," +
                         "    SourceID        INTEGER  NOT NULL," +
+                        "    TicketmasterID  TEXT," + // nullable: only ingested Events have one.
                         "    LikesCount      INTEGER  NOT NULL DEFAULT 0," +
                         "    CommentsCount   INTEGER  NOT NULL DEFAULT 0," +
                         "    FOREIGN KEY (SourceID) REFERENCES Source (SourceID)" +

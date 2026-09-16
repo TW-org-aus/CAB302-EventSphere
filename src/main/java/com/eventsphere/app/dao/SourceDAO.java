@@ -6,8 +6,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static com.eventsphere.app.dao.DaoHelpers.*;
 
 public class SourceDAO implements ISourceDAO {
 
@@ -50,6 +54,44 @@ public class SourceDAO implements ISourceDAO {
             return sources;
         } catch (SQLException e) {
             throw new RuntimeException("Failed to list all sources", e);
+        }
+    }
+
+    @Override
+    public Optional<Source> findBySiteName(String siteName) {
+        String sql = "SELECT " + COLUMNS + " FROM Source WHERE SiteName = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, siteName);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? Optional.of(mapRow(rs)) : Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find source by name: " + siteName, e);
+        }
+    }
+
+    @Override
+    public Optional<Instant> findLastSyncedAt(int sourceId) {
+        String sql = "SELECT LastSyncedAt FROM Source WHERE SourceID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, sourceId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? Optional.ofNullable(parseTimestamp(rs.getString("LastSyncedAt"))) : Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to read LastSyncedAt for source: " + sourceId, e);
+        }
+    }
+
+    @Override
+    public void updateLastSyncedAt(int sourceId, Instant syncedAt) {
+        String sql = "UPDATE Source SET LastSyncedAt = ? WHERE SourceID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, toDbTimestamp(syncedAt));
+            ps.setInt(2, sourceId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update LastSyncedAt for source: " + sourceId, e);
         }
     }
 
