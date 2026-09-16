@@ -1,6 +1,7 @@
 module com.eventsphere.app {
     requires javafx.controls;
     requires javafx.fxml;
+    requires com.gluonhq.maps;
 
     requires org.kordamp.bootstrapfx.core;
     requires org.kordamp.ikonli.javafx;

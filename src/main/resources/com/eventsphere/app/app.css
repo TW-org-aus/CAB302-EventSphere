@@ -182,3 +182,40 @@
     -fx-max-width: 48;
     -fx-max-height: 48;
 }
+
+.event-card {
+    -fx-background-color: -white;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+
+.event-card-thumb {
+    -fx-background-color: derive(-muted, 60%);
+    -fx-background-radius: 12;
+}
+
+.category-button {
+    -fx-pref-width: 150;
+    -fx-pref-height: 40;
+    -fx-background-radius: 20;
+    -fx-background-color: -white;
+    -fx-text-fill: -text;
+    -fx-font-weight: 700;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+.category-button:hover {
+    -fx-background-color: derive(-white, -8%);
+}
+
+.close-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 4;
+}
+
+.close-button:hover {
+    -fx-background-color: derive(-border, 40%);
+    -fx-background-radius: 999;
+}

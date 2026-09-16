@@ -12,18 +12,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<StackPane fx:id="rootPane" prefHeight="800" prefWidth="1280" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
+<StackPane fx:id="rootPane" prefHeight="800" prefWidth="1280" stylesheets="@app.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
 
     <BorderPane>
         <top>
             <fx:include source="nav-bar.fxml"/>
         </top>
         <center>
-            <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
                 <content>
                     <VBox>
                         <children>
-                            <StackPane prefHeight="400.0" maxHeight="400.0" VBox.vgrow="NEVER">
+                            <StackPane fx:id="heroPane" prefHeight="400.0" maxHeight="400.0" VBox.vgrow="NEVER">
                                 <ImageView fx:id="heroImage" fitHeight="400.0" preserveRatio="false"/>
 
                                 <Region style="-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.85), transparent);"/>
@@ -46,25 +46,23 @@
                                 </HBox>
                             </StackPane>
 
-                            <HBox alignment="CENTER" spacing="60.0" prefHeight="120.0" maxHeight="120.0" style="-fx-background-color: #E8503A;">
-                                <Button text="TRENDING"/>
-                                <Button text="FREE"/>
-                                <Button text="MUSIC"/>
-                                <Button text="SUSTAINABLE"/>
+                            <HBox alignment="CENTER" spacing="16.0" prefHeight="120.0" maxHeight="120.0" styleClass="page-bg">
+                                <Button text="EXPLORE" userData="ALL" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="THIS WEEKEND" userData="WEEKEND" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="MUSIC" userData="Music" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="NIGHTLIFE" userData="Nightlife" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="FOOD" userData="Food &amp; Drink" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="SPORT" userData="Sports" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="FILM" userData="Film" onAction="#onCategoryFilter" styleClass="category-button"/>
                             </HBox>
 
-                            <VBox spacing="16.0">
+                            <VBox spacing="16.0" minWidth="0">
                                 <padding><Insets top="32.0" right="48.0" bottom="32.0" left="48.0"/></padding>
-                                <Label text="THIS WEEKEND" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                                <Label fx:id="sectionTitle" text="EXPLORE" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
                                 <ScrollPane fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                            minWidth="0"
                                             style="-fx-background-color: transparent;">
-                                    <HBox spacing="16.0">
-                                        <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
-                                        <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
-                                        <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
-                                        <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
-                                        <Region prefWidth="280" prefHeight="240" style="-fx-background-color: #dddddd;"/>
-                                    </HBox>
+                                    <HBox fx:id="weekendRow" spacing="16.0"/>
                                 </ScrollPane>
                             </VBox>
                         </children>
@@ -76,22 +74,23 @@
 
     <HBox fx:id="drawer" alignment="CENTER" pickOnBounds="false"
           StackPane.alignment="CENTER_RIGHT">
-        <Button fx:id="drawerTab" prefWidth="28.0" maxHeight="80.0"
-                onAction="#onToggleDrawer"
-                style="-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;">
-            <graphic><FontIcon fx:id="drawerTabIcon" iconLiteral="bi-chevron-left"/></graphic>
-        </Button>
-
         <StackPane fx:id="mapPanel" HBox.hgrow="ALWAYS" style="-fx-background-color: #e8e8e8;">
             <Label text="Map goes here" style="-fx-text-fill: #888888;"/>
         </StackPane>
     </HBox>
 
-    <VBox fx:id="detailsPanel" prefWidth="420.0" maxWidth="420.0"
+    <VBox fx:id="detailsPanel" prefWidth="420.0" maxWidth="420.0 " spacing="12.0"
           StackPane.alignment="CENTER_LEFT"
           style="-fx-background-color: white; -fx-border-color: #dddddd; -fx-border-width: 0 1 0 0;">
         <padding><Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/></padding>
         <Label text="Event details" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
     </VBox>
+
+    <Button fx:id="drawerTab" prefWidth="28.0" maxWidth="28.0" maxHeight="80.0"
+            onAction="#onToggleDrawer"
+            StackPane.alignment="CENTER_RIGHT"
+            style="-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;">
+        <graphic><FontIcon fx:id="drawerTabIcon" iconLiteral="bi-chevron-left"/></graphic>
+    </Button>
 
 </StackPane>
