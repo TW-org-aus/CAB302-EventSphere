@@ -2,11 +2,11 @@ package com.eventsphere.app;
 
 import com.eventsphere.app.Database.Database;
 import com.eventsphere.app.dao.EventDAO;
-import com.eventsphere.app.dao.SourceDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -17,24 +17,30 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.sql.Connection;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Comparator;
 import java.util.List;
 
 public class LandingPageController {
 
     @FXML private StackPane rootPane;
-
+    @FXML private StackPane heroPane;
     @FXML private ImageView heroImage;
     @FXML private Label heroTitle;
     @FXML private Label heroBlurb;
     @FXML private HBox heroNav;
+
+    @FXML private Label sectionTitle;
     @FXML private HBox weekendRow;
 
     @FXML private HBox drawer;
@@ -47,11 +53,15 @@ public class LandingPageController {
     private static final double DETAILS_W = 420.0;
     private static final double CARD_W = 280.0;
     private static final double THUMB_H = 150.0;
+    private static final double HERO_H = 400.0;
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("EEE d MMM, h:mm a").withZone(ZoneId.systemDefault());
 
     private int state = 0;   // 0 closed, 1 map, 2 map + details
+
+    private List<Event> heroEvents = List.of();
+    private int heroIndex = 0;
 
     @FXML
     public void initialize() {
@@ -65,72 +75,109 @@ public class LandingPageController {
             if (state == 0) drawer.setTranslateX(newVal.doubleValue() - TAB_W);
         });
 
-        seedTestEvents();
+        heroImage.fitWidthProperty().bind(heroPane.widthProperty());
+
+        loadHeroEvents();
         loadUpcomingEvents();
     }
 
-    // TEMPORARY: local test data so the page has something to show.
-    // Remove once the team has shared seed data.
-    private void seedTestEvents() {
+    // ----- hero carousel -----
+    private void loadHeroEvents() {
         try {
-            Connection conn = Database.DBConnect();
-            EventDAO eventDao = new EventDAO(conn);
-
-            if (!eventDao.findAll().isEmpty()) {
-                return;
-            }
-
-            int sourceId = new SourceDAO(conn).insert("Manual", "https://eventsphere.local");
-
-            eventDao.insert(new Event(
-                    "Boiler Room Brisbane", "Warehouse party in the Valley", Category.NIGHTLIFE,
-                    Instant.now().plus(3, ChronoUnit.DAYS), null,
-                    "The Zoo", "711 Ann St, Fortitude Valley",
-                    -27.4573, 153.0345, null, null, sourceId));
-
-            eventDao.insert(new Event(
-                    "Sunrise 5k", "River run, coffee after for everyone who turns up", Category.COMMUNITY,
-                    Instant.now().plus(5, ChronoUnit.DAYS), null,
-                    "Riverwalk", "New Farm",
-                    -27.4679, 153.0459, null, null, sourceId));
-
-            eventDao.insert(new Event(
-                    "South Bank Night Market", "Food stalls and live music along the river", Category.FOOD_DRINK,
-                    Instant.now().plus(8, ChronoUnit.DAYS), null,
-                    "South Bank Parklands", "Stanley St Plaza, South Brisbane",
-                    -27.4809, 153.0176, null, null, sourceId));
-
-            eventDao.insert(new Event(
-                    "Trivia Night", "Teams of four, first round is free", Category.COMMUNITY,
-                    Instant.now().plus(11, ChronoUnit.DAYS), null,
-                    "The Grey Fox", "West End",
-                    -27.4820, 153.0090, null, null, sourceId));
-
-            eventDao.insert(new Event(
-                    "Jazz at the Powerhouse", "Local quartet, doors at seven", Category.MUSIC,
-                    Instant.now().plus(14, ChronoUnit.DAYS), null,
-                    "Brisbane Powerhouse", "119 Lamington St, New Farm",
-                    -27.4665, 153.0490, null, null, sourceId));
-
-            System.out.println("Seeded 5 test events.");
+            List<Event> upcoming = new EventDAO(Database.DBConnect()).findUpcoming();
+            heroEvents = upcoming.stream()
+                    .sorted(Comparator.comparingInt(Event::getLikesCount).reversed())
+                    .limit(3)
+                    .toList();
+            showHeroEvent(0);
         } catch (Exception e) {
-            System.err.println("Seeding failed: " + e.getMessage());
+            System.err.println("Could not load hero events: " + e.getMessage());
         }
     }
 
+    private void showHeroEvent(int index) {
+        if (heroEvents.isEmpty()) {
+            return;
+        }
+        heroIndex = Math.floorMod(index, heroEvents.size());
+        Event event = heroEvents.get(heroIndex);
+
+        heroTitle.setText(event.getTitle().toUpperCase());
+        heroBlurb.setText(event.getDescription() == null ? "" : event.getDescription());
+
+        String url = resolveImageUrl(event.getImageUrl());
+        heroImage.setImage(url == null
+                ? null
+                : new Image(url, 1600, HERO_H, false, true, true));
+    }
+
+    @FXML
+    protected void onPrevHero() {
+        showHeroEvent(heroIndex - 1);
+    }
+
+    @FXML
+    protected void onNextHero() {
+        showHeroEvent(heroIndex + 1);
+    }
+
+    // ----- event row and filters -----
+
     private void loadUpcomingEvents() {
         try {
-            List<Event> events = new EventDAO(Database.DBConnect()).findUpcoming();
-            if (events.isEmpty()) {
-                weekendRow.getChildren().add(emptyMessage("No upcoming events yet."));
-                return;
-            }
-            for (Event event : events) {
-                weekendRow.getChildren().add(buildEventCard(event));
-            }
+            renderRow(new EventDAO(Database.DBConnect()).findUpcoming());
         } catch (Exception e) {
             System.err.println("Could not load events: " + e.getMessage());
-            weekendRow.getChildren().add(emptyMessage("Events unavailable right now."));
+            weekendRow.getChildren().setAll(emptyMessage("Events unavailable right now."));
+        }
+    }
+
+    @FXML
+    protected void onCategoryFilter(ActionEvent actionEvent) {
+        Button clicked = (Button) actionEvent.getSource();
+        String value = String.valueOf(clicked.getUserData());
+
+        try {
+            EventDAO dao = new EventDAO(Database.DBConnect());
+            sectionTitle.setText(clicked.getText());
+
+            if ("ALL".equals(value)) {
+                renderRow(dao.findUpcoming());
+            } else if ("WEEKEND".equals(value)) {
+                renderRow(dao.search(null, null, weekendStart(), weekendEnd()));
+            } else {
+                renderRow(dao.findByCategory(Category.fromDbValue(value))
+                        .stream()
+                        .filter(event -> !event.hasOccurred())
+                        .toList());
+            }
+        } catch (Exception e) {
+            System.err.println("Filter failed: " + e.getMessage());
+        }
+    }
+
+    private Instant weekendStart() {
+        return ZonedDateTime.now()
+                .with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY))
+                .truncatedTo(ChronoUnit.DAYS)
+                .toInstant();
+    }
+
+    private Instant weekendEnd() {
+        return ZonedDateTime.now()
+                .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
+                .truncatedTo(ChronoUnit.DAYS)
+                .toInstant();
+    }
+
+    private void renderRow(List<Event> events) {
+        weekendRow.getChildren().clear();
+        if (events.isEmpty()) {
+            weekendRow.getChildren().add(emptyMessage("Nothing on in this category yet."));
+            return;
+        }
+        for (Event event : events) {
+            weekendRow.getChildren().add(buildEventCard(event));
         }
     }
 
@@ -169,8 +216,8 @@ public class LandingPageController {
     }
 
     private Node buildThumb(Event event) {
-        String url = event.getImageUrl();
-        if (url == null || url.isBlank()) {
+        String url = resolveImageUrl(event.getImageUrl());
+        if (url == null) {
             Region placeholder = new Region();
             placeholder.getStyleClass().add("event-card-thumb");
             placeholder.setPrefSize(CARD_W, THUMB_H);
@@ -183,6 +230,11 @@ public class LandingPageController {
         view.setFitHeight(THUMB_H);
         view.setPreserveRatio(false);
 
+        Rectangle clip = new Rectangle(CARD_W, THUMB_H);
+        clip.setArcWidth(24);
+        clip.setArcHeight(24);
+        view.setClip(clip);
+
         StackPane wrapper = new StackPane(view);
         wrapper.getStyleClass().add("event-card-thumb");
         wrapper.setPrefSize(CARD_W, THUMB_H);
@@ -190,9 +242,23 @@ public class LandingPageController {
         return wrapper;
     }
 
+    // Remote URLs pass through; anything else is treated as a file under images/.
+    private String resolveImageUrl(String stored) {
+        if (stored == null || stored.isBlank()) {
+            return null;
+        }
+        if (stored.startsWith("http://") || stored.startsWith("https://")) {
+            return stored;
+        }
+        var resource = getClass().getResource("images/" + stored);
+        return resource == null ? null : resource.toExternalForm();
+    }
+
     private void onEventCardClick(Event event) {
         System.out.println("Clicked event " + event.getEventId() + ": " + event.getTitle());
     }
+
+    // ----- map drawer -----
 
     private void slide(Node node, double x) {
         TranslateTransition tt = new TranslateTransition(Duration.millis(280), node);
@@ -224,15 +290,5 @@ public class LandingPageController {
         state = 2;
         drawerTabIcon.setIconLiteral("bi-chevron-right");
         slide(detailsPanel, TAB_W);
-    }
-
-    @FXML
-    protected void onPrevHero() {
-        System.out.println("prev");
-    }
-
-    @FXML
-    protected void onNextHero() {
-        System.out.println("next");
     }
 }

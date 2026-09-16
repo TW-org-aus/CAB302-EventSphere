@@ -12,6 +12,7 @@ import com.eventsphere.app.model.Event;
 import com.eventsphere.app.model.Source;
 import com.eventsphere.app.model.User;
 
+import java.time.temporal.ChronoUnit;
 import java.sql.Connection;
 import java.time.Instant;
 import java.util.Optional;
@@ -109,6 +110,28 @@ public class DatabaseSeeder {
             goingDAO.markGoing(userOneId, eventId);
             goingDAO.markGoing(userTwoId, eventId);
 
+            // 5. Additional upcoming Brisbane events so list and map views have data.
+            // Dates are relative to the present so a freshly seeded database always has future events.
+            seedEventIfAbsent(eventDAO, sourceId, "Boiler Room Brisbane",
+                    "Warehouse party", Category.NIGHTLIFE, 3,
+                    "Brisbane Showgrounds", "600 Gregory Terrace, Bowen Hills", -27.4573, 153.0345, "boiler-room.jpeg");
+
+            seedEventIfAbsent(eventDAO, sourceId, "Sunrise Run Club 5k",
+                    "River run, coffee and vibes", Category.COMMUNITY, 5,
+                    "Riverwalk", "New Farm", -27.4679, 153.0459, "runclub.jpg");
+
+            seedEventIfAbsent(eventDAO, sourceId, "South Bank Night Market",
+                    "Food stalls and live music", Category.FOOD_DRINK, 8,
+                    "South Bank Parklands", "Stanley St Plaza, South Brisbane", -27.4809, 153.0176, "nightmarket.jpg");
+
+            seedEventIfAbsent(eventDAO, sourceId, "Trivia Night",
+                    "Teams of four, first round is free", Category.COMMUNITY, 11,
+                    "Botanic Bar", "P Block, Level 3/2 George St, Brisbane City", -27.4820, 153.0090, "trivia.jpeg");
+
+            seedEventIfAbsent(eventDAO, sourceId, "Brisbane Car Meet",
+                    "Car meet and social night for enthusiasts", Category.COMMUNITY, 14,
+                    "Motorculture HQ", "84 Dunhill Crescent, Morningside", -27.4665, 153.0490, "edit2.png");
+
             System.out.println("Database seeding completed successfully.");
 
         } finally {
@@ -116,7 +139,28 @@ public class DatabaseSeeder {
             Database.close();
         }
     }
+    private static void seedEventIfAbsent(EventDAO eventDAO, int sourceId,
+                                          String title, String description,
+                                          Category category, int daysFromNow,
+                                          String venueName, String address,
+                                          double lat, double lng,
+                                          String imageUrl) {
+        boolean exists = eventDAO.search(title, null, null, null)
+                .stream()
+                .anyMatch(event -> title.equals(event.getTitle()));
 
+        if (exists) {
+            System.out.println("Event already exists, skipping: " + title);
+            return;
+        }
+
+        int id = eventDAO.insert(new Event(
+                title, description, category,
+                Instant.now().plus(daysFromNow, ChronoUnit.DAYS), null,
+                venueName, address, lat, lng, imageUrl, null, sourceId));
+
+        System.out.println("Created event with EventID: " + id + " — " + title);
+    }
 
     private static int findOrCreateSource(SourceDAO sourceDAO) {
 

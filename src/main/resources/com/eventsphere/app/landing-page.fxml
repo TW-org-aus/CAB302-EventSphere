@@ -19,11 +19,11 @@
             <fx:include source="nav-bar.fxml"/>
         </top>
         <center>
-            <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
                 <content>
                     <VBox>
                         <children>
-                            <StackPane prefHeight="400.0" maxHeight="400.0" VBox.vgrow="NEVER">
+                            <StackPane fx:id="heroPane" prefHeight="400.0" maxHeight="400.0" VBox.vgrow="NEVER">
                                 <ImageView fx:id="heroImage" fitHeight="400.0" preserveRatio="false"/>
 
                                 <Region style="-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.85), transparent);"/>
@@ -46,17 +46,21 @@
                                 </HBox>
                             </StackPane>
 
-                            <HBox alignment="CENTER" spacing="60.0" prefHeight="120.0" maxHeight="120.0" styleClass="page-bg">
-                                <Button text="TRENDING"/>
-                                <Button text="FREE"/>
-                                <Button text="MUSIC"/>
-                                <Button text="SUSTAINABLE"/>
+                            <HBox alignment="CENTER" spacing="16.0" prefHeight="120.0" maxHeight="120.0" styleClass="page-bg">
+                                <Button text="EXPLORE" userData="ALL" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="THIS WEEKEND" userData="WEEKEND" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="MUSIC" userData="Music" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="NIGHTLIFE" userData="Nightlife" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="FOOD" userData="Food &amp; Drink" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="SPORT" userData="Sports" onAction="#onCategoryFilter" styleClass="category-button"/>
+                                <Button text="FILM" userData="Film" onAction="#onCategoryFilter" styleClass="category-button"/>
                             </HBox>
 
-                            <VBox spacing="16.0">
+                            <VBox spacing="16.0" minWidth="0">
                                 <padding><Insets top="32.0" right="48.0" bottom="32.0" left="48.0"/></padding>
-                                <Label text="THIS WEEKEND" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                                <Label fx:id="sectionTitle" text="EXPLORE" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
                                 <ScrollPane fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
+                                            minWidth="0"
                                             style="-fx-background-color: transparent;">
                                     <HBox fx:id="weekendRow" spacing="16.0"/>
                                 </ScrollPane>
