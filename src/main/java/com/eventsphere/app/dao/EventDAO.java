@@ -16,7 +16,13 @@ public class EventDAO implements IEventDAO {
 
     static final String COLUMNS =
             "EventID, Title, Description, Category, StartTime, EndTime, VenueName, Address, " +
-            "EventLat, EventLng, ImageURL, TicketURL, CreatedAt, HasOccured, SourceID, LikesCount, CommentsCount";
+            "EventLat, EventLng, ImageURL, TicketURL, CreatedAt, HasOccured, SourceID, TicketmasterID, " +
+            "LikesCount, CommentsCount";
+
+    private static final String INSERT_SQL =
+            "INSERT INTO Events (Title, Description, Category, StartTime, EndTime, VenueName, " +
+            "Address, EventLat, EventLng, ImageURL, TicketURL, SourceID, TicketmasterID) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final Connection connection;
 
@@ -26,26 +32,8 @@ public class EventDAO implements IEventDAO {
 
     @Override
     public int insert(Event event) {
-        String sql = "INSERT INTO Events (Title, Description, Category, StartTime, EndTime, VenueName, " +
-                "Address, EventLat, EventLng, ImageURL, TicketURL, SourceID) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, event.getTitle());
-            ps.setString(2, event.getDescription());
-            if (event.getCategory() == null) {
-                ps.setNull(3, Types.VARCHAR);
-            } else {
-                ps.setString(3, event.getCategory().getDbValue());
-            }
-            ps.setString(4, toDbTimestamp(event.getStartTime()));
-            setNullableTimestamp(ps, 5, event.getEndTime());
-            ps.setString(6, event.getVenueName());
-            ps.setString(7, event.getAddress());
-            setNullableDouble(ps, 8, event.getLat());
-            setNullableDouble(ps, 9, event.getLng());
-            ps.setString(10, event.getImageUrl());
-            ps.setString(11, event.getTicketUrl());
-            ps.setInt(12, event.getSourceId());
+        try (PreparedStatement ps = connection.prepareStatement(INSERT_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            bindInsertColumns(ps, event);
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -56,6 +44,47 @@ public class EventDAO implements IEventDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to insert event: " + event.getTitle(), e);
         }
+    }
+
+    @Override
+    public void upsertByTicketmasterId(Event event) {
+        if (event.getTicketmasterId() == null) {
+            throw new IllegalArgumentException("Event has no Ticketmaster id: " + event.getTitle());
+        }
+        // DO UPDATE keeps the existing row and EventID, so Likes, Comments and Going stay attached.
+        // INSERT OR REPLACE would delete the row first and cascade those away.
+        String sql = INSERT_SQL + " ON CONFLICT (TicketmasterID) DO UPDATE SET " +
+                "Title = excluded.Title, Description = excluded.Description, Category = excluded.Category, " +
+                "StartTime = excluded.StartTime, EndTime = excluded.EndTime, VenueName = excluded.VenueName, " +
+                "Address = excluded.Address, EventLat = excluded.EventLat, EventLng = excluded.EventLng, " +
+                "ImageURL = excluded.ImageURL, TicketURL = excluded.TicketURL";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            bindInsertColumns(ps, event);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to upsert event: " + event.getTitle(), e);
+        }
+    }
+
+    // Binds the 13 placeholders of INSERT_SQL, in column order.
+    private static void bindInsertColumns(PreparedStatement ps, Event event) throws SQLException {
+        ps.setString(1, event.getTitle());
+        ps.setString(2, event.getDescription());
+        if (event.getCategory() == null) {
+            ps.setNull(3, Types.VARCHAR);
+        } else {
+            ps.setString(3, event.getCategory().getDbValue());
+        }
+        ps.setString(4, toDbTimestamp(event.getStartTime()));
+        setNullableTimestamp(ps, 5, event.getEndTime());
+        ps.setString(6, event.getVenueName());
+        ps.setString(7, event.getAddress());
+        setNullableDouble(ps, 8, event.getLat());
+        setNullableDouble(ps, 9, event.getLng());
+        ps.setString(10, event.getImageUrl());
+        ps.setString(11, event.getTicketUrl());
+        ps.setInt(12, event.getSourceId());
+        ps.setString(13, event.getTicketmasterId());
     }
 
     @Override
@@ -186,6 +215,7 @@ public class EventDAO implements IEventDAO {
                 parseTimestamp(rs.getString("CreatedAt")),
                 rs.getInt("HasOccured") == 1,
                 rs.getInt("SourceID"),
+                rs.getString("TicketmasterID"),
                 rs.getInt("LikesCount"),
                 rs.getInt("CommentsCount")
         );
