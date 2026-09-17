@@ -6,6 +6,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.FlowPane;
+import com.eventsphere.app.Database.AuthResult;
+import com.eventsphere.app.Database.AuthService;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -56,7 +58,12 @@ public class SignUpController {
     @FXML
     private Label interestsHintLabel;
 
+    @FXML
+    private Label errorLabel;
+
     private final Set<String> selectedInterests = new LinkedHashSet<>();
+
+    private final AuthService authService = new AuthService();
 
     @FXML
     public void initialize() {
@@ -91,11 +98,23 @@ public class SignUpController {
 
     @FXML
     protected void onSignUpClick() {
-        System.out.println("Sign up clicked with name: " + firstNameField.getText() + " " + lastNameField.getText()
-                + ", email: " + emailField.getText()
-                + ", username: " + usernameField.getText()
-                + ", city: " + cityField.getText()
-                + ", interests: " + selectedInterests);
+
+        clearError();
+
+        AuthResult result = authService.signUp(
+                firstNameField.getText(),
+                lastNameField.getText(),
+                emailField.getText(),
+                passwordField.getText()
+        );
+
+        if (!result.isSuccess()) {
+            showError(result.errorMessage());
+            return;
+        }
+
+        Session.setCurrentUser(result.user());
+        Router.navigateTo("landing-page.fxml");
     }
 
     @FXML
@@ -117,4 +136,17 @@ public class SignUpController {
     protected void onGoogleClick() {
         System.out.println("Sign up with Google clicked");
     }
+
+    private void showError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        errorLabel.setManaged(true);
+    }
+
+    private void clearError() {
+        errorLabel.setText("");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+    }
+
 }

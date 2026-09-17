@@ -36,6 +36,9 @@
                     <PasswordField fx:id="passwordField" promptText="Password"/>
                 </VBox>
 
+                <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"
+                       visible="false" managed="false"/>
+
                 <Button text="Log In" styleClass="primary-button" maxWidth="Infinity" onAction="#onLoginClick"/>
 
                 <Hyperlink text="Sign Up" onAction="#onSignUpClick"/>

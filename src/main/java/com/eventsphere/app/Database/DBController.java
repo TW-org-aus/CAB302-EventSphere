@@ -14,7 +14,11 @@ public class DBController {
             "'Music','Sports','Arts & Theatre','Film','Family','Community','Food & Drink','Nightlife','Other'";
 
     public DBController() {
-        connect = Database.DBConnect();
+        this(Database.DBConnect());
+    }
+// This is so test can build the same schema on an in memory database, so builds fresh database everytime
+    public DBController(Connection connection) {
+        this.connect = connection;
         createTables();
     }
 
