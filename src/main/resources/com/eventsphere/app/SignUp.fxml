@@ -88,6 +88,8 @@
                   </ScrollPane>
                   <VBox spacing="14.0" style="-fx-background-color: white; -fx-padding: 12 40 32 40; -fx-background-radius: 0 0 20 20;">
                      <children>
+                        <Label fx:id="formMessageLabel" managed="false" visible="false" wrapText="true"
+                               style="-fx-font-size: 12px;" />
                         <Button onAction="#onSignUpClick" maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="Sign UP" />
                         <Hyperlink onAction="#onLoginClick" alignment="CENTER" maxWidth="Infinity" style="-fx-font-size: 13px;" text="Login" />
                         <HBox alignment="CENTER" spacing="10.0">
