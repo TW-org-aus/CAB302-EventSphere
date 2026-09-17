@@ -37,7 +37,7 @@ public class LoginController {
             passwordField.requestFocus();
         }
     }
-    // Runs when trying yo log in
+    // Runs when trying to log in
     @FXML
     protected void onLoginClick() {
         LoginResult result;
