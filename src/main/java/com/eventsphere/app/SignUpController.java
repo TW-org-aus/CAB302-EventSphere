@@ -1,6 +1,7 @@
 package com.eventsphere.app;
 
 import com.eventsphere.app.model.Category;
+import com.eventsphere.app.service.RegisterResult;
 import com.eventsphere.app.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -29,6 +30,11 @@ public class SignUpController {
     private static final String BUBBLE_SELECTED_STYLE =
             "-fx-background-color: #E3F0FF; -fx-text-fill: #2F80ED; -fx-border-color: #2F80ED; " +
             "-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-padding: 6 14 6 14; -fx-font-size: 12px; -fx-font-weight: bold;";
+
+
+    private static final String ERROR_STYLE = "-fx-font-size: 12px; -fx-text-fill: #C0392B;";
+
+    @FXML private Label formMessageLabel;
 
     @FXML
     private TextField firstNameField;
@@ -85,8 +91,37 @@ public class SignUpController {
 
     @FXML
     protected void onSignUpClick() {
-    // comming soon yippie :)
+
+        RegisterResult result;
+        try{
+            result = userService.register(firstNameField.getText(), lastNameField.getText(), emailField.getText(),
+                    passwordField.getText(), cityField.getText(), selectedInterests);
+
+        } catch (RuntimeException e){
+            showMessage("Could not create your account. Please try again.");
+            e.printStackTrace();
+            return;
+        }
+        if (!result.isSuccess()) {
+            showMessage(result.getError());
+
+            return;
+        }
+
+
+        LoginController login = Router.navigateToWithController("login-view.fxml");
+        login.showSignUpSuccess(emailField.getText());
+
     }
+
+    private void showMessage(String message) {
+
+        formMessageLabel.setText(message);
+        formMessageLabel.setStyle(ERROR_STYLE);
+        formMessageLabel.setVisible(true);
+        formMessageLabel.setManaged(true);
+    }
+
 
     @FXML
     protected void onLoginClick() {

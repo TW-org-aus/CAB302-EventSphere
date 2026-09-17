@@ -26,6 +26,9 @@
             <VBox styleClass="card" maxWidth="480" spacing="18">
                 <Label text="Log In" styleClass="card-title"/>
 
+                <Label fx:id="signUpMessageLabel" managed="false" visible="false" wrapText="true"
+                       style="-fx-font-size: 13px; -fx-text-fill: #1E8E3E; -fx-font-weight: bold;"/>
+
                 <VBox spacing="6">
                     <Label text="Email" styleClass="muted-text"/>
                     <TextField fx:id="emailField" promptText="you@example.com"/>
