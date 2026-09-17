@@ -36,8 +36,11 @@
 
                 <VBox spacing="6">
                     <Label text="Password" styleClass="muted-text"/>
-                    <PasswordField fx:id="passwordField" promptText="Password"/>
+                    <PasswordField fx:id="passwordField" promptText="Password" onAction="#onLoginClick"/>
                 </VBox>
+
+                <Label fx:id="loginErrorLabel" managed="false" visible="false" wrapText="true"
+                       style="-fx-font-size: 12px; -fx-text-fill: #C0392B"/>
 
                 <Button text="Log In" styleClass="primary-button" maxWidth="Infinity" onAction="#onLoginClick"/>
 
