@@ -2,7 +2,10 @@ package com.eventsphere.app;
 
 import com.eventsphere.app.Database.Database;
 import com.eventsphere.app.dao.EventDAO;
+import com.eventsphere.app.dao.PreferenceDAO;
+import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.service.EventService;
+import com.eventsphere.app.service.UserService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.sql.Connection;
 
 /**
  * Global navigation entry point. Holds the app's single {@link Stage} so any
@@ -19,6 +23,11 @@ import java.io.UncheckedIOException;
 public class Router {
 
     private static Stage stage;
+
+    private static final Connection CONNECTION = Database.DBConnect();
+    private static final EventService EVENTS = new EventService(new EventDAO(CONNECTION));
+    private static final UserService USERS =
+            new UserService(new UserDAO(CONNECTION), new PreferenceDAO(CONNECTION));
 
     private Router() {
     }
@@ -45,16 +54,9 @@ public class Router {
         }
     }
 
-    // just a lil change: because we are re-factoring and removing the DAO object from the landingpage controller we still need to
-    //pass the DAO service somewhere when the user loads the landing page
-    // atm it is just for the landing page controller but we will need to add some more logic here in future
-    // to detect what DAO service needs to be passed for each page, currently the landing page is the only page that
-    // accesses live data and hence the only one that needs this but more changes will come as we move away from
-    // the stub data :)
     private static Object createController(Class<?> type) {
-        if (type == LandingPageController.class) {
-            return new LandingPageController(new EventService(new EventDAO(Database.DBConnect())));
-        }
+        if (type == LandingPageController.class) return new LandingPageController(EVENTS);
+        if (type == SignUpController.class) return new SignUpController(USERS);
         try {
             return type.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {

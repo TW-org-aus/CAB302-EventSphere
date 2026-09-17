@@ -1,5 +1,7 @@
 package com.eventsphere.app;
 
+import com.eventsphere.app.model.Category;
+import com.eventsphere.app.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -8,19 +10,15 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.FlowPane;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 public class SignUpController {
 
-    // Stub interest list: the 9 base Categories from DBController.CATEGORY_LIST
-    // plus invented sub-categories. UI-only for now — not wired to the DB schema.
-    private static final List<String> INTEREST_OPTIONS = List.of(
-            "Music", "Live Music", "Sports", "Arts & Theatre", "Film", "Comedy",
-            "Family", "Community", "Food & Drink", "Craft Beer", "Nightlife",
-            "Festivals", "Outdoors", "Fitness & Wellness", "Markets", "Charity",
-            "Workshops", "Tech", "Gaming", "Other"
-    );
+    private final UserService userService;
+
+    public SignUpController(UserService userService) {
+        this.userService = userService;
+    }
 
     private static final int MAX_INTERESTS = 5;
 
@@ -42,9 +40,6 @@ public class SignUpController {
     private TextField emailField;
 
     @FXML
-    private TextField usernameField;
-
-    @FXML
     private PasswordField passwordField;
 
     @FXML
@@ -56,30 +51,29 @@ public class SignUpController {
     @FXML
     private Label interestsHintLabel;
 
-    private final Set<String> selectedInterests = new LinkedHashSet<>();
+    private final Set<Category> selectedInterests = new LinkedHashSet<>();
 
     @FXML
     public void initialize() {
-        for (String interest : INTEREST_OPTIONS) {
-            ToggleButton bubble = new ToggleButton(interest);
+        for (Category category : Category.values()) {
+            ToggleButton bubble = new ToggleButton(category.getDbValue());
             bubble.setStyle(BUBBLE_DEFAULT_STYLE);
-            bubble.setOnAction(e -> onInterestToggled(bubble));
+            bubble.setOnAction(e -> onInterestToggled(bubble, category));
             interestsFlowPane.getChildren().add(bubble);
         }
         updateInterestsHint();
     }
 
-    private void onInterestToggled(ToggleButton bubble) {
-        String interest = bubble.getText();
+    private void onInterestToggled(ToggleButton bubble, Category category) {
         if (bubble.isSelected()) {
             if (selectedInterests.size() >= MAX_INTERESTS) {
                 bubble.setSelected(false);
                 return;
             }
-            selectedInterests.add(interest);
+            selectedInterests.add(category);
             bubble.setStyle(BUBBLE_SELECTED_STYLE);
         } else {
-            selectedInterests.remove(interest);
+            selectedInterests.remove(category);
             bubble.setStyle(BUBBLE_DEFAULT_STYLE);
         }
         updateInterestsHint();
@@ -91,11 +85,7 @@ public class SignUpController {
 
     @FXML
     protected void onSignUpClick() {
-        System.out.println("Sign up clicked with name: " + firstNameField.getText() + " " + lastNameField.getText()
-                + ", email: " + emailField.getText()
-                + ", username: " + usernameField.getText()
-                + ", city: " + cityField.getText()
-                + ", interests: " + selectedInterests);
+    // comming soon yippie :)
     }
 
     @FXML

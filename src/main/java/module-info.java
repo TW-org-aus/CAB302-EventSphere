@@ -10,6 +10,7 @@ module com.eventsphere.app {
     requires org.xerial.sqlitejdbc;
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
+    requires org.bouncycastle.provider;
 
     opens com.eventsphere.app to javafx.fxml;
     exports com.eventsphere.app;
