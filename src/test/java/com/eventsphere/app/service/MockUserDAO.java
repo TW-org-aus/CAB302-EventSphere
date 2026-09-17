@@ -56,6 +56,18 @@ class MockUserDAO implements IUserDAO{
 
     @Override
     public void update(User user) {
+        if (user == null) {
+            return;
+        }
+        findById(user.getUserId()).ifPresent(existing -> {
+            existing.setFirstName(user.getFirstName());
+            existing.setLastName(user.getLastName());
+            existing.setEmail(user.getEmail());
+            existing.setPasswordHash(user.getPasswordHash());
+            existing.setHome(user.getHomeLat(), user.getHomeLong());
+            existing.setActive(user.isActive());
+            existing.setNotifyEnabled(user.isNotifyEnabled());
+        });
     }
 
     @Override
