@@ -1,8 +1,7 @@
 package com.eventsphere.app.service;
 
 import com.eventsphere.app.model.User;
-// this is used the same as RegisterResults, the controller shows an error when isSuccess
-// is false.
+// Used by LoginController to return either the authenticated user or an error message.
 public class LoginResult {
 
     private final boolean success;
