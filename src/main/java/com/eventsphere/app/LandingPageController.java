@@ -64,7 +64,7 @@ public class LandingPageController {
     private int heroIndex = 0;
     private Event selectedEvent;
 
-    private final EventService eventService;
+    private EventService eventService;
 
     // Router's controller factory supplies this. There is deliberately no no-arg
     // constructor, so the controller cannot reach for a database on its own.
@@ -360,4 +360,4 @@ public class LandingPageController {
         state = 1;
         slide(detailsPanel, -DETAILS_W);
     }
-}
+}

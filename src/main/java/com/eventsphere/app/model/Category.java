@@ -6,10 +6,20 @@ public enum Category {
     SPORTS("Sports"),
     ARTS_THEATRE("Arts & Theatre"),
     FILM("Film"),
+    COMEDY("Comedy"),
     FAMILY("Family"),
     COMMUNITY("Community"),
     FOOD_DRINK("Food & Drink"),
+    UNI_EVENTS("Uni Events"),
     NIGHTLIFE("Nightlife"),
+    FESTIVALS("Festivals"),
+    OUTDOORS("Outdoors"),
+    FITNESS_WELLNESS("Fitness & Wellness"),
+    MARKETS("Markets"),
+    CHARITY("Charity"),
+    WORKSHOPS("Workshops"),
+    TECH("Tech"),
+    GAMING("Gaming"),
     OTHER("Other");
 
     private final String dbValue;

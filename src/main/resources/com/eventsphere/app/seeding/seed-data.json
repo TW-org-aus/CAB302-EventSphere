@@ -1,0 +1,419 @@
+{
+  "_comment": [
+    "Demo data loaded by DatabaseSeeder on every app launch.",
+    "Rows are matched on a natural key (email, title, content) and reused, so editing this",
+    "file adds new rows on the next launch but never duplicates the existing ones."
+  ],
+
+  "source": {
+    "siteName": "Manual Seed",
+    "siteUrl": "n/a"
+  },
+
+  "users": [
+    {
+      "key": "demo1",
+      "firstName": "Demo",
+      "lastName": "UserOne",
+      "email": "seed.user1@example.com",
+      "homeLat": -27.4698,
+      "homeLong": 153.0251,
+      "city": "Brisbane",
+      "interests": ["Music", "Nightlife", "Food & Drink"]
+    },
+    {
+      "key": "demo2",
+      "firstName": "Demo",
+      "lastName": "UserTwo",
+      "email": "seed.user2@example.com",
+      "homeLat": -27.4601,
+      "homeLong": 153.0350,
+      "city": "Brisbane",
+      "interests": ["Community", "Markets", "Outdoors"]
+    },
+    {
+      "key": "priya",
+      "firstName": "Priya",
+      "lastName": "Nair",
+      "email": "priya.nair@example.com",
+      "homeLat": -27.4820,
+      "homeLong": 153.0180,
+      "city": "Brisbane",
+      "interests": ["Arts & Theatre", "Comedy", "Film"]
+    },
+    {
+      "key": "jordan",
+      "firstName": "Jordan",
+      "lastName": "Okafor",
+      "email": "jordan.okafor@example.com",
+      "homeLat": -27.4550,
+      "homeLong": 153.0400,
+      "city": "Brisbane",
+      "interests": ["Sports", "Fitness & Wellness", "Outdoors"]
+    },
+    {
+      "key": "sam",
+      "firstName": "Sam",
+      "lastName": "Whitfield",
+      "email": "sam.whitfield@example.com",
+      "homeLat": -27.5000,
+      "homeLong": 153.0140,
+      "city": "Brisbane",
+      "interests": ["Tech", "Gaming", "Workshops", "Uni Events"]
+    }
+  ],
+
+  "events": [
+    {
+      "key": "demo-night",
+      "title": "EventSphere Demo Community Night",
+      "description": "A demo community event used for EventSphere development and testing.",
+      "category": "Community",
+      "startInDays": 10,
+      "durationHours": 3,
+      "venueName": "Brisbane Demo Venue",
+      "address": "Brisbane QLD",
+      "lat": -27.4698,
+      "lng": 153.0251
+    },
+    {
+      "key": "boiler-room",
+      "title": "Boiler Room Brisbane",
+      "description": "Warehouse party",
+      "category": "Nightlife",
+      "startInDays": 3,
+      "venueName": "Brisbane Showgrounds",
+      "address": "600 Gregory Terrace, Bowen Hills",
+      "lat": -27.4503,
+      "lng": 153.0331,
+      "imageUrl": "boiler-room.jpeg"
+    },
+    {
+      "key": "run-club",
+      "title": "Sunrise Run Club 5k",
+      "description": "River run, coffee and vibes",
+      "category": "Fitness & Wellness",
+      "startInDays": 5,
+      "venueName": "Riverwalk",
+      "address": "New Farm",
+      "lat": -27.4682,
+      "lng": 153.0436,
+      "imageUrl": "runclub.jpg"
+    },
+    {
+      "key": "night-market",
+      "title": "South Bank Night Market",
+      "description": "Food stalls and live music",
+      "category": "Markets",
+      "startInDays": 8,
+      "venueName": "South Bank Parklands",
+      "address": "Stanley St Plaza, South Brisbane",
+      "lat": -27.4764,
+      "lng": 153.0212,
+      "imageUrl": "nightmarket.jpg"
+    },
+    {
+      "key": "trivia",
+      "title": "Trivia Night",
+      "description": "Teams of four, first round is free",
+      "category": "Community",
+      "startInDays": 11,
+      "venueName": "Botanic Bar",
+      "address": "P Block, Level 3/2 George St, Brisbane City",
+      "lat": -27.4772,
+      "lng": 153.0283,
+      "imageUrl": "trivia.jpeg"
+    },
+    {
+      "key": "car-meet",
+      "title": "Brisbane Car Meet",
+      "description": "Car meet and social night for enthusiasts",
+      "category": "Community",
+      "startInDays": 14,
+      "venueName": "Motorculture HQ",
+      "address": "84 Dunhill Crescent, Morningside",
+      "lat": -27.4633,
+      "lng": 153.0732,
+      "imageUrl": "edit2.png"
+    },
+    {
+      "key": "comedy-cellar",
+      "title": "Fortitude Valley Comedy Cellar",
+      "description": "Six local comics, one microphone, no hecklers please",
+      "category": "Comedy",
+      "startInDays": 6,
+      "durationHours": 2,
+      "venueName": "The Zoo",
+      "address": "711 Ann St, Fortitude Valley",
+      "lat": -27.4570,
+      "lng": 153.0344
+    },
+    {
+      "key": "riverfire",
+      "title": "Riverfire Festival",
+      "description": "Fireworks along the Brisbane River, arrive early for a spot",
+      "category": "Festivals",
+      "startInDays": 21,
+      "durationHours": 5,
+      "venueName": "South Bank",
+      "address": "South Bank Parklands, South Brisbane",
+      "lat": -27.4748,
+      "lng": 153.0230
+    },
+    {
+      "key": "kangaroo-point",
+      "title": "Kangaroo Point Sunrise Climb",
+      "description": "Guided cliff climb, all gear supplied, beginners welcome",
+      "category": "Outdoors",
+      "startInDays": 4,
+      "durationHours": 3,
+      "venueName": "Kangaroo Point Cliffs",
+      "address": "Kangaroo Point QLD",
+      "lat": -27.4818,
+      "lng": 153.0340
+    },
+    {
+      "key": "uni-market-day",
+      "title": "QUT Market Day",
+      "description": "Club sign-ups, free sausage sizzle and far too many flyers",
+      "category": "Uni Events",
+      "startInDays": 7,
+      "durationHours": 6,
+      "venueName": "QUT Gardens Point",
+      "address": "2 George St, Brisbane City",
+      "lat": -27.4776,
+      "lng": 153.0281
+    },
+    {
+      "key": "java-workshop",
+      "title": "Intro to JavaFX Workshop",
+      "description": "Build your first desktop app in an afternoon, laptops required",
+      "category": "Workshops",
+      "startInDays": 9,
+      "durationHours": 4,
+      "venueName": "The Precinct",
+      "address": "315 Brunswick St, Fortitude Valley",
+      "lat": -27.4585,
+      "lng": 153.0343
+    },
+    {
+      "key": "startup-night",
+      "title": "Brisbane Tech Meetup",
+      "description": "Three lightning talks, then pizza and arguing about frameworks",
+      "category": "Tech",
+      "startInDays": 12,
+      "durationHours": 3,
+      "venueName": "Fishburners",
+      "address": "155 Queen St, Brisbane City",
+      "lat": -27.4700,
+      "lng": 153.0260
+    },
+    {
+      "key": "retro-lan",
+      "title": "Retro LAN Party",
+      "description": "CRTs, split-screen shooters and a bring-your-own extension cord policy",
+      "category": "Gaming",
+      "startInDays": 16,
+      "durationHours": 8,
+      "venueName": "Netherworld",
+      "address": "186 Wickham St, Fortitude Valley",
+      "lat": -27.4592,
+      "lng": 153.0328
+    },
+    {
+      "key": "charity-ride",
+      "title": "Brisbane Charity Ride",
+      "description": "40km ride raising money for the local food bank",
+      "category": "Charity",
+      "startInDays": 18,
+      "durationHours": 5,
+      "venueName": "New Farm Park",
+      "address": "Brunswick St, New Farm",
+      "lat": -27.4690,
+      "lng": 153.0480
+    },
+    {
+      "key": "gallery-late",
+      "title": "GOMA Up Late",
+      "description": "After-hours gallery opening with a bar and a live string quartet",
+      "category": "Arts & Theatre",
+      "startInDays": 13,
+      "durationHours": 4,
+      "venueName": "Gallery of Modern Art",
+      "address": "Stanley Pl, South Brisbane",
+      "lat": -27.4710,
+      "lng": 153.0170
+    },
+    {
+      "key": "outdoor-cinema",
+      "title": "Roma Street Outdoor Cinema",
+      "description": "Bring a picnic rug, screening starts at sundown",
+      "category": "Film",
+      "startInDays": 15,
+      "durationHours": 3,
+      "venueName": "Roma Street Parkland",
+      "address": "1 Parkland Blvd, Brisbane City",
+      "lat": -27.4640,
+      "lng": 153.0190
+    },
+    {
+      "key": "lions-match",
+      "title": "Brisbane Lions Home Game",
+      "description": "Gates open two hours before bounce",
+      "category": "Sports",
+      "startInDays": 19,
+      "durationHours": 3,
+      "venueName": "The Gabba",
+      "address": "411 Vulture St, Woolloongabba",
+      "lat": -27.4858,
+      "lng": 153.0381
+    },
+    {
+      "key": "family-fun-day",
+      "title": "Botanic Gardens Family Fun Day",
+      "description": "Face painting, a petting zoo and a very patient magician",
+      "category": "Family",
+      "startInDays": 17,
+      "durationHours": 6,
+      "venueName": "City Botanic Gardens",
+      "address": "147 Alice St, Brisbane City",
+      "lat": -27.4750,
+      "lng": 153.0300
+    },
+    {
+      "key": "jazz-sunday",
+      "title": "Sunday Jazz at the Powerhouse",
+      "description": "Free entry, five-piece band, riverside seating",
+      "category": "Music",
+      "startInDays": 20,
+      "durationHours": 3,
+      "venueName": "Brisbane Powerhouse",
+      "address": "119 Lamington St, New Farm",
+      "lat": -27.4667,
+      "lng": 153.0490
+    },
+    {
+      "key": "long-lunch",
+      "title": "West End Long Lunch",
+      "description": "Eight restaurants, one street, a lot of walking between courses",
+      "category": "Food & Drink",
+      "startInDays": 22,
+      "durationHours": 5,
+      "venueName": "Boundary St",
+      "address": "Boundary St, West End",
+      "lat": -27.4830,
+      "lng": 153.0110
+    }
+  ],
+
+  "going": [
+    { "user": "demo1", "event": "demo-night" },
+    { "user": "demo2", "event": "demo-night" },
+    { "user": "priya", "event": "comedy-cellar" },
+    { "user": "priya", "event": "gallery-late" },
+    { "user": "priya", "event": "outdoor-cinema" },
+    { "user": "jordan", "event": "run-club" },
+    { "user": "jordan", "event": "lions-match" },
+    { "user": "jordan", "event": "kangaroo-point", "muted": true },
+    { "user": "sam", "event": "java-workshop" },
+    { "user": "sam", "event": "startup-night" },
+    { "user": "sam", "event": "retro-lan" },
+    { "user": "demo1", "event": "boiler-room" },
+    { "user": "demo2", "event": "night-market" },
+    { "user": "demo2", "event": "uni-market-day" }
+  ],
+
+  "likes": [
+    { "user": "demo1", "event": "demo-night" },
+    { "user": "demo1", "event": "boiler-room" },
+    { "user": "demo1", "event": "jazz-sunday" },
+    { "user": "demo2", "event": "demo-night" },
+    { "user": "demo2", "event": "night-market" },
+    { "user": "priya", "event": "comedy-cellar" },
+    { "user": "priya", "event": "gallery-late" },
+    { "user": "priya", "event": "demo-night" },
+    { "user": "jordan", "event": "run-club" },
+    { "user": "jordan", "event": "lions-match" },
+    { "user": "jordan", "event": "charity-ride" },
+    { "user": "sam", "event": "retro-lan" },
+    { "user": "sam", "event": "startup-night" },
+    { "user": "sam", "event": "java-workshop" },
+    { "user": "sam", "event": "demo-night" }
+  ],
+
+  "comments": [
+    {
+      "key": "c-demo-1",
+      "user": "demo1",
+      "event": "demo-night",
+      "content": "Looking forward to this event!"
+    },
+    {
+      "key": "c-demo-2",
+      "user": "demo2",
+      "event": "demo-night",
+      "content": "Same, is anyone heading over from the city side?",
+      "replyTo": "c-demo-1"
+    },
+    {
+      "key": "c-comedy-1",
+      "user": "priya",
+      "event": "comedy-cellar",
+      "content": "Third time seeing this lineup, worth getting there early for a seat."
+    },
+    {
+      "key": "c-run-1",
+      "user": "jordan",
+      "event": "run-club",
+      "content": "Pace groups are friendly, do not be put off by the 5k."
+    },
+    {
+      "key": "c-lan-1",
+      "user": "sam",
+      "event": "retro-lan",
+      "content": "Bringing a spare CRT if anyone needs one."
+    },
+    {
+      "key": "c-lan-2",
+      "user": "demo1",
+      "event": "retro-lan",
+      "content": "Yes please, mine died last time.",
+      "replyTo": "c-lan-1"
+    },
+    {
+      "key": "c-market-1",
+      "user": "demo2",
+      "event": "night-market",
+      "content": "The dumpling stall near the stage is the one to beat."
+    }
+  ],
+
+  "conversations": [
+    { "key": "conv-demo", "userA": "demo1", "userB": "demo2" },
+    { "key": "conv-priya-sam", "userA": "priya", "userB": "sam" },
+    { "key": "conv-jordan", "userA": "jordan", "userB": "demo1" }
+  ],
+
+  "messages": [
+    { "conversation": "conv-demo", "sender": "demo1", "content": "Are you going to the demo night on the weekend?" },
+    { "conversation": "conv-demo", "sender": "demo2", "content": "Yeah just marked myself as going." },
+    { "conversation": "conv-demo", "sender": "demo1", "content": "Nice, meet at the front entrance?" },
+    { "conversation": "conv-priya-sam", "sender": "priya", "content": "Did you end up getting a ticket to the comedy night?" },
+    { "conversation": "conv-priya-sam", "sender": "sam", "content": "Not yet, is it selling out?" },
+    { "conversation": "conv-priya-sam", "sender": "priya", "content": "Half gone already, I would not leave it." },
+    { "conversation": "conv-jordan", "sender": "jordan", "content": "Run club starts at 5:30, not 6, heads up." },
+    { "conversation": "conv-jordan", "sender": "demo1", "content": "Good to know, thanks." }
+  ],
+
+  "notifications": [
+    { "user": "demo1", "type": "CommentReply", "event": "demo-night", "comment": "c-demo-2" },
+    { "user": "sam", "type": "CommentReply", "event": "retro-lan", "comment": "c-lan-2" },
+    { "user": "demo2", "type": "NewMessage", "conversation": "conv-demo" },
+    { "user": "sam", "type": "NewMessage", "conversation": "conv-priya-sam" },
+    { "user": "demo1", "type": "NewMessage", "conversation": "conv-jordan" },
+    { "user": "demo1", "type": "EventReminder", "event": "boiler-room" },
+    { "user": "jordan", "type": "EventReminder", "event": "run-club" },
+    { "user": "priya", "type": "EventReminder", "event": "comedy-cellar" },
+    { "user": "sam", "type": "EventReminder", "event": "java-workshop" }
+  ]
+}
