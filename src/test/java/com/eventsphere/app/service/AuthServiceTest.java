@@ -49,7 +49,9 @@ class AuthServiceTest {
 
     @Test
     void wrongEmailAndWrongPasswordGetSameMessage() {
-        assertEquals(AuthService.INVALID_CREDS, auth.login("Weridemail@gmail.com", PASSWORD).getError());
+        String wrongEmailError = auth.login("weirdemail@gmail.com", PASSWORD).getError();
+        String wrongPasswordError = auth.login(EMAIL, "Incorrect Password").getError();
+        assertEquals(wrongPasswordError, wrongEmailError);
     }
 
     @Test
