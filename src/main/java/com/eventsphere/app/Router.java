@@ -6,6 +6,8 @@ import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.service.EventService;
 import com.eventsphere.app.service.UserService;
+import com.eventsphere.app.service.AuthService;
+import com.eventsphere.app.service.SessionManager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,6 +30,9 @@ public class Router {
     private static final EventService EVENTS = new EventService(new EventDAO(CONNECTION));
     private static final UserService USERS =
             new UserService(new UserDAO(CONNECTION), new PreferenceDAO(CONNECTION));
+    private static final UserDAO USER_DAO = new UserDAO(CONNECTION);
+    private static final SessionManager SESSION = new  SessionManager();
+    private static final AuthService AUTH = new AuthService(USER_DAO, SESSION);
 
     private Router() {
     }
@@ -57,6 +62,8 @@ public class Router {
     private static Object createController(Class<?> type) {
         if (type == LandingPageController.class) return new LandingPageController(EVENTS);
         if (type == SignUpController.class) return new SignUpController(USERS);
+        if (type == LoginController.class) return new LoginController(AUTH);
+        if (type == SettingsController.class) return new SettingsController(AUTH);
         try {
             return type.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {

@@ -2,8 +2,15 @@ package com.eventsphere.app;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ToggleButton;
+import com.eventsphere.app.service.AuthService;
 
 public class SettingsController {
+
+    private final AuthService authService;
+
+    public SettingsController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @FXML
     private ToggleButton notificationsToggle;
@@ -42,7 +49,8 @@ public class SettingsController {
 
     @FXML
     protected void onLogOutClick() {
-        System.out.println("Log out clicked");
+        authService.logout();
+        Router.navigateTo("login-view.fxml");
     }
 
     @FXML
