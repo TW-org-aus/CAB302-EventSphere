@@ -33,4 +33,15 @@ public class HelloApplication extends Application {
         Router.navigateTo("landing-page.fxml");
         stage.show();
     }
+
+    // yes I know this is ugly and tbh there is probally a better way to gracfully stop background proccesses
+    // but I could not be bothered to impliment this atm
+    // As you may or may not know there is a background thread that loads the tiles in while the application starts
+    // so the startup doesnt take a billion years and currently closing the GUI only stops the JavaFX thread but
+    // it doesnt stop the other threads , so this is just a way to one-shot kill everything if the gui is closed which is what
+    // we want to do.
+    @Override
+    public void stop() {
+        System.exit(0);
+    }
 }

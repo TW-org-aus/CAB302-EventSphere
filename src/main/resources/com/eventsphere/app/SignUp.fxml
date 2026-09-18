@@ -16,6 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
+<?import javafx.scene.control.ListView?>
 <AnchorPane prefHeight="730.0" prefWidth="1200.0" style="-fx-background-color: #F0512B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.SignUpController">
    <children>
       <fx:include source="nav-bar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
@@ -38,7 +39,7 @@
                                  <children>
                                     <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="First name">
+                                          <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* First name">
                                              <font>
                                                 <Font size="18.0" />
                                              </font></Label>
@@ -47,7 +48,7 @@
                                     </VBox>
                                     <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="Last name">
+                                          <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* Last name">
                                              <font>
                                                 <Font size="18.0" />
                                              </font></Label>
@@ -56,12 +57,12 @@
                                     </VBox>
                                  </children>
                               </HBox>
-                              <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="Email">
+                              <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* Email">
                                  <font>
                                     <Font size="18.0" />
                                  </font></Label>
                               <TextField fx:id="emailField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
-                              <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="Password">
+                              <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* Password">
                                  <font>
                                     <Font size="18.0" />
                                  </font></Label>
@@ -74,7 +75,7 @@
                                  </font></Label>
                               <Label style="-fx-font-size: 11px; -fx-text-fill: #6B7280;" text="So we can find events closer to you" wrapText="true" />
                               <TextField fx:id="addressField" maxWidth="Infinity" promptText="e.g. 2 George St, Brisbane City" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
-
+                              <ListView fx:id="suggestionsList" maxHeight="140" visible="false" managed="false"/>
                               <Region prefHeight="4.0" />
                               <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="What are you into?">
                                  <font>

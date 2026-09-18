@@ -5,10 +5,12 @@ import com.eventsphere.app.dao.EventDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
-import com.eventsphere.app.service.EventService;
-import com.eventsphere.app.service.UserService;
+import com.eventsphere.app.places.IPlacesClient;
+import com.eventsphere.app.places.PlacesClient;
 import com.eventsphere.app.service.AuthService;
+import com.eventsphere.app.service.EventService;
 import com.eventsphere.app.service.SessionManager;
+import com.eventsphere.app.service.UserService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -38,6 +40,7 @@ public class Router {
             new UserService(USER_DAO, new PreferenceDAO(CONNECTION));
     private static final SessionManager SESSION = new SessionManager();
     private static final AuthService AUTH = new AuthService(USER_DAO, SESSION);
+    private static final IPlacesClient PLACES = new PlacesClient();
 
     private Router() {
     }
@@ -66,9 +69,10 @@ public class Router {
 
     private static Object createController(Class<?> type) {
         if (type == LandingPageController.class) return new LandingPageController(EVENTS);
-        if (type == SignUpController.class) return new SignUpController(USERS);
+        if (type == SignUpController.class) return new SignUpController(USERS, PLACES);
         if (type == LoginController.class) return new LoginController(AUTH);
         if (type == SettingsController.class) return new SettingsController(AUTH);
+        if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
         try {
             return type.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {

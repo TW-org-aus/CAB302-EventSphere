@@ -1,24 +1,36 @@
 package com.eventsphere.app;
 
 import com.eventsphere.app.model.Category;
+import com.eventsphere.app.places.IPlacesClient;
+import com.eventsphere.app.places.PlaceLocation;
+import com.eventsphere.app.places.Suggestion;
 import com.eventsphere.app.service.RegisterResult;
 import com.eventsphere.app.service.UserService;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 
+import java.io.IOException;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class SignUpController {
 
     private final UserService userService;
+    private final IPlacesClient places;
 
-    public SignUpController(UserService userService) {
+    // Regenerated after every fetchDetails() call: Google bills autocomplete + fetchDetails
+    // together as one session, keyed by this token, so a new lookup needs a new token.
+    private String sessionToken = UUID.randomUUID().toString();
+    private Double selectedLat;
+    private Double selectedLng;
+
+    public SignUpController(UserService userService, IPlacesClient places) {
         this.userService = userService;
+        this.places = places;
     }
 
     private static final int MAX_INTERESTS = 5;
@@ -52,6 +64,9 @@ public class SignUpController {
     private TextField addressField;
 
     @FXML
+    private ListView<Suggestion> suggestionsList;
+
+    @FXML
     private FlowPane interestsFlowPane;
 
     @FXML
@@ -68,6 +83,73 @@ public class SignUpController {
             interestsFlowPane.getChildren().add(bubble);
         }
         updateInterestsHint();
+
+        // Suggestion rows show their address text, not Suggestion's default toString().
+        suggestionsList.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Suggestion item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getText());
+            }
+        });
+        addressField.textProperty().addListener((obs, oldText, newText) -> onAddressTyped(newText));
+        suggestionsList.setOnMouseClicked(e -> onSuggestionPicked());
+    }
+
+    private void onAddressTyped(String text) {
+        // Typing again invalidates whatever was picked before.
+        selectedLat = null;
+        selectedLng = null;
+        if (text == null || text.isBlank()) {
+            hideSuggestions();
+            return;
+        }
+        Task<List<Suggestion>> lookup = new Task<>() {
+            @Override
+            protected List<Suggestion> call() throws Exception {
+                return places.autocomplete(text, sessionToken);
+            }
+        };
+        lookup.setOnSucceeded(e -> showSuggestions(lookup.getValue()));
+        lookup.setOnFailed(e -> hideSuggestions());
+        new Thread(lookup).start();
+
+    }
+
+    private void onSuggestionPicked() {
+        Suggestion picked = suggestionsList.getSelectionModel().getSelectedItem();
+        if (picked == null) {
+            return;
+        }
+        Task<PlaceLocation> details = new Task<>() {
+            @Override
+            protected PlaceLocation call() throws Exception {
+                return places.fetchDetails(picked.getPlaceId(), sessionToken);
+            }
+        };
+        details.setOnSucceeded(e -> {
+            PlaceLocation location = details.getValue();
+            selectedLat = location.getLat();
+            selectedLng = location.getLng();
+            addressField.setText(picked.getText());
+            hideSuggestions();
+            // The session that token was billing for is closed now that fetchDetails ran.
+            sessionToken = UUID.randomUUID().toString();
+        });
+        new Thread(details).start();
+    }
+
+    private void showSuggestions(List<Suggestion> suggestions) {
+        suggestionsList.getItems().setAll(suggestions);
+        boolean hasResults = !suggestions.isEmpty();
+        suggestionsList.setVisible(hasResults);
+        suggestionsList.setManaged(hasResults);
+    }
+
+    private void hideSuggestions() {
+        suggestionsList.getItems().clear();
+        suggestionsList.setVisible(false);
+        suggestionsList.setManaged(false);
     }
 
     private void onInterestToggled(ToggleButton bubble, Category category) {
@@ -94,9 +176,10 @@ public class SignUpController {
 
         RegisterResult result;
         try{
-            // TODO: pass the picked suggestion's coordinates once the address dropdown is built.
             result = userService.register(firstNameField.getText(), lastNameField.getText(), emailField.getText(),
-                    passwordField.getText(), null, null, selectedInterests);
+                    passwordField.getText(), selectedLat, selectedLng, selectedInterests);
+
+
 
         } catch (RuntimeException e){
             showMessage("Could not create your account. Please try again.");
