@@ -35,9 +35,34 @@ class GenreCategoryMapperTest {
     @Test
     void matchingIgnoresCaseAndWhitespace() throws Exception {
         JsonNode node = classifications("""
-                [{"segment": {"name": "  ARTS & THEATRE "}, "genre": {"name": "Comedy"}}]
+                [{"segment": {"name": "  ARTS & THEATRE "}, "genre": {"name": "Theatre"}}]
                 """);
         assertEquals(Category.ARTS_THEATRE, GenreCategoryMapper.map(node));
+    }
+
+    // Comedy is filed under the Arts & Theatre segment, so the genre check has to win.
+    @Test
+    void comedyGenreBeatsArtsAndTheatreSegment() throws Exception {
+        JsonNode node = classifications("""
+                [{"primary": true, "segment": {"name": "Arts & Theatre"}, "genre": {"name": "Comedy"}}]
+                """);
+        assertEquals(Category.COMEDY, GenreCategoryMapper.map(node));
+    }
+
+    @Test
+    void fairsAndFestivalsMapsToFestivals() throws Exception {
+        JsonNode node = classifications("""
+                [{"primary": true, "segment": {"name": "Miscellaneous"}, "genre": {"name": "Fairs & Festivals"}}]
+                """);
+        assertEquals(Category.FESTIVALS, GenreCategoryMapper.map(node));
+    }
+
+    @Test
+    void healthWellnessMapsToFitnessWellness() throws Exception {
+        JsonNode node = classifications("""
+                [{"primary": true, "segment": {"name": "Miscellaneous"}, "genre": {"name": "Health/Wellness"}}]
+                """);
+        assertEquals(Category.FITNESS_WELLNESS, GenreCategoryMapper.map(node));
     }
 
     @Test

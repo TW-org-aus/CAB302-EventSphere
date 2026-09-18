@@ -21,17 +21,17 @@ public class PreferenceDAO implements IPreferenceDAO {
 
     @Override
     public Preference findByUser(int userId) {
-        String citySql = "SELECT City FROM Preferences WHERE UserID = ?";
+        String addressSql = "SELECT Address FROM Preferences WHERE UserID = ?";
         String categoriesSql = "SELECT Category FROM PreferenceCategories WHERE UserID = ?";
         try {
-            String city = null;
+            String address = null;
             boolean hasRow = false;
-            try (PreparedStatement ps = connection.prepareStatement(citySql)) {
+            try (PreparedStatement ps = connection.prepareStatement(addressSql)) {
                 ps.setInt(1, userId);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         hasRow = true;
-                        city = rs.getString("City");
+                        address = rs.getString("Address");
                     }
                 }
             }
@@ -47,22 +47,22 @@ public class PreferenceDAO implements IPreferenceDAO {
                     }
                 }
             }
-            return new Preference(userId, city, categories);
+            return new Preference(userId, address, categories);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find preferences for user: " + userId, e);
         }
     }
 
     @Override
-    public void upsertCity(int userId, String city) {
-        String sql = "INSERT INTO Preferences (UserID, City) VALUES (?, ?) " +
-                "ON CONFLICT(UserID) DO UPDATE SET City = excluded.City";
+    public void upsertAddress(int userId, String address) {
+        String sql = "INSERT INTO Preferences (UserID, Address) VALUES (?, ?) " +
+                "ON CONFLICT(UserID) DO UPDATE SET Address = excluded.Address";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
-            ps.setString(2, city);
+            ps.setString(2, address);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to upsert city for user: " + userId, e);
+            throw new RuntimeException("Failed to upsert address for user: " + userId, e);
         }
     }
 

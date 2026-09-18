@@ -2,6 +2,7 @@ package com.eventsphere.app;
 
 import com.eventsphere.app.Database.Database;
 import com.eventsphere.app.dao.EventDAO;
+import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.service.EventService;
@@ -28,10 +29,14 @@ public class Router {
 
     private static final Connection CONNECTION = Database.DBConnect();
     private static final EventService EVENTS = new EventService(new EventDAO(CONNECTION));
+
+    // small refactor by me alex, I just changed it because UserService and
+    // AuthService both read the Users table, so they share one DAO.
+    // its better to declare users and userDAO before so it can be passed down
+    private static final IUserDAO USER_DAO = new UserDAO(CONNECTION);
     private static final UserService USERS =
-            new UserService(new UserDAO(CONNECTION), new PreferenceDAO(CONNECTION));
-    private static final UserDAO USER_DAO = new UserDAO(CONNECTION);
-    private static final SessionManager SESSION = new  SessionManager();
+            new UserService(USER_DAO, new PreferenceDAO(CONNECTION));
+    private static final SessionManager SESSION = new SessionManager();
     private static final AuthService AUTH = new AuthService(USER_DAO, SESSION);
 
     private Router() {

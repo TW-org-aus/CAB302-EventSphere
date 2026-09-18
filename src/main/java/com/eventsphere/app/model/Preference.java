@@ -2,28 +2,28 @@ package com.eventsphere.app.model;
 
 import java.util.*;
 
-// this object contains the details for the 2 tables of city and catagories that the user prefferences
+// this object contains the details for the 2 tables of address and catagories that the user prefferences
 public class Preference {
 
     private final int userId;
-    private String city;
+    private String address;
     private final EnumSet<Category> categories = EnumSet.noneOf(Category.class);
 
-    public Preference(int userId, String city, Collection<Category> categories) {
+    public Preference(int userId, String address, Collection<Category> categories) {
         this.userId = userId;
-        this.city = city;
+        this.address = address;
         setCategories(categories);
     }
 
     public int getUserId() { return userId; }
-    public String getCity() { return city; }
+    public String getAddress() { return address; }
 
 
     public Set<Category> getCategories() {
         return Collections.unmodifiableSet(EnumSet.copyOf(categories));
     }
 
-    public void setCity(String city) { this.city = city; }
+    public void setAddress(String address) { this.address = address; }
 
 
     public void setCategories(Collection<Category> categories) {

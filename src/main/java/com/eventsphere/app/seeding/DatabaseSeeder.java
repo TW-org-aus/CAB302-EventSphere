@@ -149,10 +149,10 @@ public class DatabaseSeeder {
         record(n, "user");
     }
 
-    // upsertCity and replaceCategories both overwrite, so this needs no existence check.
+    // upsertAddress and replaceCategories both overwrite, so this needs no existence check.
     private void seedPreferences(JsonNode userNode, int userId) {
-        if (userNode.hasNonNull("city")) {
-            preferences.upsertCity(userId, userNode.path("city").asText());
+        if (userNode.hasNonNull("address")) {
+            preferences.upsertAddress(userId, userNode.path("address").asText());
         }
         JsonNode interests = userNode.path("interests");
         if (interests.isArray() && !interests.isEmpty()) {

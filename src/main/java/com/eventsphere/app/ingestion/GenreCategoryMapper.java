@@ -6,22 +6,29 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Locale;
 import java.util.Map;
 
+import static java.util.Map.entry;
+
 // Genre mapper is here because ticketmaster genre's do NOT match up with the ones we have fully so this class
 //attempts to fix that by doing a rough genre mapping
 
-// Maps a Ticketmaster classification (see ticketmaster scheama in docs: segment > genre > sub-genre) onto one of the fixed Categories.
-// Genre is checked before segment because Family, Community, Food & Drink and Nightlife only appear
-// at genre level: Ticketmaster files them under the "Miscellaneous" segment.
+// Maps a Ticketmaster classification (segment > genre > sub-genre) onto one of the fixed Categories.
+// Genre is checked first: the categories below only appear at genre level, not segment level.
+// Uni Events, Markets, Charity, Tech and Outdoors are app-only, so ingestion never produces them.
+// Workshops and Gaming likely have a genre too, but the names are unconfirmed so they land in OTHER.
 public class GenreCategoryMapper {
 
 
-    private static final Map<String, Category> BY_GENRE = Map.of(
-            "family", Category.FAMILY,
-            "children's theatre", Category.FAMILY,
-            "community/civic", Category.COMMUNITY,
-            "fairs & festivals", Category.COMMUNITY,
-            "food & drink", Category.FOOD_DRINK,
-            "nightlife", Category.NIGHTLIFE);
+    // Map.ofEntries rather than Map.of because Map.of only has overloads up to 10 pairs.
+    private static final Map<String, Category> BY_GENRE = Map.ofEntries(
+            entry("family", Category.FAMILY),
+            entry("children's theatre", Category.FAMILY),
+            entry("community/civic", Category.COMMUNITY),
+            entry("fairs & festivals", Category.FESTIVALS),
+            entry("food & drink", Category.FOOD_DRINK),
+            entry("nightlife", Category.NIGHTLIFE),
+            entry("health/wellness", Category.FITNESS_WELLNESS),
+            // Comedy sits under the Arts & Theatre segment, so it must match at genre level.
+            entry("comedy", Category.COMEDY));
 
     private static final Map<String, Category> BY_SEGMENT = Map.of(
             "music", Category.MUSIC,
