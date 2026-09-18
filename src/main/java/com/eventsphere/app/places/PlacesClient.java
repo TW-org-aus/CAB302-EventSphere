@@ -16,29 +16,27 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-// Client for the Places API (New): autocomplete + place details, restricted to AU.
-// Modelled on TicketmasterClient -- same HttpClient/Jackson setup, same two-constructor
-// pattern (one from .env, one with an explicit key for tests), same rule of never
-// putting the API key in a thrown message.
+// Client for the Places API : autocomplete + place details.
 public class PlacesClient implements IPlacesClient {
 
     private static final String AUTOCOMPLETE_URL = "https://places.googleapis.com/v1/places:autocomplete";
     private static final String DETAILS_URL = "https://places.googleapis.com/v1/places/";
 
-    // Only what sign-up needs. Requesting more fields than this costs more per call.
+    // Only what sign-up needs.
     private static final String DETAILS_FIELD_MASK = "id,formattedAddress,location";
 
     private final HttpClient http;
     private final ObjectMapper json = new ObjectMapper();
     private final String apiKey;
 
+
     // first constructor uses .env
     public PlacesClient() {
         this(EnvConfig.require("GOOGLE_PLACES_API_KEY"));
     }
 
-    // second constructor gets the key passed in directly -- for tests, so they can run
-    // without an .env / real API key
+    // second constructor gets the key passed in directly -- for router
+    // so we don't have to pull api from env in the router class
     public PlacesClient(String apiKey) {
         this.apiKey = apiKey;
         this.http = HttpClient.newBuilder()
@@ -62,11 +60,18 @@ public class PlacesClient implements IPlacesClient {
 
         HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
-            // Leave the request out of the message --> it carries the API key.
+
             throw new IOException("Places autocomplete returned HTTP " + response.statusCode());
         }
         return parseSuggestions(json.readTree(response.body()));
     }
+
+
+
+
+
+
+
 
     static List<Suggestion> parseSuggestions(JsonNode root) {
         List<Suggestion> suggestions = new ArrayList<>();
@@ -97,11 +102,14 @@ public class PlacesClient implements IPlacesClient {
 
         HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
-            // Leave the request out of the message --> it carries the API key.
+
             throw new IOException("Places details returned HTTP " + response.statusCode());
         }
         return parseLocation(json.readTree(response.body()));
     }
+
+
+
 
     static PlaceLocation parseLocation(JsonNode root) {
         JsonNode location = root.path("location");

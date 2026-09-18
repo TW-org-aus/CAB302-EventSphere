@@ -61,8 +61,7 @@
                         <FontIcon iconLiteral="bi-person-fill" iconSize="16" iconColor="white"/>
                     </children>
                 </StackPane>
-                <!-- Temporary dev-only entry point until real auth/session state exists; remove once login is reachable another way -->
-                <Button text="Log In" onAction="#onLoginClick"
+                <Button fx:id="authButton" onAction="#onAuthClick"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-underline: true; -fx-cursor: hand;"/>
             </children>
             <HBox.margin>
