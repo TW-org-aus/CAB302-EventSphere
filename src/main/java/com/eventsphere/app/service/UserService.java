@@ -27,8 +27,10 @@ public class UserService {
         this.preferences = preferences;
     }
 
+    // Coordinates arrive already resolved by the caller, and are null when no address was picked.
     public RegisterResult register(String firstName, String lastName, String email,
-                                   String rawPassword, String city, Set<Category> interests) {
+                                   String rawPassword, Double homeLat, Double homeLng,
+                                   Set<Category> interests) {
 
         String normalisedEmail = email == null ? null : email.strip().toLowerCase(Locale.ROOT);
 
@@ -59,8 +61,8 @@ public class UserService {
                     lastName.strip(),
                     normalisedEmail,
                     PasswordHasher.hash(rawPassword),
-                    mapLat(city),
-                    mapLong(city));
+                    homeLat,
+                    homeLng);
         } catch (RuntimeException e) {
 
             if (isDuplicateEmail(e)) {
@@ -69,7 +71,7 @@ public class UserService {
             throw e;
         }
 
-        savePreferences(userId, city, interests);
+        savePreferences(userId, interests);
 
         return RegisterResult.ok(userId);
     }
@@ -93,10 +95,8 @@ public class UserService {
         return interests == null || interests.size() <= MAX_INTERESTS;
     }
 
-    private void savePreferences(int userId, String city, Set<Category> interests) {
-        if (city != null && !city.isBlank()) {
-            preferences.upsertCity(userId, city.strip());
-        }
+    // Only the interests: sign-up stores coordinates on the user row, never the address text.
+    private void savePreferences(int userId, Set<Category> interests) {
         if (interests != null && !interests.isEmpty()) {
             preferences.replaceCategories(userId, interests);
         }
@@ -115,14 +115,5 @@ public class UserService {
             cause = cause.getCause();
         }
         return false;
-    }
-
-    // will impliment when google api is hooked up for geocaching
-    private Double mapLat(String city) {
-        return null;
-    }
-
-    private Double mapLong(String city) {
-        return null;
     }
 }

@@ -7,11 +7,11 @@ import java.util.Collection;
 
 public interface IPreferenceDAO {
 
-    // Never returns null: returns no city, no categories when none is saved.
+    // Never returns null: returns no address, no categories when none is saved.
     Preference findByUser(int userId);
 
-    // city may be null.
-    void upsertCity(int userId, String city);
+    // address may be null.
+    void upsertAddress(int userId, String address);
 
     // Replaces the whole set with new ones and creates the Preferences row if missing.(even if there are more old than new the old ones will still be gone :(
     void replaceCategories(int userId, Collection<Category> categories);

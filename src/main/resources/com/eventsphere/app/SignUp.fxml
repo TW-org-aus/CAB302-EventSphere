@@ -68,12 +68,12 @@
                               <PasswordField fx:id="passwordField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
 
                               <Region prefHeight="4.0" />
-                              <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="Where do you live?">
+                              <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="What's your address?">
                                  <font>
                                     <Font size="18.0" />
                                  </font></Label>
                               <Label style="-fx-font-size: 11px; -fx-text-fill: #6B7280;" text="So we can find events closer to you" wrapText="true" />
-                              <TextField fx:id="cityField" maxWidth="Infinity" promptText="e.g. Brisbane" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                              <TextField fx:id="addressField" maxWidth="Infinity" promptText="e.g. 2 George St, Brisbane City" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
 
                               <Region prefHeight="4.0" />
                               <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="What are you into?">

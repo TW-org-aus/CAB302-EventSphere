@@ -80,10 +80,10 @@ public class DBController {
                         "    NotifyEnabled   INTEGER  NOT NULL DEFAULT 1 CHECK (NotifyEnabled IN (0, 1))" +
                         ");" +
 
-                        // Preference: User city + preferred Categories.
+                        // Preference: User address + preferred Categories.
                         "CREATE TABLE IF NOT EXISTS Preferences (" +
                         "    UserID      INTEGER PRIMARY KEY," +
-                        "    City        TEXT," +
+                        "    Address     TEXT," +
                         "    FOREIGN KEY (UserID) REFERENCES Users (UserID)" +
                         "        ON DELETE CASCADE ON UPDATE CASCADE" +
                         ");" +

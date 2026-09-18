@@ -11,6 +11,10 @@ class MockUserDAO implements IUserDAO{
 
     private final List<User> users = new ArrayList<>();
 
+    // Last coordinates handed to insert, for assertions.
+    Double lastHomeLat;
+    Double lastHomeLong;
+
     @Override
     public int insert(String firstName, String lastName, String email, String passwordHash) {
         return insert(firstName, lastName, email, passwordHash, null, null);
@@ -18,6 +22,8 @@ class MockUserDAO implements IUserDAO{
 
     @Override
     public int insert(String firstName, String lastName, String email, String passwordHash, Double homeLat, Double homeLong) {
+        lastHomeLat = homeLat;
+        lastHomeLong = homeLong;
         int id = users.size() + 1;
         users.add(new User(id, firstName, lastName, email, passwordHash, homeLat, homeLong, LocalDate.now(), true, true));
         return id;

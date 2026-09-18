@@ -18,7 +18,7 @@
       "email": "seed.user1@example.com",
       "homeLat": -27.4698,
       "homeLong": 153.0251,
-      "city": "Brisbane",
+      "address": "Queen Street Mall, Brisbane City QLD 4000",
       "interests": ["Music", "Nightlife", "Food & Drink"]
     },
     {
@@ -28,7 +28,7 @@
       "email": "seed.user2@example.com",
       "homeLat": -27.4601,
       "homeLong": 153.0350,
-      "city": "Brisbane",
+      "address": "Brunswick Street Mall, Fortitude Valley QLD 4006",
       "interests": ["Community", "Markets", "Outdoors"]
     },
     {
@@ -38,7 +38,7 @@
       "email": "priya.nair@example.com",
       "homeLat": -27.4820,
       "homeLong": 153.0180,
-      "city": "Brisbane",
+      "address": "Boundary Street, West End QLD 4101",
       "interests": ["Arts & Theatre", "Comedy", "Film"]
     },
     {
@@ -48,7 +48,7 @@
       "email": "jordan.okafor@example.com",
       "homeLat": -27.4550,
       "homeLong": 153.0400,
-      "city": "Brisbane",
+      "address": "Commercial Road, Newstead QLD 4006",
       "interests": ["Sports", "Fitness & Wellness", "Outdoors"]
     },
     {
@@ -58,7 +58,7 @@
       "email": "sam.whitfield@example.com",
       "homeLat": -27.5000,
       "homeLong": 153.0140,
-      "city": "Brisbane",
+      "address": "Annerley Road, Dutton Park QLD 4102",
       "interests": ["Tech", "Gaming", "Workshops", "Uni Events"]
     }
   ],

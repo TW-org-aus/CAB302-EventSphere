@@ -49,7 +49,7 @@ public class SignUpController {
     private PasswordField passwordField;
 
     @FXML
-    private TextField cityField;
+    private TextField addressField;
 
     @FXML
     private FlowPane interestsFlowPane;
@@ -94,8 +94,9 @@ public class SignUpController {
 
         RegisterResult result;
         try{
+            // TODO: pass the picked suggestion's coordinates once the address dropdown is built.
             result = userService.register(firstNameField.getText(), lastNameField.getText(), emailField.getText(),
-                    passwordField.getText(), cityField.getText(), selectedInterests);
+                    passwordField.getText(), null, null, selectedInterests);
 
         } catch (RuntimeException e){
             showMessage("Could not create your account. Please try again.");
