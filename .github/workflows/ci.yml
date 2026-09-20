@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write   # lets the deploy action push to the gh-pages branch
+
 jobs:
   build:
     runs-on: windows-latest
@@ -16,4 +19,15 @@ jobs:
           distribution: corretto
           java-version: '21'
           cache: maven
+
       - run: ./mvnw.cmd -B verify
+
+      - name: Generate Javadoc
+        run: ./mvnw.cmd -B javadoc:javadoc
+
+      - name: Publish Javadoc
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: target/docs/JavaDocs/javadoc
+          branch: gh-pages
