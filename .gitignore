@@ -40,3 +40,5 @@ database.db-shm
 
 #.env
 .env
+
+/docs/JavaDocs/
