@@ -7,11 +7,11 @@ on:
     branches: [main]
 
 permissions:
-  contents: write   # lets the deploy action push to the gh-pages branch
+  contents: write
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -20,10 +20,13 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - run: ./mvnw.cmd -B verify
+      - name: Make Maven wrapper executable
+        run: chmod +x mvnw
+
+      - run: ./mvnw -B verify
 
       - name: Generate Javadoc
-        run: ./mvnw.cmd -B javadoc:javadoc
+        run: ./mvnw -B javadoc:javadoc
 
       - name: Publish Javadoc
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
