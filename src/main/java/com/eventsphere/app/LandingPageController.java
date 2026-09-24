@@ -1,13 +1,21 @@
 package com.eventsphere.app;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import com.eventsphere.app.model.Event;
 import com.eventsphere.app.service.EventService;
 import com.gluonhq.maps.MapPoint;
 import com.gluonhq.maps.MapView;
+
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,13 +26,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.geometry.Pos;
 import javafx.util.Duration;
-import org.kordamp.ikonli.javafx.FontIcon;
-
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class LandingPageController {
 
@@ -116,6 +118,21 @@ public class LandingPageController {
         heroImage.setImage(url == null
                 ? null
                 : new Image(url, 1600, HERO_H, false, true, true));
+    }
+
+    // Called by NavBarController after it navigates here with a search term.
+    public void showSearchResults(String keyword) {
+        try {
+            sectionTitle.setText("Results for \"" + keyword + "\"");
+            List<Event> results = eventService.search(keyword);
+            renderRow(results);
+            if (results.isEmpty()) {
+                weekendRow.getChildren().setAll(emptyMessage("No events match \"" + keyword + "\"."));
+            }
+        } catch (Exception e) {
+            System.err.println("Search failed: " + e.getMessage());
+            weekendRow.getChildren().setAll(emptyMessage("Search unavailable right now."));
+        }
     }
 
     @FXML

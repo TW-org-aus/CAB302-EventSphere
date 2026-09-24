@@ -15,6 +15,7 @@ class MockEventDAO implements IEventDAO {
     private final List<Event> upcoming = new ArrayList<>();
     private final List<Event> byCategory = new ArrayList<>();
 
+    String lastSearchText;
     Instant lastSearchFrom;
     Instant lastSearchTo;
     Category lastCategoryRequested;
@@ -42,6 +43,7 @@ class MockEventDAO implements IEventDAO {
 
     @Override
     public List<Event> search(String text, Category category, Instant from, Instant to) {
+        lastSearchText = text;
         lastSearchFrom = from;
         lastSearchTo = to;
         return List.copyOf(upcoming);
