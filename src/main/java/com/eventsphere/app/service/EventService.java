@@ -1,9 +1,5 @@
 package com.eventsphere.app.service;
 
-import com.eventsphere.app.dao.IEventDAO;
-import com.eventsphere.app.model.Category;
-import com.eventsphere.app.model.Event;
-
 import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -13,6 +9,10 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import com.eventsphere.app.dao.IEventDAO;
+import com.eventsphere.app.model.Category;
+import com.eventsphere.app.model.Event;
 
 public class EventService {
 
@@ -120,4 +120,13 @@ public class EventService {
 
         return EARTH_RADIUS_KM * c;
     }
+
+    // Keyword search for the nav bar. The DAO matches title, description, venue name and
+    // address. Only events from now on are returned. A blank keyword shows everything upcoming.
+    public List<Event> search(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return events.findUpcoming();
+        }
+        return events.search(keyword.trim(), null, Instant.now(clock), null);
+    } 
 }

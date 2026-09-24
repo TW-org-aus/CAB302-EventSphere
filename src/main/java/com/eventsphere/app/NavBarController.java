@@ -2,8 +2,10 @@ package com.eventsphere.app;
 
 import com.eventsphere.app.service.AuthService;
 import com.eventsphere.app.service.SessionManager;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 public class NavBarController {
 
@@ -11,6 +13,7 @@ public class NavBarController {
     private final SessionManager session;
 
     @FXML private Button authButton;
+    @FXML private TextField searchField;
 
     public NavBarController(AuthService authService, SessionManager session) {
         this.authService = authService;
@@ -27,9 +30,15 @@ public class NavBarController {
         Router.navigateTo("landing-page.fxml");
     }
 
+    // Enter in the search bar: load the landing page, then show matching events there.
+    // A blank search just shows the normal landing page.
     @FXML
     protected void onSearch() {
-        System.out.println("Search submitted");
+        String keyword = searchField.getText();
+        LandingPageController landing = Router.navigateToWithController("landing-page.fxml");
+        if (keyword != null && !keyword.isBlank()) {
+            landing.showSearchResults(keyword.trim());
+        }
     }
 
     @FXML

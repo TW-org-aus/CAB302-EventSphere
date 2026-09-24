@@ -1,15 +1,16 @@
 package com.eventsphere.app.service;
 
-import com.eventsphere.app.model.Category;
-import com.eventsphere.app.model.Event;
-import org.junit.jupiter.api.Test;
-
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.Test;
+
+import com.eventsphere.app.model.Category;
+import com.eventsphere.app.model.Event;
 
 class EventServiceTest {
 
@@ -132,5 +133,48 @@ class EventServiceTest {
         assertEquals(List.of("Still to come"),
                 result.stream().map(Event::getTitle).toList());
         assertEquals(Category.MUSIC, dao.lastCategoryRequested);
+    }
+
+        // ----- keyword search -----
+
+    @Test
+    void searchTrimsTheKeywordBeforePassingItToTheDao() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, WEDNESDAY).search("  jazz  ");
+
+        assertEquals("jazz", dao.lastSearchText);
+    }
+
+    @Test
+    void searchOnlyLooksAtEventsFromNowOn() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, WEDNESDAY).search("jazz");
+
+        assertEquals(WEDNESDAY.instant(), dao.lastSearchFrom);
+        assertNull(dao.lastSearchTo);
+    }
+
+    @Test
+    void blankSearchFallsBackToUpcomingWithoutSearching() {
+        MockEventDAO dao = new MockEventDAO();
+        dao.setUpcoming(eventWithLikes("Tonight", 0), eventWithLikes("Tomorrow", 0));
+
+        List<Event> result = new EventService(dao, WEDNESDAY).search("   ");
+
+        assertEquals(2, result.size());
+        assertNull(dao.lastSearchText);
+    }
+
+    @Test
+    void nullSearchFallsBackToUpcomingWithoutSearching() {
+        MockEventDAO dao = new MockEventDAO();
+        dao.setUpcoming(eventWithLikes("Tonight", 0));
+
+        List<Event> result = new EventService(dao, WEDNESDAY).search(null);
+
+        assertEquals(1, result.size());
+        assertNull(dao.lastSearchText);
     }
 }
