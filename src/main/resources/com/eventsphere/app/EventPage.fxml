@@ -2,7 +2,10 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -10,54 +13,53 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="920.0" prefWidth="1380.0" style="-fx-background-color: #F0512B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.EventPageController">
+<AnchorPane prefHeight="920.0" prefWidth="1380.0" styleClass="event-page" stylesheets="@app.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.EventPageController">
    <children>
       <fx:include source="nav-bar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
       <HBox spacing="36.0" style="-fx-padding: 28 40 24 40;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
          <children>
             <VBox prefWidth="500.0" spacing="26.0">
                <children>
-                  <Button fx:id="backButton" onAction="#onBackClick" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 0 2;" text="← Back" />
-                  <VBox spacing="14.0" style="-fx-background-color: white; -fx-background-radius: 16px; -fx-padding: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.2, 0, 4);">
+                  <Button fx:id="backButton" onAction="#onBackClick" styleClass="back-button" text="← Back" />
+                  <VBox spacing="14.0" styleClass="event-detail-card">
                      <children>
                         <VBox fx:id="eventFieldsBox" spacing="14.0">
                            <children>
-                              <StackPane alignment="CENTER" prefHeight="180.0" style="-fx-background-color: #161616; -fx-background-radius: 10px;">
+                              <StackPane alignment="CENTER" prefHeight="180.0" styleClass="event-image-frame">
                                  <children>
                                     <ImageView fx:id="eventImage" fitHeight="180.0" fitWidth="464.0" preserveRatio="false" />
                                  </children>
                               </StackPane>
-                              <Label fx:id="titleLabel" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="" wrapText="true" />
-                              <Label fx:id="descriptionLabel" style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="" wrapText="true" />
+                              <Label fx:id="titleLabel" styleClass="event-title" text="" wrapText="true" />
                               <HBox alignment="CENTER_LEFT" spacing="8.0">
                                  <children>
-                                    <Label style="-fx-font-size: 13px;" text="📅" />
-                                    <Label fx:id="dateLabel" style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="" />
+                                    <Label styleClass="event-meta" text="📅" />
+                                    <Label fx:id="dateLabel" styleClass="event-meta" text="" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" spacing="8.0">
                                  <children>
-                                    <Label style="-fx-font-size: 13px;" text="🕒" />
-                                    <Label fx:id="timeLabel" style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="" />
+                                    <Label styleClass="event-meta" text="🕒" />
+                                    <Label fx:id="timeLabel" styleClass="event-meta" text="" />
                                  </children>
                               </HBox>
                               <HBox fx:id="venueRow" alignment="CENTER_LEFT" spacing="8.0">
                                  <children>
-                                    <Label style="-fx-font-size: 13px;" text="📍" />
-                                    <Label fx:id="venueLabel" style="-fx-text-fill: #555555; -fx-font-size: 13px;" text="" wrapText="true" />
+                                    <Label styleClass="event-meta" text="📍" />
+                                    <Label fx:id="venueLabel" styleClass="event-meta" text="" wrapText="true" />
                                  </children>
                               </HBox>
+                              <HBox fx:id="actionBar" alignment="CENTER_LEFT" spacing="10.0">
+                                 <children>
+                                    <ToggleButton fx:id="likeButton" onAction="#onLikeClick" styleClass="action-button" text="♡" />
+                                    <ToggleButton fx:id="goingButton" onAction="#onGoingClick" styleClass="action-button" text="Going" />
+                                    <Button fx:id="ticketsButton" onAction="#onGetTicketsClick" styleClass="action-button-primary" text="Get tickets" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="descriptionLabel" styleClass="event-description" text="" wrapText="true" />
                            </children>
                         </VBox>
-                        <Label fx:id="notFoundLabel" managed="false" style="-fx-text-fill: #555555; -fx-font-size: 14px;" text="" visible="false" />
-                     </children>
-                  </VBox>
-                  <VBox spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 16px; -fx-padding: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.2, 0, 4);">
-                     <children>
-                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="Filter comments" />
-                        <Button maxWidth="Infinity" onAction="#onFilterTopClick" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-background-radius: 8px; -fx-padding: 10px; -fx-font-size: 13px;" text="★ Top" />
-                        <Button maxWidth="Infinity" onAction="#onFilterLatestClick" style="-fx-background-color: white; -fx-text-fill: #222222; -fx-background-radius: 8px; -fx-border-color: #DDDDDD; -fx-border-radius: 8px; -fx-padding: 10px; -fx-font-size: 13px;" text="🕒 Latest" />
-                        <Button maxWidth="Infinity" onAction="#onFilterHostRepliesClick" style="-fx-background-color: white; -fx-text-fill: #222222; -fx-background-radius: 8px; -fx-border-color: #DDDDDD; -fx-border-radius: 8px; -fx-padding: 10px; -fx-font-size: 13px;" text="💬 Host Replies" />
+                        <Label fx:id="notFoundLabel" managed="false" styleClass="event-meta" text="" visible="false" />
                      </children>
                   </VBox>
                </children>
@@ -66,38 +68,42 @@
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <Label style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" text="Community Comments" />
-                        <StackPane style="-fx-background-color: #D8431F; -fx-background-radius: 12px; -fx-padding: 2 9 2 9;">
+                        <Label styleClass="comments-heading" text="Comments" />
+                        <StackPane styleClass="comments-count-badge">
                            <children>
-                              <Label fx:id="commentsCountLabel" style="-fx-text-fill: white; -fx-font-size: 12px;" text="" />
+                              <Label fx:id="commentsCountLabel" styleClass="comments-count-label" text="" />
                            </children>
                         </StackPane>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Label style="-fx-text-fill: white; -fx-font-size: 13px;" text="Sort: Relevant ⌄" />
+                        <ToggleButton fx:id="sortTopButton" onAction="#onSortChanged" styleClass="sort-pill" text="Top">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="sortGroup" />
+                           </toggleGroup>
+                        </ToggleButton>
+                        <ToggleButton fx:id="sortNewestButton" onAction="#onSortChanged" selected="true" styleClass="sort-pill" text="Newest" toggleGroup="$sortGroup" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" spacing="12.0">
+                  <VBox styleClass="composer">
                      <children>
-                        <Button onAction="#onSortTopClick" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-background-radius: 18px; -fx-padding: 8 20 8 20; -fx-font-size: 13px;" text="★ Top" />
-                        <Button onAction="#onSortLatestClick" style="-fx-background-color: white; -fx-text-fill: #222222; -fx-background-radius: 18px; -fx-border-color: #DDDDDD; -fx-border-radius: 18px; -fx-padding: 8 20 8 20; -fx-font-size: 13px;" text="🕒 Latest" />
-                        <Button onAction="#onSortHostRepliesClick" style="-fx-background-color: white; -fx-text-fill: #222222; -fx-background-radius: 18px; -fx-border-color: #DDDDDD; -fx-border-radius: 18px; -fx-padding: 8 20 8 20; -fx-font-size: 13px;" text="💬 Host Replies" />
-                     </children>
-                  </HBox>
-                  <Label style="-fx-text-fill: white; -fx-font-size: 14px;" text="No comments yet." />
-                  <Region VBox.vgrow="ALWAYS" />
-                  <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 25px; -fx-padding: 10 16 10 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.2, 0, 3);">
-                     <children>
-                        <StackPane alignment="CENTER" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: #E7EAEF; -fx-background-radius: 50px;">
+                        <HBox fx:id="replyChip" alignment="CENTER_LEFT" managed="false" spacing="6.0" styleClass="reply-chip" visible="false">
                            <children>
-                              <Label style="-fx-font-size: 12px;" text="👤" />
+                              <Label fx:id="replyChipLabel" text="" />
+                              <Button fx:id="replyChipClose" onAction="#onCancelReplyClick" styleClass="close-button" text="✕" />
                            </children>
-                        </StackPane>
-                        <TextField fx:id="commentInput" promptText="Write a comment....." style="-fx-background-color: transparent; -fx-border-color: transparent;" HBox.hgrow="ALWAYS" />
-                        <Label style="-fx-font-size: 14px; -fx-text-fill: #777777;" text="🖼" />
-                        <Label style="-fx-font-size: 14px; -fx-text-fill: #777777;" text="☺" />
-                        <Button onAction="#onPostCommentClick" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-background-radius: 18px; -fx-padding: 8 22 8 22; -fx-font-size: 13px;" text="Post" />
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <TextField fx:id="commentInput" promptText="Write a comment....." HBox.hgrow="ALWAYS" />
+                              <Button fx:id="postButton" onAction="#onPostCommentClick" styleClass="action-button-primary" text="Post" />
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
+                  </VBox>
+                  <ScrollPane fitToWidth="true" styleClass="comments-scroll" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox fx:id="commentsList" spacing="16.0" />
+                     </content>
+                  </ScrollPane>
                </children>
             </VBox>
          </children>
