@@ -11,8 +11,9 @@ public class EventImages {
     private EventImages() {
     }
 
-    // Remote URLs pass through; anything else is treated as a file under images/.
-    //legacy method used by landing page and I currently CBF to change it
+    // used to be the main method for resolving images but is now a helper method used by the
+    // main placeholder url resolver method
+
     private static String resolveImageUrl(String stored) {
         if (stored == null || stored.isBlank()) {
             return null;
@@ -24,8 +25,7 @@ public class EventImages {
         return resource == null ? null : resource.toExternalForm();
     }
 
-    // Same as resolveImageUrl, but falls back to a category placeholder instead of returning null.
-    // newer method used by event details page will eventully become the defeult image resolver method.
+    // used for resolving images and falls back to pre-defined placeholder images for missing images
     public static String resolveImageUrlWithPlaceholder(Event event) {
         String url = resolveImageUrl(event.getImageUrl());
         return url != null ? url : placeholderUrl(event.getCategory());
