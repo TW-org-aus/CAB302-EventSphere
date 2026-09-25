@@ -73,7 +73,7 @@ public class Router {
         if (type == LoginController.class) return new LoginController(AUTH);
         if (type == SettingsController.class) return new SettingsController(AUTH);
         if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
-        if (type == EventPageController.class) return new EventPageController(EVENTS);
+        if (type == EventPageController.class) return new EventPageController(EVENTS, SESSION);
         try {
             return type.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {

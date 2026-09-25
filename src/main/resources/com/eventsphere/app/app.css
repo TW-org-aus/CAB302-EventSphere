@@ -219,3 +219,169 @@
     -fx-background-color: derive(-border, 40%);
     -fx-background-radius: 999;
 }
+
+/* ----- Event details page ----- */
+
+.event-page {
+    -fx-background-color: #F0512B;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 2;
+    -fx-cursor: hand;
+}
+
+/* Named event-detail-card, not event-card: that name is already used by the
+   landing page's event cards with different styling, so reusing it here would
+   have silently overridden theirs. */
+.event-detail-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16px;
+    -fx-padding: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.2, 0, 4);
+}
+
+.event-image-frame {
+    -fx-background-color: #161616;
+    -fx-background-radius: 10px;
+}
+
+.event-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111111;
+}
+
+.event-meta {
+    -fx-text-fill: #555555;
+    -fx-font-size: 13px;
+}
+
+.event-description {
+    -fx-text-fill: #555555;
+    -fx-font-size: 13px;
+}
+
+.action-button {
+    -fx-background-color: white;
+    -fx-text-fill: #222222;
+    -fx-background-radius: 18px;
+    -fx-border-color: #DDDDDD;
+    -fx-border-radius: 18px;
+    -fx-padding: 8 18 8 18;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.action-button:selected {
+    -fx-background-color: #2E6BE8;
+    -fx-text-fill: white;
+    -fx-border-color: #2E6BE8;
+}
+
+.action-button-primary {
+    -fx-background-color: #2E6BE8;
+    -fx-text-fill: white;
+    -fx-background-radius: 18px;
+    -fx-padding: 8 22 8 22;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.comments-heading {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.comments-count-badge {
+    -fx-background-color: #D8431F;
+    -fx-background-radius: 12px;
+    -fx-padding: 2 9 2 9;
+}
+
+.comments-count-label {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+
+.sort-pill {
+    -fx-background-color: white;
+    -fx-text-fill: #222222;
+    -fx-background-radius: 18px;
+    -fx-border-color: #DDDDDD;
+    -fx-border-radius: 18px;
+    -fx-padding: 8 20 8 20;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.sort-pill:selected {
+    -fx-background-color: #2E6BE8;
+    -fx-text-fill: white;
+    -fx-border-color: #2E6BE8;
+}
+
+.composer {
+    -fx-background-color: white;
+    -fx-background-radius: 18px;
+    -fx-padding: 12px 16px 12px 16px;
+    -fx-spacing: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.2, 0, 3);
+}
+
+.reply-chip {
+    -fx-background-color: #E7EAEF;
+    -fx-background-radius: 14px;
+    -fx-padding: 4 10 4 10;
+    -fx-text-fill: #222222;
+    -fx-font-size: 12px;
+}
+
+.comments-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.comment-row {
+    -fx-background-color: white;
+    -fx-background-radius: 14px;
+    -fx-padding: 14px;
+    -fx-spacing: 6px;
+}
+
+.comment-reply {
+    -fx-background-color: #F7F8FA;
+    -fx-background-radius: 12px;
+    -fx-padding: 10px;
+    -fx-spacing: 4px;
+}
+
+.comment-author {
+    -fx-text-fill: #111111;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.comment-meta {
+    -fx-text-fill: #888888;
+    -fx-font-size: 11px;
+}
+
+.reply-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2E6BE8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.empty-comments-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
