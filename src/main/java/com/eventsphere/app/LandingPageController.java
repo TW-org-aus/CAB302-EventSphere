@@ -6,8 +6,12 @@ import java.util.List;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
+import com.eventsphere.app.model.User;
+import com.eventsphere.app.service.DateRange;
 import com.eventsphere.app.service.EventService;
+import com.eventsphere.app.service.SessionManager;
 import com.gluonhq.maps.MapPoint;
 import com.gluonhq.maps.MapView;
 
@@ -19,6 +23,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,6 +34,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 public class LandingPageController {
 
@@ -42,6 +48,9 @@ public class LandingPageController {
     @FXML private Label sectionTitle;
     @FXML private HBox weekendRow;
 
+    @FXML private ComboBox<DateRange> dateFilter;
+    @FXML private ComboBox<Double> distanceFilter;
+
     @FXML private HBox drawer;
     @FXML private Button drawerTab;
     @FXML private FontIcon drawerTabIcon;
@@ -54,6 +63,7 @@ public class LandingPageController {
     private static final double THUMB_H = 150.0;
     private static final double HERO_H = 400.0;
     private static final int HERO_COUNT = 3;
+    private static final Double ANY_DISTANCE = 0.0;
     private static final String TAB_RIGHT =
             "-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;";
     private static final String TAB_LEFT =
@@ -68,16 +78,23 @@ public class LandingPageController {
     private int heroIndex = 0;
     private Event selectedEvent;
 
-    private EventService eventService;
+    private final EventService eventService;
+    private final SessionManager session;
 
+    private Category selectedCategory;       // null = all categories
+    private boolean filtersReady = false;    // stops setValue() in initFilters firing queries
 
-    public LandingPageController(EventService eventService) {
-
+    // Router's controller factory supplies these. There is deliberately no no-arg
+    // constructor, so the controller cannot reach for a database on its own.
+    public LandingPageController(EventService eventService, SessionManager session) {
         this.eventService = eventService;
+        this.session = session;
     }
 
     @FXML
     public void initialize() {
+        initFilters();
+
         drawer.prefWidthProperty().bind(rootPane.widthProperty());
         drawer.maxWidthProperty().bind(rootPane.widthProperty());
 
@@ -129,6 +146,18 @@ public class LandingPageController {
                 : new Image(url, 1600, HERO_H, false, true, true));
     }
 
+    @FXML
+    protected void onPrevHero() {
+        showHeroEvent(heroIndex - 1);
+    }
+
+    @FXML
+    protected void onNextHero() {
+        showHeroEvent(heroIndex + 1);
+    }
+
+    // ----- search -----
+
     // Called by NavBarController after it navigates here with a search term.
     public void showSearchResults(String keyword) {
         try {
@@ -144,16 +173,6 @@ public class LandingPageController {
         }
     }
 
-    @FXML
-    protected void onPrevHero() {
-        showHeroEvent(heroIndex - 1);
-    }
-
-    @FXML
-    protected void onNextHero() {
-        showHeroEvent(heroIndex + 1);
-    }
-
     // ----- event row and filters -----
 
     private void loadUpcomingEvents() {
@@ -165,17 +184,84 @@ public class LandingPageController {
         }
     }
 
+    private void initFilters() {
+        dateFilter.getItems().setAll(DateRange.values());
+        dateFilter.setValue(DateRange.ANY);
+
+        distanceFilter.getItems().setAll(ANY_DISTANCE, 5.0, 10.0, 25.0, 50.0);
+        distanceFilter.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Double km) {
+                return km == null || km <= 0 ? "Any distance" : "Within " + km.intValue() + " km";
+            }
+
+            @Override
+            public Double fromString(String text) {
+                return null;   // not editable
+            }
+        });
+        distanceFilter.setValue(ANY_DISTANCE);
+
+        // Distance needs a home location, which only logged-in users with an address have.
+        distanceFilter.setDisable(homeUser() == null);
+
+        filtersReady = true;
+    }
+
     @FXML
     protected void onCategoryFilter(ActionEvent actionEvent) {
         Button clicked = (Button) actionEvent.getSource();
         String value = String.valueOf(clicked.getUserData());
 
+        filtersReady = false;
+        if (EventService.FILTER_ALL.equals(value)) {
+            selectedCategory = null;
+            dateFilter.setValue(DateRange.ANY);
+            distanceFilter.setValue(ANY_DISTANCE);
+        } else if (EventService.FILTER_WEEKEND.equals(value)) {
+            selectedCategory = null;
+            dateFilter.setValue(DateRange.THIS_WEEKEND);
+        } else {
+            selectedCategory = Category.fromDbValue(value);
+        }
+        filtersReady = true;
+
+        sectionTitle.setText(clicked.getText());
+        applyFilters();
+    }
+
+    @FXML
+    protected void onFiltersChanged() {
+        applyFilters();
+    }
+
+    private void applyFilters() {
+        if (!filtersReady) {
+            return;
+        }
+        Double km = distanceFilter.getValue();
+        Double radius = (km == null || km <= 0) ? null : km;
+        User home = homeUser();
+
         try {
-            sectionTitle.setText(clicked.getText());
-            renderRow(eventService.findByFilter(value));
+            List<Event> results = eventService.filter(selectedCategory, dateFilter.getValue(), radius,
+                    home == null ? null : home.getHomeLat(),
+                    home == null ? null : home.getHomeLong());
+            renderRow(results);
+            if (results.isEmpty()) {
+                weekendRow.getChildren().setAll(emptyMessage("No events match these filters."));
+            }
         } catch (Exception e) {
             System.err.println("Filter failed: " + e.getMessage());
+            weekendRow.getChildren().setAll(emptyMessage("Events unavailable right now."));
         }
+    }
+
+    // The logged-in user, only if they have a home location saved.
+    private User homeUser() {
+        return session.getCurrentUser()
+                .filter(user -> user.getHomeLat() != null && user.getHomeLong() != null)
+                .orElse(null);
     }
 
     private void renderRow(List<Event> events) {
@@ -393,6 +479,7 @@ public class LandingPageController {
         drawerTabIcon.setIconLiteral("bi-chevron-right");
         slide(detailsPanel, TAB_W);
     }
+
     public void hideEventDetails() {
         state = 1;
         slide(detailsPanel, -DETAILS_W);

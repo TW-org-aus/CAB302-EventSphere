@@ -1,13 +1,13 @@
 package com.eventsphere.app.service;
 
-import com.eventsphere.app.dao.IEventDAO;
-import com.eventsphere.app.model.Category;
-import com.eventsphere.app.model.Event;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.eventsphere.app.dao.IEventDAO;
+import com.eventsphere.app.model.Category;
+import com.eventsphere.app.model.Event;
 
 // In-memory IEventDAO so EventService can be tested without a database.
 class MockEventDAO implements IEventDAO {
@@ -16,9 +16,13 @@ class MockEventDAO implements IEventDAO {
     private final List<Event> byCategory = new ArrayList<>();
     private Event byId;
 
+    // Last arguments handed to search(), for assertions.
     String lastSearchText;
+    Category lastSearchCategory;
     Instant lastSearchFrom;
     Instant lastSearchTo;
+
+    // Last category handed to findByCategory(), for assertions.
     Category lastCategoryRequested;
 
     void setUpcoming(Event... events) {
@@ -49,6 +53,7 @@ class MockEventDAO implements IEventDAO {
     @Override
     public List<Event> search(String text, Category category, Instant from, Instant to) {
         lastSearchText = text;
+        lastSearchCategory = category;
         lastSearchFrom = from;
         lastSearchTo = to;
         return List.copyOf(upcoming);

@@ -68,7 +68,7 @@ public class Router {
     }
 
     private static Object createController(Class<?> type) {
-        if (type == LandingPageController.class) return new LandingPageController(EVENTS);
+        if (type == LandingPageController.class) return new LandingPageController(EVENTS, SESSION);
         if (type == SignUpController.class) return new SignUpController(USERS, PLACES);
         if (type == LoginController.class) return new LoginController(AUTH);
         if (type == SettingsController.class) return new SettingsController(AUTH, USERS, SESSION);

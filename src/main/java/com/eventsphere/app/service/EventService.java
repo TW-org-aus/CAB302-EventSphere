@@ -67,20 +67,50 @@ public class EventService {
                 .toList();
     }
 
-    // The coming weekend: midnight on the next Friday (today if it is already Friday)
-    // through to midnight on the Monday after it.
-    Instant weekendStart() {
+    // The coming weekend: midnight Friday to midnight Monday. Counting back from the next Monday
+    // means a Saturday or Sunday still gets *this* weekend rather than jumping to next week's.
+    private ZonedDateTime weekendEndDate() {
         return ZonedDateTime.now(clock)
-                .with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY))
-                .truncatedTo(ChronoUnit.DAYS)
-                .toInstant();
+                .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
+                .truncatedTo(ChronoUnit.DAYS);
+    }
+
+    Instant weekendStart() {
+        return weekendEndDate().minusDays(3).toInstant();
     }
 
     Instant weekendEnd() {
-        return ZonedDateTime.now(clock)
-                .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
-                .truncatedTo(ChronoUnit.DAYS)
-                .toInstant();
+        return weekendEndDate().toInstant();
+    }
+
+    // Combined landing page filter. category null = any category; range ANY = anything from now on;
+    // radiusKm null, or no home coordinates, = any distance. Radius results come back nearest first.
+    public List<Event> filter(Category category, DateRange range, Double radiusKm,
+                              Double homeLat, Double homeLng) {
+        Instant now = Instant.now(clock);
+        Instant from = now;
+        Instant to = null;
+
+        switch (range == null ? DateRange.ANY : range) {
+            case TODAY -> to = ZonedDateTime.now(clock).truncatedTo(ChronoUnit.DAYS).plusDays(1).toInstant();
+            case THIS_WEEKEND -> {
+                Instant start = weekendStart();
+                from = start.isAfter(now) ? start : now;
+                to = weekendEnd();
+            }
+            case NEXT_7_DAYS -> to = now.plus(7, ChronoUnit.DAYS);
+            case NEXT_30_DAYS -> to = now.plus(30, ChronoUnit.DAYS);
+            case ANY -> { }
+        }
+
+        List<Event> results = events.search(null, category, from, to).stream()
+                .filter(event -> !event.hasOccurred())
+                .toList();
+
+        if (radiusKm != null && homeLat != null && homeLng != null) {
+            return withinRadius(results, homeLat, homeLng, radiusKm);
+        }
+        return results;
     }
 
     public List<Event> findUpcomingNearby(double userLat, double userLng, double radiusKm) {
@@ -133,5 +163,5 @@ public class EventService {
             return events.findUpcoming();
         }
         return events.search(keyword.trim(), null, Instant.now(clock), null);
-    } 
+    }
 }
