@@ -123,7 +123,7 @@ public class LandingPageController {
         heroTitle.setText(event.getTitle().toUpperCase());
         heroBlurb.setText(event.getDescription() == null ? "" : event.getDescription());
 
-        String url = EventImages.resolveImageUrl(event.getImageUrl());
+        String url = EventImages.resolveImageUrlWithPlaceholder(event);
         heroImage.setImage(url == null
                 ? null
                 : new Image(url, 1600, HERO_H, false, true, true));
@@ -229,14 +229,17 @@ public class LandingPageController {
     }
 
     private Node buildThumb(Event event, double width, double height) {
-        String url = EventImages.resolveImageUrl(event.getImageUrl());
+        String url = EventImages.resolveImageUrlWithPlaceholder(event);
+
+        // old logic for the legacy image url resolver class no longer needed feel free to delete if you want
+        /*
         if (url == null) {
             Region placeholder = new Region();
             placeholder.getStyleClass().add("event-card-thumb");
             placeholder.setPrefSize(width, height);
             placeholder.setMinHeight(height);
             return placeholder;
-        }
+        }*/
 
         ImageView view = new ImageView(new Image(url, width, height, false, true, true));
         view.setFitWidth(width);

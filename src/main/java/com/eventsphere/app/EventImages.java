@@ -13,7 +13,7 @@ public class EventImages {
 
     // Remote URLs pass through; anything else is treated as a file under images/.
     //legacy method used by landing page and I currently CBF to change it
-    public static String resolveImageUrl(String stored) {
+    private static String resolveImageUrl(String stored) {
         if (stored == null || stored.isBlank()) {
             return null;
         }
