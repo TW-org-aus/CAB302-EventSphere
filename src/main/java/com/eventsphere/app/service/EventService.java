@@ -9,6 +9,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import com.eventsphere.app.dao.IEventDAO;
 import com.eventsphere.app.model.Category;
@@ -38,6 +39,10 @@ public class EventService {
 
     public List<Event> findUpcoming() {
         return events.findUpcoming();
+    }
+
+    public Event findById(int eventId) {
+        return events.findById(eventId);
     }
 
     // Backing list for the hero carousel: the most liked upcoming events, most liked first.

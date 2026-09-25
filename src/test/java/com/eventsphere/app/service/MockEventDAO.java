@@ -14,6 +14,7 @@ class MockEventDAO implements IEventDAO {
 
     private final List<Event> upcoming = new ArrayList<>();
     private final List<Event> byCategory = new ArrayList<>();
+    private Event byId;
 
     String lastSearchText;
     Instant lastSearchFrom;
@@ -28,6 +29,10 @@ class MockEventDAO implements IEventDAO {
     void setByCategory(Event... events) {
         byCategory.clear();
         byCategory.addAll(List.of(events));
+    }
+
+    void setById(Event event) {
+        byId = event;
     }
 
     @Override
@@ -58,12 +63,10 @@ class MockEventDAO implements IEventDAO {
     public void upsertByTicketmasterId(Event event) {
         throw new UnsupportedOperationException("not needed for these tests");
     }
-
     @Override
-    public Optional<Event> findById(int eventId) {
-        throw new UnsupportedOperationException("not needed for these tests");
+    public Event findById(int eventId) {
+        return byId != null && byId.getEventId() == eventId ? byId : null;
     }
-
     @Override
     public List<Event> findAll() {
         throw new UnsupportedOperationException("not needed for these tests");
