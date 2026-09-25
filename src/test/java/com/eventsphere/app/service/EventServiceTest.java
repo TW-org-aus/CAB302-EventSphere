@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -133,6 +134,24 @@ class EventServiceTest {
         assertEquals(List.of("Still to come"),
                 result.stream().map(Event::getTitle).toList());
         assertEquals(Category.MUSIC, dao.lastCategoryRequested);
+    }
+
+    // ----- findById -----
+
+    @Test
+    void findByIdReturnsTheEventWhenFound() {
+        MockEventDAO dao = new MockEventDAO();
+        Event event = eventWithLikes("Car Meet", 0);
+        dao.setById(event);
+
+        assertEquals(event, new EventService(dao).findById(event.getEventId()));
+    }
+
+    @Test
+    void findByIdReturnsEmptyWhenNotFound() {
+        MockEventDAO dao = new MockEventDAO();
+
+        assertNull(new EventService(dao).findById(404));
     }
 
         // ----- keyword search -----
