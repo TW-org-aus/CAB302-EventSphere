@@ -196,4 +196,109 @@ class EventServiceTest {
         assertEquals(1, result.size());
         assertNull(dao.lastSearchText);
     }
+
+        // ----- combined filter (category / date / location) -----
+
+    private static final Clock SATURDAY =
+            Clock.fixed(Instant.parse("2026-09-19T02:00:00Z"), BRISBANE);   // midday Sat 19 Sep
+
+    @Test
+    void filterPassesCategoryToTheDao() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, WEDNESDAY).filter(Category.MUSIC, DateRange.ANY, null, null, null);
+
+        assertEquals(Category.MUSIC, dao.lastSearchCategory);
+    }
+
+    @Test
+    void anyTimeSearchesFromNowWithNoEnd() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, WEDNESDAY).filter(null, DateRange.ANY, null, null, null);
+
+        assertEquals(WEDNESDAY.instant(), dao.lastSearchFrom);
+        assertNull(dao.lastSearchTo);
+    }
+
+    @Test
+    void todayEndsAtLocalMidnight() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, WEDNESDAY).filter(null, DateRange.TODAY, null, null, null);
+
+        assertEquals(WEDNESDAY.instant(), dao.lastSearchFrom);
+        assertEquals(Instant.parse("2026-09-16T14:00:00Z"), dao.lastSearchTo);
+    }
+
+    @Test
+    void next7DaysEndsAWeekFromNow() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, WEDNESDAY).filter(null, DateRange.NEXT_7_DAYS, null, null, null);
+
+        assertEquals(Instant.parse("2026-09-23T02:00:00Z"), dao.lastSearchTo);
+    }
+
+    @Test
+    void thisWeekendMidweekRunsFridayToMonday() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, WEDNESDAY).filter(null, DateRange.THIS_WEEKEND, null, null, null);
+
+        assertEquals(Instant.parse("2026-09-17T14:00:00Z"), dao.lastSearchFrom);
+        assertEquals(Instant.parse("2026-09-20T14:00:00Z"), dao.lastSearchTo);
+    }
+
+    @Test
+    void thisWeekendOnSaturdayStartsNowAndEndsThisMonday() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, SATURDAY).filter(null, DateRange.THIS_WEEKEND, null, null, null);
+
+        assertEquals(SATURDAY.instant(), dao.lastSearchFrom);
+        assertEquals(Instant.parse("2026-09-20T14:00:00Z"), dao.lastSearchTo);
+    }
+
+    @Test
+    void weekendButtonOnSaturdayStillCoversThisWeekend() {
+        MockEventDAO dao = new MockEventDAO();
+
+        new EventService(dao, SATURDAY).findByFilter(EventService.FILTER_WEEKEND);
+
+        assertEquals(Instant.parse("2026-09-17T14:00:00Z"), dao.lastSearchFrom);
+        assertEquals(Instant.parse("2026-09-20T14:00:00Z"), dao.lastSearchTo);
+    }
+
+    @Test
+    void radiusKeepsOnlyNearbyEvents() {
+        MockEventDAO dao = new MockEventDAO();
+        dao.setUpcoming(eventAt("Far", -33.8688, 151.2093), eventAt("Near", -27.47, 153.03));
+
+        List<Event> result = new EventService(dao, WEDNESDAY)
+                .filter(null, DateRange.ANY, 50.0, USER_LAT, USER_LNG);
+
+        assertEquals(List.of("Near"), result.stream().map(Event::getTitle).toList());
+    }
+
+    @Test
+    void radiusIsIgnoredWithoutHomeCoordinates() {
+        MockEventDAO dao = new MockEventDAO();
+        dao.setUpcoming(eventAt("Far", -33.8688, 151.2093), eventAt("Near", -27.47, 153.03));
+
+        List<Event> result = new EventService(dao, WEDNESDAY)
+                .filter(null, DateRange.ANY, 50.0, null, null);
+
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void filterDropsEventsThatHaveAlreadyHappened() {
+        MockEventDAO dao = new MockEventDAO();
+        dao.setUpcoming(eventThatHasOccurred("Finished", true), eventThatHasOccurred("Still to come", false));
+
+        List<Event> result = new EventService(dao, WEDNESDAY).filter(null, DateRange.ANY, null, null, null);
+
+        assertEquals(List.of("Still to come"), result.stream().map(Event::getTitle).toList());
+    }
 }
