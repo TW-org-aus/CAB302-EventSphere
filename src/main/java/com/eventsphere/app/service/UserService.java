@@ -4,6 +4,7 @@ import com.eventsphere.app.dao.IPreferenceDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.User;
+import com.eventsphere.app.model.Preference;
 
 import java.util.Locale;
 import java.util.Set;
@@ -14,6 +15,7 @@ public class UserService {
 
     public static final int MAX_INTERESTS = 5;
     public static final int MIN_PASSWORD_LENGTH = 8;
+    public static final int MAX_BIO_LENGTH = 200;
 
     static final String EMAIL_TAKEN = "That email is already registered";
     static final String WRONG_PASSWORD = "Current password is incorrect";
@@ -133,6 +135,24 @@ public class UserService {
         String oldHash = user.getPasswordHash();
         user.setPasswordHash(PasswordHasher.hash(newPassword));
         save(user, () -> user.setPasswordHash(oldHash));
+        return Optional.empty();
+    }
+
+    public Preference getPreferences(int userId) {
+        return preferences.findByUser(userId);
+    }
+
+    public Optional<String> updateProfile(int userId, String bio, Set<Category> interests) {
+        String trimmedBio = bio == null ? "" : bio.strip();
+
+        if (trimmedBio.length() > MAX_BIO_LENGTH) {
+            return Optional.of("Bio must be " + MAX_BIO_LENGTH + " characters or fewer");
+        }
+        if (!withinInterestLimit(interests)) {
+            return Optional.of("Pick at most " + MAX_INTERESTS + " interests");
+        }
+        preferences.upsertBio(userId, trimmedBio.isEmpty() ? null : trimmedBio);
+        preferences.replaceCategories(userId, interests == null ? Set.of() : interests);
         return Optional.empty();
     }
 

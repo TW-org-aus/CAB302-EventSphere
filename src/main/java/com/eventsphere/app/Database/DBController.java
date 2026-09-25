@@ -35,6 +35,7 @@ public class DBController {
     private void migrate() {
         addColumnIfMissing("Source", "LastSyncedAt", "DATETIME");
         addColumnIfMissing("Events", "TicketmasterID", "TEXT");
+        addColumnIfMissing("Preferences", "Bio", "TEXT");
         try (Statement statement = connect.createStatement()) {
             statement.executeUpdate(
                     "CREATE UNIQUE INDEX IF NOT EXISTS idx_events_ticketmasterid ON Events (TicketmasterID);");
@@ -84,6 +85,7 @@ public class DBController {
                         "CREATE TABLE IF NOT EXISTS Preferences (" +
                         "    UserID      INTEGER PRIMARY KEY," +
                         "    Address     TEXT," +
+                        "    Bio        TEXT," +
                         "    FOREIGN KEY (UserID) REFERENCES Users (UserID)" +
                         "        ON DELETE CASCADE ON UPDATE CASCADE" +
                         ");" +

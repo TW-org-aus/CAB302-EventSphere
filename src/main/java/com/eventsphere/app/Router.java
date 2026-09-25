@@ -72,6 +72,7 @@ public class Router {
         if (type == SignUpController.class) return new SignUpController(USERS, PLACES);
         if (type == LoginController.class) return new LoginController(AUTH);
         if (type == SettingsController.class) return new SettingsController(AUTH, USERS, SESSION);
+        if (type == ProfileController.class) return new ProfileController(USERS, SESSION);
         if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
         if (type == EventPageController.class) return new EventPageController(EVENTS, SESSION);
         try {
