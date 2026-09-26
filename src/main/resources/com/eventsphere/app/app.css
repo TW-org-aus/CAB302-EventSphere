@@ -385,3 +385,8 @@
     -fx-text-fill: white;
     -fx-font-size: 14px;
 }
+
+.comment-error {
+    -fx-text-fill: #D8431F;
+    -fx-font-size: 12px;
+}

@@ -97,6 +97,7 @@
                               <Button fx:id="postButton" onAction="#onPostCommentClick" styleClass="action-button-primary" text="Post" />
                            </children>
                         </HBox>
+                        <Label fx:id="commentErrorLabel" managed="false" styleClass="comment-error" text="" visible="false" wrapText="true" />
                      </children>
                   </VBox>
                   <ScrollPane fitToWidth="true" styleClass="comments-scroll" VBox.vgrow="ALWAYS">
