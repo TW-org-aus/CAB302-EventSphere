@@ -2,7 +2,11 @@ package com.eventsphere.app;
 
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Event;
+import com.eventsphere.app.model.User;
+import com.eventsphere.app.service.CommentService;
 import com.eventsphere.app.service.EventService;
+import com.eventsphere.app.service.LikeResult;
+import com.eventsphere.app.service.LikeService;
 import com.eventsphere.app.service.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,8 +68,11 @@ public class EventPageController {
     @FXML private Button replyChipClose;
     @FXML private TextField commentInput;
     @FXML private Button postButton;
+    @FXML private Label commentErrorLabel;
 
     private final EventService eventService;
+    private final LikeService likeService;
+    private final CommentService commentService;
     private final SessionManager session;
 
     private Event currentEvent;
@@ -76,8 +83,11 @@ public class EventPageController {
 
     // Router's controller factory supplies these. There is deliberately no no-arg
     // constructor, so the controller cannot reach for a database or session on its own.
-    public EventPageController(EventService eventService, SessionManager session) {
+    public EventPageController(EventService eventService, LikeService likeService,
+                               CommentService commentService, SessionManager session) {
         this.eventService = eventService;
+        this.likeService = likeService;
+        this.commentService = commentService;
         this.session = session;
     }
 
@@ -139,16 +149,43 @@ public class EventPageController {
         ticketsButton.setVisible(hasTicketUrl);
         ticketsButton.setManaged(hasTicketUrl);
 
-        // Fresh event: nothing loaded from a likes/going service yet, so start from the stored
-        // like count with liked=false. showLikeState/showGoingState can be called again later
-        // once that data is wired up.
-        showLikeState(false, event.getLikesCount());
+        // Likes and comments come straight from the database, so reopening the page shows the
+        // state the logged-in user (and everyone else) already saved. showGoingState stays a
+        // display-only toggle until the going feature is wired up.
         showGoingState(false);
-
-        commentsCountLabel.setText(String.valueOf(event.getCommentsCount()));
-        showComments(List.of(), Map.of());
+        loadLikeState(event);
+        loadComments(event.getEventId());
+        clearCommentError();
 
         updateComposerEnabled();
+    }
+
+    private Integer currentUserId() {
+        return session.getCurrentUser().map(User::getUserId).orElse(null);
+    }
+
+    // Logged out: liked is false, but the count still comes from the database so visitors
+    // see the real popularity. A read failure keeps the stored count on screen.
+    private void loadLikeState(Event event) {
+        try {
+            LikeResult state = likeService.stateFor(currentUserId(), event.getEventId());
+            showLikeState(state.liked(), state.count());
+        } catch (Exception e) {
+            System.err.println("Could not load likes for event " + event.getEventId() + ": " + e.getMessage());
+            showLikeState(false, event.getLikesCount());
+        }
+    }
+
+    // Loads the event's stored comments and the author names they need, then re-renders.
+    // Called on page load and again after a successful post.
+    private void loadComments(int eventId) {
+        try {
+            List<Comment> comments = commentService.commentsForEvent(eventId);
+            showComments(comments, commentService.authorNamesFor(comments));
+        } catch (Exception e) {
+            System.err.println("Could not load comments for event " + eventId + ": " + e.getMessage());
+            showComments(List.of(), Map.of());
+        }
     }
 
     // Joins the venue name and address with ", ", leaving out whichever side is missing.
@@ -179,8 +216,8 @@ public class EventPageController {
 
     // ----- like / going / tickets -----
 
-    // Updates the like button's label and selected state. count is whatever total should be
-    // shown next to the heart (the event's stored like count until a real like service exists).
+    // Updates the like button's label and selected state. count is the total read back from
+    // LikeService (the trigger-maintained Events.LikesCount).
     public void showLikeState(boolean liked, int count) {
         likeButton.setSelected(liked);
         likeButton.setText((liked ? "♥ " : "♡ ") + count);
@@ -198,12 +235,20 @@ public class EventPageController {
             Router.navigateTo("login-view.fxml");
             return;
         }
-        // TODO: call the likes service to persist the toggle for the current user, then
-        // refresh showLikeState from its returned state. For now this just flips the button
-        // so the UI is demonstrable; nothing is saved.
-        boolean nowLiked = likeButton.isSelected();
-        int baseCount = currentEvent == null ? 0 : currentEvent.getLikesCount();
-        showLikeState(nowLiked, nowLiked ? baseCount + 1 : baseCount);
+        if (currentEvent == null) {
+            return;
+        }
+        // The service flips the stored like and returns the state to show, so the button and
+        // count always mirror the database. Duplicates are impossible (UNIQUE key +
+        // INSERT OR IGNORE), so a double click cannot count twice.
+        try {
+            LikeResult state = likeService.toggleLike(currentUserId(), currentEvent.getEventId());
+            showLikeState(state.liked(), state.count());
+        } catch (Exception e) {
+            System.err.println("Could not update like for event " + currentEvent.getEventId() + ": " + e.getMessage());
+            // Put the button back to whatever the database says, undoing the visual toggle.
+            loadLikeState(currentEvent);
+        }
     }
 
     @FXML
@@ -234,13 +279,12 @@ public class EventPageController {
     // ----- comments -----
 
     // Stores the given comments and names, then renders them as threads using the current
-    // sort. Missing names fall back to "User #<id>".
+    // sort. Missing names fall back to "User #<id>". The badge always shows the number of
+    // comments actually loaded, which is what the database holds.
     public void showComments(List<Comment> comments, Map<Integer, String> namesByUserId) {
         currentComments = comments;
         currentNamesByUserId = namesByUserId;
-        if (!comments.isEmpty()) {
-            commentsCountLabel.setText(String.valueOf(comments.size()));
-        }
+        commentsCountLabel.setText(String.valueOf(comments.size()));
         renderComments();
     }
 
@@ -293,9 +337,11 @@ public class EventPageController {
 
         for (Comment topLevel : topLevels) {
             VBox threadBox = new VBox(8);
-            threadBox.getChildren().add(buildCommentRow(topLevel, null, false));
 
             List<Comment> replies = repliesByTopLevel.get(topLevel);
+            // One reply per comment: the Reply link disappears once the comment has its reply.
+            threadBox.getChildren().add(buildCommentRow(topLevel, null, false, replies.isEmpty()));
+
             replies.sort(Comparator.comparing(Comment::getCreatedAt,
                     Comparator.nullsLast(Comparator.naturalOrder())));
             for (Comment reply : replies) {
@@ -305,7 +351,8 @@ public class EventPageController {
 
                 VBox indent = new VBox(6);
                 indent.setStyle("-fx-padding: 0 0 0 24;");
-                indent.getChildren().add(buildCommentRow(reply, mentionUserId, true));
+                // Replies cannot be replied to, so they never get a Reply link.
+                indent.getChildren().add(buildCommentRow(reply, mentionUserId, true, false));
                 threadBox.getChildren().add(indent);
             }
             commentsList.getChildren().add(threadBox);
@@ -358,7 +405,9 @@ public class EventPageController {
         return COMMENT_DATE_FORMAT.format(when);
     }
 
-    private VBox buildCommentRow(Comment comment, Integer directParentUserId, boolean isReply) {
+    // canReply is false for replies and for comments that already have their one reply, so the
+    // UI never offers an action CommentService would refuse.
+    private VBox buildCommentRow(Comment comment, Integer directParentUserId, boolean isReply, boolean canReply) {
         VBox row = new VBox(4);
         row.getStyleClass().add(isReply ? "comment-reply" : "comment-row");
 
@@ -381,6 +430,8 @@ public class EventPageController {
 
         Button replyLink = new Button("Reply");
         replyLink.getStyleClass().add("reply-link");
+        replyLink.setVisible(canReply);
+        replyLink.setManaged(canReply);
         replyLink.setOnAction(e -> onReplyClick(comment));
         replyLink.setDisable(!session.isLoggedIn());
 
@@ -402,6 +453,7 @@ public class EventPageController {
         replyChipLabel.setText("Replying to " + name);
         replyChip.setVisible(true);
         replyChip.setManaged(true);
+        clearCommentError();
         commentInput.setText("@" + name + " ");
         commentInput.requestFocus();
         commentInput.positionCaret(commentInput.getText().length());
@@ -409,24 +461,61 @@ public class EventPageController {
 
     @FXML
     protected void onCancelReplyClick() {
-        replyTarget = null;
-        replyChip.setVisible(false);
-        replyChip.setManaged(false);
+        clearReplyTarget();
+        clearCommentError();
         commentInput.clear();
     }
 
+    // Stores the comment (or reply) through CommentService, then reloads the list from the
+    // database so the new row is rendered with its real id, timestamp and author. The service
+    // owns the reply rules and throws IllegalArgumentException with a reason when one is hit.
     @FXML
     protected void onPostCommentClick() {
-        if (!session.isLoggedIn()) {
+        if (!session.isLoggedIn() || currentEvent == null) {
             return;
         }
-        // TODO: call the comment service's post method with commentInput's text and, if
-        // replyTarget is set, its commentId as replyToCommentId. Then reload comments via
-        // showComments so the new comment/reply appears.
+        String content = commentInput.getText();
+        if (content == null || content.isBlank()) {
+            return;
+        }
+        clearCommentError();
+        Integer replyToCommentId = replyTarget == null ? null : replyTarget.getCommentId();
+        try {
+            commentService.postComment(currentUserId(), currentEvent.getEventId(),
+                    content, replyToCommentId);
+        } catch (IllegalArgumentException e) {
+            // Refused by a reply rule (target deleted, already replied to, ...). Keep the typed
+            // text so it is not lost and tell the user why.
+            System.err.println("Could not post comment: " + e.getMessage());
+            showCommentError(e.getMessage());
+            return;
+        } catch (Exception e) {
+            System.err.println("Could not post comment: " + e.getMessage());
+            showCommentError("Could not post this comment. Please try again.");
+            return;
+        }
+        clearReplyTarget();
         commentInput.clear();
+        loadComments(currentEvent.getEventId());
+    }
+
+    // Hides the reply chip and forgets the target, without touching the input text.
+    private void clearReplyTarget() {
         replyTarget = null;
         replyChip.setVisible(false);
         replyChip.setManaged(false);
+    }
+
+    private void showCommentError(String message) {
+        commentErrorLabel.setText(message);
+        commentErrorLabel.setVisible(true);
+        commentErrorLabel.setManaged(true);
+    }
+
+    private void clearCommentError() {
+        commentErrorLabel.setText("");
+        commentErrorLabel.setVisible(false);
+        commentErrorLabel.setManaged(false);
     }
 
     // Disables the composer and reply links when logged out, and swaps the prompt text.
