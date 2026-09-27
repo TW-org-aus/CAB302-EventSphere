@@ -7,6 +7,8 @@ import com.eventsphere.app.model.Preference;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 // In-memory IPreferenceDAO so UserService can be tested without a database.
 class MockPreferenceDAO implements IPreferenceDAO {
@@ -16,9 +18,12 @@ class MockPreferenceDAO implements IPreferenceDAO {
     Integer lastCategoriesUserId;
     Set<Category> lastCategories;
 
+    private final Map<Integer, Preference> saved = new HashMap<>();
+
     @Override
     public Preference findByUser(int userId) {
-        return new Preference(userId, null, new LinkedHashSet<>());
+        Preference preference = saved.get(userId);
+        return preference != null ? preference : new Preference(userId, null, null, new LinkedHashSet<>());
     }
 
     @Override
@@ -28,8 +33,14 @@ class MockPreferenceDAO implements IPreferenceDAO {
     }
 
     @Override
+    public void upsertBio(int userId, String bio) {
+        saved.computeIfAbsent(userId, id -> findByUser(id)).setBio(bio);
+    }
+
+    @Override
     public void replaceCategories(int userId, Collection<Category> categories) {
         lastCategoriesUserId = userId;
         lastCategories = new LinkedHashSet<>(categories);
+        saved.computeIfAbsent(userId, id -> findByUser(id)).setCategories(categories);
     }
 }

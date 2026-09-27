@@ -29,12 +29,11 @@
                         <Label text="Ava Chen" styleClass="card-title"/>
                         <Label text="West End · 27" styleClass="muted-text"/>
                     </VBox>
-                    <Button text="Edit" styleClass="secondary-button" onAction="#onEditProfileClick"/>
+                    <Button fx:id="editButton" text="Edit" styleClass="secondary-button" onAction="#onEditProfileClick"/>
                     <Button text="Settings" styleClass="primary-button" onAction="#onSettingsClick"/>
                 </HBox>
 
-                <Label text="Runs a lot before everyone else is awake. Always down for something loud after."
-                       styleClass="body-text" wrapText="true"/>
+                <Label fx:id="bioLabel" styleClass="body-text" wrapText="true"/>
 
                 <HBox spacing="32">
                     <VBox>
@@ -47,11 +46,7 @@
                     </VBox>
                 </HBox>
 
-                <HBox spacing="10">
-                    <Label text="Live music" styleClass="tag-pill"/>
-                    <Label text="Coffee" styleClass="tag-pill"/>
-                    <Label text="Running club" styleClass="tag-pill"/>
-                </HBox>
+                <HBox fx:id="interestBox" spacing="10"/>
             </VBox>
 
             <!-- Events card -->

@@ -13,6 +13,9 @@ public interface IPreferenceDAO {
     // address may be null.
     void upsertAddress(int userId, String address);
 
+    // bio may be null
+    void upsertBio(int userId, String bio);
+
     // Replaces the whole set with new ones and creates the Preferences row if missing.(even if there are more old than new the old ones will still be gone :(
     void replaceCategories(int userId, Collection<Category> categories);
 }
