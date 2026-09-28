@@ -3,6 +3,8 @@ package com.eventsphere.app;
 import com.eventsphere.app.Database.Database;
 import com.eventsphere.app.dao.EventDAO;
 import com.eventsphere.app.dao.IUserDAO;
+import com.eventsphere.app.dao.GoingDAO;
+import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.places.IPlacesClient;
@@ -36,6 +38,7 @@ public class Router {
     // AuthService both read the Users table, so they share one DAO.
     // its better to declare users and userDAO before so it can be passed down
     private static final IUserDAO USER_DAO = new UserDAO(CONNECTION);
+    private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
     private static final UserService USERS =
             new UserService(USER_DAO, new PreferenceDAO(CONNECTION));
     private static final SessionManager SESSION = new SessionManager();
@@ -71,6 +74,7 @@ public class Router {
         if (type == LandingPageController.class) return new LandingPageController(EVENTS);
         if (type == SignUpController.class) return new SignUpController(USERS, PLACES);
         if (type == LoginController.class) return new LoginController(AUTH);
+        if (type == ProfileController.class) return new ProfileController(SESSION, GOING_DAO);
         if (type == SettingsController.class) return new SettingsController(AUTH);
         if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
         try {

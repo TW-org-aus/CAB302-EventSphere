@@ -4,8 +4,10 @@ import com.eventsphere.app.service.AuthService;
 import com.eventsphere.app.service.SessionManager;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 
 public class NavBarController {
 
@@ -13,6 +15,9 @@ public class NavBarController {
     private final SessionManager session;
 
     @FXML private Button authButton;
+    @FXML private StackPane notificationsButton;
+    @FXML private StackPane messagesButton;
+    @FXML private StackPane profileButton;
     @FXML private TextField searchField;
 
     public NavBarController(AuthService authService, SessionManager session) {
@@ -21,8 +26,17 @@ public class NavBarController {
     }
 
     @FXML
-    protected void initialize() {
-        authButton.setText(session.isLoggedIn() ? "Log Out" : "Log In");
+    public void initialize() {
+        boolean loggedIn = session.isLoggedIn();
+        setShown(notificationsButton, loggedIn);
+        setShown(messagesButton, loggedIn);
+        setShown(profileButton, loggedIn);
+        authButton.setText(loggedIn ? "Log Out" : "Log In");
+    }
+
+    private static void setShown(Node node, boolean show) {
+        node.setVisible(show);
+        node.setManaged(show);
     }
 
     @FXML
@@ -53,6 +67,10 @@ public class NavBarController {
 
     @FXML
     protected void onProfileClick() {
+        if (!session.isLoggedIn()) {
+            Router.navigateTo("login-view.fxml");
+            return;
+        }
         Router.navigateTo("profile-view.fxml");
     }
 
