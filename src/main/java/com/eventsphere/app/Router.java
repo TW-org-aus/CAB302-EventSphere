@@ -91,7 +91,7 @@ public class Router {
         if (type == ProfileController.class) return new ProfileController(USERS, SESSION, GOING_DAO);
         if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
         if (type == EventPageController.class) {
-            return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE, SESSION);
+            return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE, GOING_DAO, SESSION);
         }
         try {
             return type.getDeclaredConstructor().newInstance();
