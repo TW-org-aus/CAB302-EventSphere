@@ -1,24 +1,5 @@
 package com.eventsphere.app;
 
-import com.eventsphere.app.model.Comment;
-import com.eventsphere.app.model.Event;
-import com.eventsphere.app.model.User;
-import com.eventsphere.app.service.CommentService;
-import com.eventsphere.app.service.EventService;
-import com.eventsphere.app.service.LikeResult;
-import com.eventsphere.app.service.LikeService;
-import com.eventsphere.app.service.SessionManager;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-
 import java.awt.Desktop;
 import java.net.URI;
 import java.time.Duration;
@@ -32,6 +13,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.eventsphere.app.model.Comment;
+import com.eventsphere.app.model.Event;
+import com.eventsphere.app.model.User;
+import com.eventsphere.app.service.CommentService;
+import com.eventsphere.app.service.EventService;
+import com.eventsphere.app.service.LikeResult;
+import com.eventsphere.app.service.LikeService;
+import com.eventsphere.app.service.SessionManager;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class EventPageController {
 
@@ -274,6 +275,15 @@ public class EventPageController {
         } catch (Exception e) {
             System.err.println("Could not open ticket URL: " + e.getMessage());
         }
+    }
+    
+    @FXML
+    protected void onSeeGoingClick() {
+        if (currentEvent == null) {
+            return;
+        }
+        EventGoingController going = Router.navigateToWithController("event-going-view.fxml");
+        going.showEvent(currentEvent.getEventId());
     }
 
     // ----- comments -----
