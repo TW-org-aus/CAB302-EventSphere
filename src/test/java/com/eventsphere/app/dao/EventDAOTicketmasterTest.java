@@ -53,8 +53,8 @@ class EventDAOTicketmasterTest {
         int first = events.insert(event("Scraped one", null));
         int second = events.insert(event("Scraped two", null));
 
-        assertNull(events.findById(first).orElseThrow().getTicketmasterId());
-        assertNull(events.findById(second).orElseThrow().getTicketmasterId());
+        assertNull(events.findById(first).getTicketmasterId());
+        assertNull(events.findById(second).getTicketmasterId());
     }
 
     @Test

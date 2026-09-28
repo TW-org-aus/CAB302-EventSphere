@@ -1,23 +1,28 @@
 package com.eventsphere.app.service;
 
-import com.eventsphere.app.dao.IEventDAO;
-import com.eventsphere.app.model.Category;
-import com.eventsphere.app.model.Event;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.eventsphere.app.dao.IEventDAO;
+import com.eventsphere.app.model.Category;
+import com.eventsphere.app.model.Event;
 
 // In-memory IEventDAO so EventService can be tested without a database.
 class MockEventDAO implements IEventDAO {
 
     private final List<Event> upcoming = new ArrayList<>();
     private final List<Event> byCategory = new ArrayList<>();
+    private Event byId;
 
+    // Last arguments handed to search(), for assertions.
     String lastSearchText;
+    Category lastSearchCategory;
     Instant lastSearchFrom;
     Instant lastSearchTo;
+
+    // Last category handed to findByCategory(), for assertions.
     Category lastCategoryRequested;
 
     void setUpcoming(Event... events) {
@@ -28,6 +33,10 @@ class MockEventDAO implements IEventDAO {
     void setByCategory(Event... events) {
         byCategory.clear();
         byCategory.addAll(List.of(events));
+    }
+
+    void setById(Event event) {
+        byId = event;
     }
 
     @Override
@@ -44,6 +53,7 @@ class MockEventDAO implements IEventDAO {
     @Override
     public List<Event> search(String text, Category category, Instant from, Instant to) {
         lastSearchText = text;
+        lastSearchCategory = category;
         lastSearchFrom = from;
         lastSearchTo = to;
         return List.copyOf(upcoming);
@@ -58,12 +68,10 @@ class MockEventDAO implements IEventDAO {
     public void upsertByTicketmasterId(Event event) {
         throw new UnsupportedOperationException("not needed for these tests");
     }
-
     @Override
-    public Optional<Event> findById(int eventId) {
-        throw new UnsupportedOperationException("not needed for these tests");
+    public Event findById(int eventId) {
+        return byId != null && byId.getEventId() == eventId ? byId : null;
     }
-
     @Override
     public List<Event> findAll() {
         throw new UnsupportedOperationException("not needed for these tests");

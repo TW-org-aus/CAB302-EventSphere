@@ -9,6 +9,7 @@ module com.eventsphere.app {
     requires java.sql;
     requires org.xerial.sqlitejdbc;
     requires java.net.http;
+    requires java.desktop;
     requires com.fasterxml.jackson.databind;
     requires org.bouncycastle.provider;
 

@@ -16,7 +16,7 @@ public interface IEventDAO {
     // existing row never changes.
     void upsertByTicketmasterId(Event event);
 
-    Optional<Event> findById(int eventId);
+    Event findById(int eventId);
 
 
     List<Event> findAll();

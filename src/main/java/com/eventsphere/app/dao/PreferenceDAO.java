@@ -21,10 +21,11 @@ public class PreferenceDAO implements IPreferenceDAO {
 
     @Override
     public Preference findByUser(int userId) {
-        String addressSql = "SELECT Address FROM Preferences WHERE UserID = ?";
+        String addressSql = "SELECT Address, Bio FROM Preferences WHERE UserID = ?";
         String categoriesSql = "SELECT Category FROM PreferenceCategories WHERE UserID = ?";
         try {
             String address = null;
+            String  bio = null;
             boolean hasRow = false;
             try (PreparedStatement ps = connection.prepareStatement(addressSql)) {
                 ps.setInt(1, userId);
@@ -32,11 +33,12 @@ public class PreferenceDAO implements IPreferenceDAO {
                     if (rs.next()) {
                         hasRow = true;
                         address = rs.getString("Address");
+                        bio = rs.getString("Bio");
                     }
                 }
             }
             if (!hasRow) {
-                return new Preference(userId, null, List.of());
+                return new Preference(userId, null, null, List.of());
             }
             List<Category> categories = new ArrayList<>();
             try (PreparedStatement ps = connection.prepareStatement(categoriesSql)) {
@@ -47,7 +49,7 @@ public class PreferenceDAO implements IPreferenceDAO {
                     }
                 }
             }
-            return new Preference(userId, address, categories);
+            return new Preference(userId, address, bio, categories);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find preferences for user: " + userId, e);
         }
@@ -63,6 +65,19 @@ public class PreferenceDAO implements IPreferenceDAO {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to upsert address for user: " + userId, e);
+        }
+    }
+
+    @Override
+    public void upsertBio(int userId, String bio) {
+        String sql = "INSERT INTO Preferences (UserID, Bio) VALUES (?, ?) " +
+                "ON CONFLICT(UserID) DO UPDATE SET Bio = excluded.Bio";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setString(2, bio);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to upsert bio for user: " + userId, e);
         }
     }
 

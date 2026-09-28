@@ -88,12 +88,12 @@ public class EventDAO implements IEventDAO {
     }
 
     @Override
-    public Optional<Event> findById(int eventId) {
+    public Event findById(int eventId) {
         String sql = "SELECT " + COLUMNS + " FROM Events WHERE EventID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, eventId);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() ? Optional.of(mapRow(rs)) : Optional.empty();
+                return  rs.next() ? mapRow(rs) : null;
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to find event by id: " + eventId, e);
