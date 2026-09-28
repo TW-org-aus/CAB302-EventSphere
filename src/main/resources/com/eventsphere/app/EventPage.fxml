@@ -54,6 +54,7 @@
                                     <ToggleButton fx:id="likeButton" onAction="#onLikeClick" styleClass="action-button" text="♡" />
                                     <ToggleButton fx:id="goingButton" onAction="#onGoingClick" styleClass="action-button" text="Going" />
                                     <Button fx:id="ticketsButton" onAction="#onGetTicketsClick" styleClass="action-button-primary" text="Get tickets" />
+                                    <Button onAction="#onSeeGoingClick" styleClass="action-button" text="See who's going" />
                                  </children>
                               </HBox>
                               <Label fx:id="descriptionLabel" styleClass="event-description" text="" wrapText="true" />

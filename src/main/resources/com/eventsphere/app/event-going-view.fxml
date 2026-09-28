@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.eventsphere.app.EventGoingController"
+      stylesheets="@app.css">
+    <children>
+        <fx:include source="nav-bar.fxml"/>
+        <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS">
+            <content>
+                <VBox styleClass="page-bg" alignment="TOP_CENTER" spacing="24">
+                    <padding>
+                        <Insets top="40.0" bottom="80.0" left="32.0" right="32.0"/>
+                    </padding>
+
+                    <HBox maxWidth="700">
+                        <Button text="&#8592; Back" styleClass="secondary-button" onAction="#onBackClick"/>
+                    </HBox>
+
+                    <VBox styleClass="card" maxWidth="700" spacing="6">
+                        <Label fx:id="eventTitleLabel" styleClass="card-title" wrapText="true"/>
+                        <Label fx:id="goingCountLabel" styleClass="muted-text"/>
+                    </VBox>
+
+                    <VBox styleClass="card" maxWidth="700" spacing="0">
+                        <Label text="Who's going" styleClass="card-title"/>
+                        <VBox fx:id="attendeeList" spacing="0" style="-fx-padding: 18 0 0 0;"/>
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</VBox>

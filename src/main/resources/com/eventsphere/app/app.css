@@ -390,3 +390,24 @@
     -fx-text-fill: #D8431F;
     -fx-font-size: 12px;
 }
+
+/* ----- Who's going screen ----- */
+
+.going-row {
+    -fx-padding: 10 0 10 0;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.going-avatar {
+    -fx-background-color: -accent;
+    -fx-text-fill: -white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: center;
+    -fx-background-radius: 999;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-max-width: 40;
+    -fx-max-height: 40;
+}
