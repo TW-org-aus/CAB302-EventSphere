@@ -1,9 +1,15 @@
 package com.eventsphere.app;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.sql.Connection;
+
 import com.eventsphere.app.Database.Database;
 import com.eventsphere.app.dao.CommentDAO;
 import com.eventsphere.app.dao.EventDAO;
+import com.eventsphere.app.dao.GoingDAO;
 import com.eventsphere.app.dao.ICommentDAO;
+import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.dao.ILikeDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.dao.GoingDAO;
@@ -16,17 +22,15 @@ import com.eventsphere.app.places.PlacesClient;
 import com.eventsphere.app.service.AuthService;
 import com.eventsphere.app.service.CommentService;
 import com.eventsphere.app.service.EventService;
+import com.eventsphere.app.service.GoingService;
 import com.eventsphere.app.service.LikeService;
 import com.eventsphere.app.service.SessionManager;
 import com.eventsphere.app.service.UserService;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.sql.Connection;
 
 /**
  * Global navigation entry point. Holds the app's single {@link Stage} so any
@@ -57,6 +61,8 @@ public class Router {
     private static final ICommentDAO COMMENT_DAO = new CommentDAO(CONNECTION);
     private static final LikeService LIKE_SERVICE = new LikeService(LIKE_DAO);
     private static final CommentService COMMENT_SERVICE = new CommentService(COMMENT_DAO, USER_DAO);
+    private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
+    private static final GoingService GOING_SERVICE = new GoingService(GOING_DAO);
 
     private Router() {
     }
@@ -90,6 +96,7 @@ public class Router {
         if (type == SettingsController.class) return new SettingsController(AUTH, USERS, SESSION);
         if (type == ProfileController.class) return new ProfileController(USERS, SESSION, GOING_DAO);
         if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
+        if (type == EventGoingController.class) return new EventGoingController(EVENTS, GOING_SERVICE);
         if (type == EventPageController.class) {
             return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE, GOING_DAO, SESSION);
         }
