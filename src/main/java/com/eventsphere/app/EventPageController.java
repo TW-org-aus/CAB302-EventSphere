@@ -21,6 +21,7 @@ import com.eventsphere.app.service.CommentService;
 import com.eventsphere.app.service.EventService;
 import com.eventsphere.app.service.LikeResult;
 import com.eventsphere.app.service.LikeService;
+import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.service.SessionManager;
 
 import javafx.event.ActionEvent;
@@ -74,6 +75,7 @@ public class EventPageController {
     private final EventService eventService;
     private final LikeService likeService;
     private final CommentService commentService;
+    private final IGoingDAO going;
     private final SessionManager session;
 
     private Event currentEvent;
@@ -85,10 +87,12 @@ public class EventPageController {
     // Router's controller factory supplies these. There is deliberately no no-arg
     // constructor, so the controller cannot reach for a database or session on its own.
     public EventPageController(EventService eventService, LikeService likeService,
-                               CommentService commentService, SessionManager session) {
+                               CommentService commentService, IGoingDAO going,
+                               SessionManager session) {
         this.eventService = eventService;
         this.likeService = likeService;
         this.commentService = commentService;
+        this.going = going;
         this.session = session;
     }
 
@@ -150,10 +154,9 @@ public class EventPageController {
         ticketsButton.setVisible(hasTicketUrl);
         ticketsButton.setManaged(hasTicketUrl);
 
-        // Likes and comments come straight from the database, so reopening the page shows the
-        // state the logged-in user (and everyone else) already saved. showGoingState stays a
-        // display-only toggle until the going feature is wired up.
-        showGoingState(false);
+        // Likes, going and comments come straight from the database, so reopening the page shows the
+        // state the logged-in user (and everyone else) already saved.
+        loadGoingState(event);
         loadLikeState(event);
         loadComments(event.getEventId());
         clearCommentError();
@@ -163,6 +166,21 @@ public class EventPageController {
 
     private Integer currentUserId() {
         return session.getCurrentUser().map(User::getUserId).orElse(null);
+    }
+
+    // Logged out: always false, since going is per-user.
+    private void loadGoingState(Event event) {
+        Integer userId = currentUserId();
+        if (userId == null) {
+            showGoingState(false);
+            return;
+        }
+        try {
+            showGoingState(going.isGoing(userId, event.getEventId()));
+        } catch (Exception e) {
+            System.err.println("Could not load going state for event " + event.getEventId() + ": " + e.getMessage());
+            showGoingState(false);
+        }
     }
 
     // Logged out: liked is false, but the count still comes from the database so visitors
@@ -255,14 +273,25 @@ public class EventPageController {
     @FXML
     protected void onGoingClick() {
         if (!session.isLoggedIn()) {
-            goingButton.setSelected(false);
+            goingButton.setSelected(false); // undo the toggle the click already applied
             Router.navigateTo("login-view.fxml");
             return;
         }
-        // TODO: call the attendance/going service to persist the toggle for the current user,
-        // then refresh showGoingState from its returned state. For now this just flips the
-        // button so the UI is demonstrable; nothing is saved.
-        showGoingState(goingButton.isSelected());
+        if (currentEvent == null) {
+            return;
+        }
+        // markGoing/unmarkGoing are idempotent, so a double click cannot create duplicate rows.
+        try {
+            if (goingButton.isSelected()) {
+                going.markGoing(currentUserId(), currentEvent.getEventId());
+            } else {
+                going.unmarkGoing(currentUserId(), currentEvent.getEventId());
+            }
+            showGoingState(goingButton.isSelected());
+        } catch (Exception e) {
+            System.err.println("Could not update going for event " + currentEvent.getEventId() + ": " + e.getMessage());
+            loadGoingState(currentEvent);  // put the button back to what the database says
+        }
     }
 
     @FXML

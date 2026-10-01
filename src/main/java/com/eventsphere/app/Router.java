@@ -12,6 +12,8 @@ import com.eventsphere.app.dao.ICommentDAO;
 import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.dao.ILikeDAO;
 import com.eventsphere.app.dao.IUserDAO;
+import com.eventsphere.app.dao.GoingDAO;
+import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.dao.LikeDAO;
 import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
@@ -46,6 +48,7 @@ public class Router {
     // AuthService both read the Users table, so they share one DAO.
     // its better to declare users and userDAO before so it can be passed down
     private static final IUserDAO USER_DAO = new UserDAO(CONNECTION);
+    private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
     private static final UserService USERS =
             new UserService(USER_DAO, new PreferenceDAO(CONNECTION));
     private static final SessionManager SESSION = new SessionManager();
@@ -58,7 +61,6 @@ public class Router {
     private static final ICommentDAO COMMENT_DAO = new CommentDAO(CONNECTION);
     private static final LikeService LIKE_SERVICE = new LikeService(LIKE_DAO);
     private static final CommentService COMMENT_SERVICE = new CommentService(COMMENT_DAO, USER_DAO);
-    private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
     private static final GoingService GOING_SERVICE = new GoingService(GOING_DAO);
 
     private Router() {
@@ -91,11 +93,11 @@ public class Router {
         if (type == SignUpController.class) return new SignUpController(USERS, PLACES);
         if (type == LoginController.class) return new LoginController(AUTH);
         if (type == SettingsController.class) return new SettingsController(AUTH, USERS, SESSION);
-        if (type == ProfileController.class) return new ProfileController(USERS, SESSION);
+        if (type == ProfileController.class) return new ProfileController(USERS, SESSION, GOING_DAO);
         if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
         if (type == EventGoingController.class) return new EventGoingController(EVENTS, GOING_SERVICE);
         if (type == EventPageController.class) {
-            return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE, SESSION);
+            return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE, GOING_DAO, SESSION);
         }
         try {
             return type.getDeclaredConstructor().newInstance();

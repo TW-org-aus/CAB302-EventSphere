@@ -37,7 +37,7 @@
 
         <HBox alignment="CENTER" spacing="14.0">
             <children>
-                <StackPane alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
+                <StackPane fx:id="notificationsButton" alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
                            prefHeight="38.0" prefWidth="38.0"
                            style="-fx-background-color: white; -fx-background-radius: 50px; -fx-cursor: hand;"
                            onMouseClicked="#onNotificationsClick">
@@ -45,7 +45,7 @@
                         <FontIcon iconLiteral="bi-bell" iconSize="16" iconColor="#111111"/>
                     </children>
                 </StackPane>
-                <StackPane alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
+                <StackPane fx:id="messagesButton" alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
                            prefHeight="38.0" prefWidth="38.0"
                            style="-fx-background-color: white; -fx-background-radius: 50px; -fx-cursor: hand;"
                            onMouseClicked="#onMessagesClick">
@@ -53,7 +53,7 @@
                         <FontIcon iconLiteral="bi-chat-dots" iconSize="16" iconColor="#111111"/>
                     </children>
                 </StackPane>
-                <StackPane alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
+                <StackPane fx:id="profileButton" alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
                            prefHeight="38.0" prefWidth="38.0"
                            style="-fx-background-color: #2E6BE8; -fx-background-radius: 50px; -fx-cursor: hand;"
                            onMouseClicked="#onProfileClick">
