@@ -61,7 +61,6 @@ public class Router {
     private static final ICommentDAO COMMENT_DAO = new CommentDAO(CONNECTION);
     private static final LikeService LIKE_SERVICE = new LikeService(LIKE_DAO);
     private static final CommentService COMMENT_SERVICE = new CommentService(COMMENT_DAO, USER_DAO);
-    private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
     private static final GoingService GOING_SERVICE = new GoingService(GOING_DAO);
 
     private Router() {
