@@ -191,9 +191,10 @@ class CommentServiceTest {
         Comment comment = commentById(id);
         assertNull(comment.getUpdatedAt());
 
-        Instant before = Instant.now();
+        // datetime('now') in SQLite has second precision; truncate bounds to match.
+        Instant before = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         comments.editComment(comment, "Edited text");
-        Instant after = Instant.now();
+        Instant after = Instant.now().truncatedTo(ChronoUnit.SECONDS).plusSeconds(1);
 
         Instant updatedAt = commentById(id).getUpdatedAt();
         assertNotNull(updatedAt);
