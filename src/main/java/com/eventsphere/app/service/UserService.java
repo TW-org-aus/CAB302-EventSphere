@@ -3,6 +3,7 @@ package com.eventsphere.app.service;
 import com.eventsphere.app.dao.IPreferenceDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.model.Category;
+import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Preference;
 import com.eventsphere.app.model.User;
 
@@ -209,6 +210,8 @@ public class UserService {
         }
         return Optional.empty();
     }
+
+
 
 
     // ----- helpers ------
