@@ -8,6 +8,7 @@ import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Event;
+import com.eventsphere.app.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -170,5 +172,87 @@ class CommentServiceTest {
         assertEquals("Ada Lovelace", names.get(userId));
         assertEquals("Grace Hopper", names.get(otherUserId));
         assertEquals(2, names.size());
+    }
+
+    // ----- editComment -----
+
+    @Test
+    void editCommentUpdatesTheStoredContent() {
+        int id = comments.postComment(userId, eventId, "Original text", null);
+        Comment comment = commentById(id);
+
+        comments.editComment(comment, "Edited text");
+
+        assertEquals("Edited text", commentById(id).getContent());
+    }
+
+    @Test
+    void editCommentSetsUpdatedAt() {
+        int id = comments.postComment(userId, eventId, "Original text", null);
+        Comment comment = commentById(id);
+        assertNull(comment.getUpdatedAt());
+
+        // datetime('now') in SQLite has second precision; truncate bounds to match.
+        Instant before = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+        comments.editComment(comment, "Edited text");
+        Instant after = Instant.now().truncatedTo(ChronoUnit.SECONDS).plusSeconds(1);
+
+        Instant updatedAt = commentById(id).getUpdatedAt();
+        assertNotNull(updatedAt);
+        assertFalse(updatedAt.isBefore(before));
+        assertFalse(updatedAt.isAfter(after));
+    }
+
+    @Test
+    void editCommentDoesNotAffectOtherComments() {
+        int id1 = comments.postComment(userId, eventId, "First", null);
+        int id2 = comments.postComment(userId, eventId, "Second", null);
+        Comment comment1 = commentById(id1);
+
+        comments.editComment(comment1, "Changed");
+
+        assertEquals("Second", commentById(id2).getContent());
+    }
+
+    // ----- deleteComment -----
+
+    @Test
+    void deleteCommentRemovesItFromTheEvent() {
+        int id = comments.postComment(userId, eventId, "Going to be deleted", null);
+
+        comments.deleteComment(id);
+
+        assertTrue(comments.commentsForEvent(eventId).isEmpty());
+    }
+
+    @Test
+    void deleteCommentOnlyRemovesTheTargetedComment() {
+        int id1 = comments.postComment(userId, eventId, "Keep this", null);
+        int id2 = comments.postComment(userId, eventId, "Delete this", null);
+
+        comments.deleteComment(id2);
+
+        assertEquals(1, comments.commentsForEvent(eventId).size());
+        assertEquals("Keep this", commentById(id1).getContent());
+    }
+
+    // ----- UsersComment -----
+
+    @Test
+    void usersCommentReturnsTrueForTheAuthor() {
+        int id = comments.postComment(userId, eventId, "Mine", null);
+        Comment comment = commentById(id);
+        User author = new UserDAO(connection).findById(userId).orElseThrow();
+
+        assertTrue(comments.UsersComment(comment, author));
+    }
+
+    @Test
+    void usersCommentReturnsFalseForADifferentUser() {
+        int id = comments.postComment(userId, eventId, "Mine", null);
+        Comment comment = commentById(id);
+        User other = new UserDAO(connection).findById(otherUserId).orElseThrow();
+
+        assertFalse(comments.UsersComment(comment, other));
     }
 }
