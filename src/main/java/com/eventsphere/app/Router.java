@@ -5,6 +5,8 @@ import java.io.UncheckedIOException;
 import java.sql.Connection;
 
 import com.eventsphere.app.Database.Database;
+import com.eventsphere.app.ai.AiClient;
+import com.eventsphere.app.ai.DescriptionCleaner;
 import com.eventsphere.app.dao.CommentDAO;
 import com.eventsphere.app.dao.EventDAO;
 import com.eventsphere.app.dao.GoingDAO;
@@ -12,8 +14,6 @@ import com.eventsphere.app.dao.ICommentDAO;
 import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.dao.ILikeDAO;
 import com.eventsphere.app.dao.IUserDAO;
-import com.eventsphere.app.dao.GoingDAO;
-import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.dao.LikeDAO;
 import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
@@ -48,7 +48,6 @@ public class Router {
     // AuthService both read the Users table, so they share one DAO.
     // its better to declare users and userDAO before so it can be passed down
     private static final IUserDAO USER_DAO = new UserDAO(CONNECTION);
-    private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
     private static final UserService USERS =
             new UserService(USER_DAO, new PreferenceDAO(CONNECTION));
     private static final SessionManager SESSION = new SessionManager();
@@ -61,8 +60,15 @@ public class Router {
     private static final ICommentDAO COMMENT_DAO = new CommentDAO(CONNECTION);
     private static final LikeService LIKE_SERVICE = new LikeService(LIKE_DAO);
     private static final CommentService COMMENT_SERVICE = new CommentService(COMMENT_DAO, USER_DAO);
+
+    // One GoingDAO shared by the event page (toggle), the profile (Going/Been tabs) and
+    // GoingService (the "who's going" screen).
     private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
     private static final GoingService GOING_SERVICE = new GoingService(GOING_DAO);
+
+    // AI calls: null when no AI_API_KEY is set, so the app still runs without one.
+    private static final AiClient AI = AiClient.isConfigured() ? new AiClient() : null;
+    private static final DescriptionCleaner DESCRIPTIONS = new DescriptionCleaner(AI);
 
     private Router() {
     }
@@ -98,7 +104,8 @@ public class Router {
         if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
         if (type == EventGoingController.class) return new EventGoingController(EVENTS, GOING_SERVICE);
         if (type == EventPageController.class) {
-            return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE, GOING_DAO, SESSION);
+            return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE,
+                    GOING_DAO, DESCRIPTIONS, SESSION);
         }
         try {
             return type.getDeclaredConstructor().newInstance();

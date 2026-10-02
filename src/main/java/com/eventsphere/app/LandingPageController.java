@@ -4,6 +4,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import com.eventsphere.app.Database.Database;
+import com.eventsphere.app.dao.EventDAO;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import com.eventsphere.app.model.Category;
@@ -356,17 +358,25 @@ public class LandingPageController {
 
     // ----- map drawer -----
 
+    private static final double DEFAULT_LAT = -27.4698;
+    private static final double DEFAULT_LNG = 153.0251;
+
     private void initMap() {
         MapView mapView = new MapView();
-        mapView.setZoom(11);
-        mapView.flyTo(0, new MapPoint(-27.4698, 153.0251), 0.1);
+
+        User user = session.getCurrentUser().orElse(null);
+        double lat = user != null && user.getHomeLat() != null ? user.getHomeLat() : DEFAULT_LAT;
+        double lng = user != null && user.getHomeLong() != null ? user.getHomeLong() : DEFAULT_LNG;
+
+        mapView.setZoom(15);
+        mapView.flyTo(0, new MapPoint(lat, lng), 0.1);
 
         EventMapLayer layer = new EventMapLayer(this::onPinClick);
         mapView.addLayer(layer);
         mapPanel.getChildren().setAll(mapView);
 
         try {
-            layer.setEvents(eventService.findUpcoming());
+            layer.setEvents(new EventDAO(Database.DBConnect()).findUpcoming());
         } catch (Exception e) {
             System.err.println("Could not load map pins: " + e.getMessage());
         }

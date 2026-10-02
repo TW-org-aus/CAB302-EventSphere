@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.eventsphere.app.ai.DescriptionCleaner;
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Event;
 import com.eventsphere.app.model.User;
@@ -34,6 +35,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.concurrent.Task;
 
 public class EventPageController {
 
@@ -77,6 +79,7 @@ public class EventPageController {
     private final CommentService commentService;
     private final IGoingDAO going;
     private final SessionManager session;
+    private final DescriptionCleaner descriptions;
 
     private Event currentEvent;
     private List<Comment> currentComments = List.of();
@@ -88,11 +91,12 @@ public class EventPageController {
     // constructor, so the controller cannot reach for a database or session on its own.
     public EventPageController(EventService eventService, LikeService likeService,
                                CommentService commentService, IGoingDAO going,
-                               SessionManager session) {
+                               DescriptionCleaner descriptions, SessionManager session) {
         this.eventService = eventService;
         this.likeService = likeService;
         this.commentService = commentService;
         this.going = going;
+        this.descriptions = descriptions;
         this.session = session;
     }
 
@@ -130,9 +134,12 @@ public class EventPageController {
             descriptionLabel.setVisible(false);
             descriptionLabel.setManaged(false);
         } else {
+            // Show the raw text immediately, then swap in the cleaned version when it
+            // arrives. The call is off the FX thread so page never blocks on it.
             descriptionLabel.setText(event.getDescription());
             descriptionLabel.setVisible(true);
             descriptionLabel.setManaged(true);
+            cleanDescriptionAsync(event);
         }
 
         dateLabel.setText(DATE_FORMAT.format(event.getStartTime()));
@@ -162,6 +169,24 @@ public class EventPageController {
         clearCommentError();
 
         updateComposerEnabled();
+    }
+
+    private void cleanDescriptionAsync(Event event) {
+        Task<String> task = new Task<>() {
+            @Override
+            protected String call() {
+                return descriptions.clean(event.getEventId(), event.getDescription());
+            }
+        };
+        task.setOnSucceeded(e -> {
+            // Ignore the result if the user has already navigated to another event.
+            if (currentEvent != null && currentEvent.getEventId() == event.getEventId()) {
+                descriptionLabel.setText(task.getValue());
+            }
+        });
+        Thread worker = new Thread(task, "clean-description");
+        worker.setDaemon(true);
+        worker.start();
     }
 
     private Integer currentUserId() {
