@@ -367,6 +367,11 @@
     -fx-font-weight: bold;
 }
 
+.comment-content {
+    -fx-text-fill: #1A1A1A;
+    -fx-font-size: 13px;
+}
+
 .comment-meta {
     -fx-text-fill: #888888;
     -fx-font-size: 11px;
