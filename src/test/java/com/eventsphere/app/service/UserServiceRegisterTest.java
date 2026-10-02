@@ -9,10 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 // Covers the sign-up/register path
 class UserServiceRegisterTest {
@@ -41,7 +38,8 @@ class UserServiceRegisterTest {
         PlaceLocation location = places.fetchDetails(chosen.getPlaceId(), sessionToken);
 
         RegisterResult result = userService.register("Ada", "Lovelace", "ada@example.com",
-                "supersecret1", location.getLat(), location.getLng(), Set.of(Category.TECH));
+                "supersecret1", location.getLat(), location.getLng(), Set.of(Category.TECH),
+                "ada_lovelace", null);
 
         assertTrue(result.isSuccess());
         assertEquals(-27.4689123, users.lastHomeLat);
@@ -56,7 +54,8 @@ class UserServiceRegisterTest {
     @Test
     void registerNeverPersistsAddressText() {
         RegisterResult result = userService.register("Ada", "Lovelace", "ada2@example.com",
-                "supersecret1", -27.4689123, 153.0273456, Set.of(Category.TECH));
+                "supersecret1", -27.4689123, 153.0273456, Set.of(Category.TECH),
+                "ada_lovelace2", null);
 
         assertTrue(result.isSuccess());
         // upsertAddress must never be called cause the address string is not collected anymo re.
@@ -67,7 +66,8 @@ class UserServiceRegisterTest {
     @Test
     void registerWithNoSuggestionPickedStoresNullCoordinates() {
         RegisterResult result = userService.register("Ada", "Lovelace", "ada3@example.com",
-                "supersecret1", null, null, Set.of(Category.TECH));
+                "supersecret1", null, null, Set.of(Category.TECH),
+                "ada_lovelace3", null);
 
         assertTrue(result.isSuccess());
         assertNull(users.lastHomeLat);

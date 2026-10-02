@@ -14,10 +14,11 @@ public class User {
     private final LocalDate dateCreated;
     private boolean active;
     private boolean notifyEnabled;
+    private String username;
 
     public User(int userId, String firstName, String lastName, String email, String passwordHash,
                 Double homeLat, Double homeLong, LocalDate dateCreated,
-                boolean active, boolean notifyEnabled) {
+                boolean active, boolean notifyEnabled, String username) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -28,6 +29,7 @@ public class User {
         this.dateCreated = dateCreated;
         this.active = active;
         this.notifyEnabled = notifyEnabled;
+        this.username = username;
     }
 
     public int getUserId() { return userId; }
@@ -40,6 +42,7 @@ public class User {
     public LocalDate getDateCreated() { return dateCreated; }
     public boolean isActive() { return active; }
     public boolean isNotifyEnabled() { return notifyEnabled; }
+    public String getUsername() { return username; }
 
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
@@ -47,6 +50,7 @@ public class User {
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public void setActive(boolean active) { this.active = active; }
     public void setNotifyEnabled(boolean notifyEnabled) { this.notifyEnabled = notifyEnabled; }
+    public void setUsername(String username) { this.username = username; }
 
     //Sets both home coordinates, or clears them when passed nulls.
     public void setHome(Double homeLat, Double homeLong) {
