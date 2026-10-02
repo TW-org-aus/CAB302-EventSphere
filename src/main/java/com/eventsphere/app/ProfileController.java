@@ -12,11 +12,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -76,8 +73,8 @@ public class ProfileController {
             return;
         }
 
-        nameLabel.setText(user.getFullName());
-        subtitleLabel.setText(user.getEmail());
+        nameLabel.setText(user.getUsername() != null ? user.getUsername() : user.getFullName());
+        subtitleLabel.setText(user.getFullName());
         avatarLabel.setText(initials(user));
 
         showProfile();
@@ -110,13 +107,32 @@ public class ProfileController {
 
     @FXML
     protected void onEditProfileClick() {
-        session.getCurrentUser().map(User::getUserId).ifPresent(userId -> {
+        session.getCurrentUser().ifPresent(user -> {
+            int userId = user.getUserId();
             Preference current = userService.getPreferences(userId);
+
+            TextField usernameField = new TextField(Objects.requireNonNullElse(user.getUsername(), ""));
+            usernameField.setPromptText("3–30 chars, letters/numbers/underscores");
+            Label usernameError = new Label();
+            usernameError.setStyle("-fx-font-size: 11px; -fx-text-fill: #C0392B");
+            usernameError.managedProperty().bind(usernameError.visibleProperty());
+            usernameError.setVisible(false);
+            usernameField.focusedProperty().addListener((obs, wasFocused, isNow) -> {
+                if (!isNow) {
+                    String val = usernameField.getText().strip();
+                    if (!val.isEmpty() && userService.isUsernameTaken(val, userId)) {
+                        usernameError.setText("That username is already taken");
+                        usernameError.setVisible(true);
+                    } else {
+                        usernameError.setVisible(false);
+                    }
+                }
+            });
 
             TextArea bio = new TextArea(Objects.requireNonNullElse(current.getBio(), ""));
             bio.setWrapText(true);
             bio.setPrefRowCount(3);
-            bio.setPromptText("Up to " + userService.MAX_BIO_LENGTH + " characters");
+            bio.setPromptText("Up to " + UserService.MAX_BIO_WORDS + " words");
 
             FlowPane bubbles = new FlowPane(8, 8);
             Label hint = new Label();
@@ -124,8 +140,15 @@ public class ProfileController {
             InterestPicker interests = new InterestPicker(bubbles, hint, current.getCategories());
 
             EditDialog.show(editButton.getScene().getWindow(), "Edit profile",
-                    () -> userService.updateProfile(userId, bio.getText(), interests.getSelected()),
-                    field("Bio", bio), field("Interests", new VBox(6, hint, bubbles)));
+                    () -> {
+                        Optional<String> usernameErr = userService.changeUsername(user, usernameField.getText());
+                        if (usernameErr.isPresent()) return usernameErr;
+                        return userService.updateProfile(userId, bio.getText(), interests.getSelected());
+                    },
+                    field("Username", new VBox(4, usernameField, usernameError)),
+                    field("Bio", bio),
+                    field("Interests", new VBox(6, hint, bubbles)));
+            nameLabel.setText(user.getUsername() != null ? user.getUsername() : user.getFullName());
             showProfile();
         });
     }

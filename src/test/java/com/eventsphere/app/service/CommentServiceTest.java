@@ -1,18 +1,5 @@
 package com.eventsphere.app.service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.time.Instant;
-import java.util.Map;
-
-import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import com.eventsphere.app.Database.DBController;
 import com.eventsphere.app.dao.CommentDAO;
 import com.eventsphere.app.dao.EventDAO;
@@ -21,6 +8,17 @@ import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Event;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.time.Instant;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 // SCRUM-58: comments, plus the one-reply-per-comment / no-reply-to-a-reply rules.
 class CommentServiceTest {
@@ -46,8 +44,8 @@ class CommentServiceTest {
         comments = new CommentService(new CommentDAO(connection), users);
 
         int sourceId = new SourceDAO(connection).insert("Test", "https://example.com");
-        userId = users.insert("Ada", "Lovelace", "ada@example.com", "hash");
-        otherUserId = users.insert("Grace", "Hopper", "grace@example.com", "hash");
+        userId = users.insert("Ada", "Lovelace", "ada@example.com", "hash", null, null, null);
+        otherUserId = users.insert("Grace", "Hopper", "grace@example.com", "hash", null, null, null);
 
         EventDAO events = new EventDAO(connection);
         eventId = events.insert(event("Test Event", sourceId));
