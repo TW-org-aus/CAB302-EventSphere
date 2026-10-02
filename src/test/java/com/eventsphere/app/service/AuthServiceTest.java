@@ -2,9 +2,8 @@ package com.eventsphere.app.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class AuthServiceTest {
 
@@ -21,7 +20,7 @@ class AuthServiceTest {
         users = new MockUserDAO();
         session = new SessionManager();
         auth = new AuthService(users, session);
-        userId = users.insert("John", "Smith", EMAIL, PasswordHasher.hash(PASSWORD));
+        userId = users.insert("John", "Smith", EMAIL, PasswordHasher.hash(PASSWORD), null, null, null);
     }
 
     @Test

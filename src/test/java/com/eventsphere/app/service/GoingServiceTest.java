@@ -1,18 +1,5 @@
 package com.eventsphere.app.service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
-
-import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import com.eventsphere.app.Database.DBController;
 import com.eventsphere.app.dao.EventDAO;
 import com.eventsphere.app.dao.GoingDAO;
@@ -21,6 +8,19 @@ import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
 import com.eventsphere.app.model.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GoingServiceTest {
 
@@ -62,7 +62,7 @@ class GoingServiceTest {
     }
 
     private int user(String first, String last) {
-        return users.insert(first, last, first.toLowerCase() + "." + last.toLowerCase() + "@example.com", "hash");
+        return users.insert(first, last, first.toLowerCase() + "." + last.toLowerCase() + "@example.com", "hash", null, null, null);
     }
 
     private static List<String> names(List<User> attendees) {
@@ -70,7 +70,7 @@ class GoingServiceTest {
     }
 
     private static User userNamed(String first, String last) {
-        return new User(1, first, last, "x@example.com", "hash", null, null, LocalDate.now(), true, true);
+        return new User(1, first, last, "x@example.com", "hash", null, null, LocalDate.now(), true, true, null);
     }
 
     // ----- attendeesFor -----

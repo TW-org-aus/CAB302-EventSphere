@@ -5,6 +5,8 @@ import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.User;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +96,29 @@ public class CommentService {
                         && comment.getReplyToCommentId() == replyToCommentId);
         if (alreadyAnswered) {
             throw new IllegalArgumentException(REPLY_ALREADY_EXISTS);
+        }
+    }
+
+
+    public void editComment(Comment comment, String newText) {
+        comment.setContent(newText);
+        comment.setUpdatedAt(Instant.now());
+        comments.update(comment);
+    }
+
+
+
+
+    public void deleteComment(int commentId) {
+        comments.delete(commentId);
+    }
+
+    public boolean UsersComment(Comment comment, User user){
+        if (comment.getUserId() == user.getUserId()){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }

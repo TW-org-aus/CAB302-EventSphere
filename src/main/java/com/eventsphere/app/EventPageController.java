@@ -1,5 +1,24 @@
 package com.eventsphere.app;
 
+import com.eventsphere.app.ai.DescriptionCleaner;
+import com.eventsphere.app.dao.IGoingDAO;
+import com.eventsphere.app.model.Comment;
+import com.eventsphere.app.model.Event;
+import com.eventsphere.app.model.User;
+import com.eventsphere.app.service.*;
+import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import java.awt.Desktop;
 import java.net.URI;
 import java.time.Duration;
@@ -13,29 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.eventsphere.app.ai.DescriptionCleaner;
-import com.eventsphere.app.model.Comment;
-import com.eventsphere.app.model.Event;
-import com.eventsphere.app.model.User;
-import com.eventsphere.app.service.CommentService;
-import com.eventsphere.app.service.EventService;
-import com.eventsphere.app.service.LikeResult;
-import com.eventsphere.app.service.LikeService;
-import com.eventsphere.app.dao.IGoingDAO;
-import com.eventsphere.app.service.SessionManager;
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.concurrent.Task;
 
 public class EventPageController {
 
@@ -135,7 +131,7 @@ public class EventPageController {
             descriptionLabel.setManaged(false);
         } else {
             // Show the raw text immediately, then swap in the cleaned version when it
-            // arrives. The call is off the FX thread so page never blocks on it.
+            // arrives. The call is off the FX thread so the page never blocks on it.
             descriptionLabel.setText(event.getDescription());
             descriptionLabel.setVisible(true);
             descriptionLabel.setManaged(true);
@@ -171,6 +167,8 @@ public class EventPageController {
         updateComposerEnabled();
     }
 
+    // Cleaning calls an external API, so it runs on a background thread. The raw text is
+    // already on screen; this swaps in the cleaned version when it arrives.
     private void cleanDescriptionAsync(Event event) {
         Task<String> task = new Task<>() {
             @Override
@@ -330,7 +328,7 @@ public class EventPageController {
             System.err.println("Could not open ticket URL: " + e.getMessage());
         }
     }
-    
+
     @FXML
     protected void onSeeGoingClick() {
         if (currentEvent == null) {
@@ -338,6 +336,14 @@ public class EventPageController {
         }
         EventGoingController going = Router.navigateToWithController("event-going-view.fxml");
         going.showEvent(currentEvent.getEventId());
+    }
+
+    public void onEditClick(Comment comment, String newText) {
+        commentService.editComment(comment, newText);
+    }
+
+    public void onDeleteClick(Comment comment) {
+        commentService.deleteComment(comment.getCommentId());
     }
 
     // ----- comments -----
@@ -393,7 +399,7 @@ public class EventPageController {
                 Comparator.nullsLast(Comparator.reverseOrder()));
         Comparator<Comment> threadOrder = sortTopButton.isSelected()
                 ? Comparator.<Comment>comparingInt(c -> repliesByTopLevel.get(c).size()).reversed()
-                        .thenComparing(newestFirst)
+                .thenComparing(newestFirst)
                 : newestFirst;
 
         List<Comment> topLevels = new ArrayList<>(repliesByTopLevel.keySet());
@@ -483,7 +489,9 @@ public class EventPageController {
             prefix = "@" + nameFor(directParentUserId) + " ";
         }
         Label content = new Label(prefix + comment.getContent());
+        content.getStyleClass().add("comment-content");
         content.setWrapText(true);
+        content.setMaxWidth(Double.MAX_VALUE);
 
         String metaText = relativeTime(comment.getCreatedAt());
         if (comment.getUpdatedAt() != null) {
@@ -499,10 +507,65 @@ public class EventPageController {
         replyLink.setOnAction(e -> onReplyClick(comment));
         replyLink.setDisable(!session.isLoggedIn());
 
-        HBox metaRow = new HBox(10, meta, replyLink);
+        boolean isOwner = session.getCurrentUser()
+                .map(u -> commentService.UsersComment(comment, u))
+                .orElse(false);
+
+        // Edit button
+        FontIcon pencilIcon = new FontIcon("bi-pencil");
+        pencilIcon.setIconSize(12);
+        Button editLink = new Button();
+        editLink.setGraphic(pencilIcon);
+        editLink.getStyleClass().add("reply-link");
+        editLink.setDisable(!isOwner);
+
+        // Delete button
+        FontIcon xIcon = new FontIcon("bi-x");
+        xIcon.setIconSize(12);
+        Button deleteLink = new Button();
+        deleteLink.setGraphic(xIcon);
+        deleteLink.getStyleClass().add("reply-link");
+        deleteLink.setDisable(!isOwner);
+
+        // Inline edit field + submit button (hidden until edit is clicked)
+        TextField editField = new TextField(comment.getContent());
+        editField.setVisible(false);
+        editField.setManaged(false);
+
+        Button submitEdit = new Button("Save");
+        submitEdit.getStyleClass().add("reply-link");
+        submitEdit.setVisible(false);
+        submitEdit.setManaged(false);
+
+        editLink.setOnAction(e -> {
+            content.setVisible(false);
+            content.setManaged(false);
+            editField.setVisible(true);
+            editField.setManaged(true);
+            submitEdit.setVisible(true);
+            submitEdit.setManaged(true);
+        });
+
+        submitEdit.setOnAction(e -> {
+            commentService.editComment(comment, editField.getText());
+            content.setText(editField.getText());
+            content.setVisible(true);
+            content.setManaged(true);
+            editField.setVisible(false);
+            editField.setManaged(false);
+            submitEdit.setVisible(false);
+            submitEdit.setManaged(false);
+        });
+
+        deleteLink.setOnAction(e -> {
+            commentService.deleteComment(comment.getCommentId());
+            loadComments(currentEvent.getEventId());
+        });
+
+        HBox metaRow = new HBox(10, meta, replyLink, editLink, deleteLink);
         metaRow.setStyle("-fx-alignment: center-left;");
 
-        row.getChildren().addAll(author, content, metaRow);
+        row.getChildren().addAll(author, content, editField, submitEdit, metaRow);
         return row;
     }
 
