@@ -138,6 +138,16 @@ public class UserService {
         return Optional.empty();
     }
 
+    // Double-checking password to prevent others from deleting users account
+    public Optional<String> deleteAccount(User user, String password) {
+        if (!PasswordHasher.verify(password, user.getPasswordHash())) {
+            return Optional.of("Password is incorrect");
+        }
+        users.deactivate(user.getUserId());
+        return Optional.empty();
+    }
+    
+
     public Preference getPreferences(int userId) {
         return preferences.findByUser(userId);
     }

@@ -10,12 +10,15 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 final class EditDialog {
-    private static final ButtonType SAVE = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-
     private EditDialog() {
     }
 
     static void show(Window owner, String title, Supplier<Optional<String>> save, Node... fields) {
+        show(owner, title, "Save", "primary-button", save, fields);
+    }
+
+    static void show(Window owner, String title, String confirmText, String confirmStyle, Supplier<Optional<String>> save, Node... fields) {
+        ButtonType confirm = new ButtonType(confirmText, ButtonBar.ButtonData.OK_DONE);
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle(title);
         dialog.initOwner(owner);
@@ -33,11 +36,11 @@ final class EditDialog {
         DialogPane pane = dialog.getDialogPane();
         pane.getStylesheets().add(EditDialog.class.getResource("app.css").toExternalForm());
         pane.setContent(content);
-        pane.getButtonTypes().addAll(SAVE, ButtonType.CANCEL);
-        pane.lookupButton(SAVE).getStyleClass().add("primary-button");
+        pane.getButtonTypes().addAll(confirm, ButtonType.CANCEL);
+        pane.lookupButton(confirm).getStyleClass().add(confirmStyle);
         pane.lookupButton(ButtonType.CANCEL).getStyleClass().add("secondary-button");
 
-        pane.lookupButton(SAVE).addEventFilter(ActionEvent.ACTION, event -> {
+        pane.lookupButton(confirm).addEventFilter(ActionEvent.ACTION, event -> {
             Optional<String> problem;
             try {
                 problem = save.get();

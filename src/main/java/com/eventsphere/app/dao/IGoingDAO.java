@@ -15,6 +15,9 @@ public interface IGoingDAO {
     // false for deactivated users, so they fail the messaging Going check.
     boolean isGoing(int userId, int eventId);
 
+    // True if both users are going to the same event, has to be true for teo users to start messaging
+    boolean shareGoingEvent(int userA, int userB);
+
     // Events the user is going to, ordered by start time ascending.
     List<Event> findEventsForUser(int userId);
 

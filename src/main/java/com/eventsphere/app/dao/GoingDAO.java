@@ -57,6 +57,24 @@ public class GoingDAO implements IGoingDAO {
         }
     }
 
+    // Joins in on itself on EventID to find any event both users are going to; all deleted (deactivated) accounts are excluded
+    @Override
+    public boolean shareGoingEvent(int userA, int userB) {
+        String sql = "SELECT 1 FROM Going a " + "JOIN Going b ON b.EventID = a.EventID " +
+                "JOIN Users ua ON ua.UserID = a.UserID " + "JOIN Users ub ON ub.UserID = b.UserID " +
+                "WHERE a.UserID = ? AND b.UserID = ? AND ua.IsActive = 1 AND ub.IsActive = 1 LIMIT 1";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userA);
+            ps.setInt(2, userB);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to check shared going: users " + userA + ", " + userB, e);
+        }
+    }
+
     @Override
     public List<Event> findEventsForUser(int userId) {
         String sql = "SELECT e.* FROM Events e JOIN Going g ON g.EventID = e.EventID " +

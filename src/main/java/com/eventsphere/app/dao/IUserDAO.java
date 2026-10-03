@@ -28,6 +28,6 @@ public interface IUserDAO {
 
     void setNotifyEnabled(int userId, boolean enabled);
 
-    // Soft delete. The row stays so comments and messages keep their author.
+    // Soft delete. The row stays so comments and messages keep their author. While likes, going, notifications, preferences and home location is removed.
     void deactivate(int userId);
 }
