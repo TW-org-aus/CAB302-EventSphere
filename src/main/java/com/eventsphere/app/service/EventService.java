@@ -11,8 +11,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import com.eventsphere.app.dao.ICommentDAO;
 import com.eventsphere.app.dao.IEventDAO;
 import com.eventsphere.app.model.Category;
+import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Event;
 
 public class EventService {
@@ -26,6 +28,7 @@ public class EventService {
 
     private final IEventDAO events;
     private final Clock clock;
+
 
     public EventService(IEventDAO events) {
         this(events, Clock.systemDefaultZone());
@@ -164,4 +167,7 @@ public class EventService {
         }
         return events.search(keyword.trim(), null, Instant.now(clock), null);
     }
+
+
+
 }

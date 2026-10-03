@@ -36,9 +36,12 @@ public class DBController {
         addColumnIfMissing("Source", "LastSyncedAt", "DATETIME");
         addColumnIfMissing("Events", "TicketmasterID", "TEXT");
         addColumnIfMissing("Preferences", "Bio", "TEXT");
+        addColumnIfMissing("Users", "Username", "TEXT");
         try (Statement statement = connect.createStatement()) {
             statement.executeUpdate(
                     "CREATE UNIQUE INDEX IF NOT EXISTS idx_events_ticketmasterid ON Events (TicketmasterID);");
+            statement.executeUpdate(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON Users (LOWER(Username));");
         } catch (SQLException ex) {
             System.err.println(ex);
         }

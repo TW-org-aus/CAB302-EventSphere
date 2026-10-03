@@ -17,7 +17,7 @@ public class UserDAO implements IUserDAO {
     // Every column of Users, in the order mapRow reads them.
     static final String COLUMNS =
             "UserID, FirstName, LastName, Email, PasswordHash, " +
-            "HomeLat, HomeLong, DateCreated, IsActive, NotifyEnabled";
+            "HomeLat, HomeLong, DateCreated, IsActive, NotifyEnabled, Username";
 
     private final Connection connection;
 
@@ -26,15 +26,16 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public int insert(String firstName, String lastName, String email, String passwordHash) {
-        return insert(firstName, lastName, email, passwordHash, null, null);
+    public int insert(String firstName, String lastName, String email, String passwordHash,
+                      Double homeLat, Double homeLong) {
+        return insert(firstName, lastName, email, passwordHash, homeLat, homeLong, null);
     }
 
     @Override
     public int insert(String firstName, String lastName, String email, String passwordHash,
-                      Double homeLat, Double homeLong) {
-        String sql = "INSERT INTO Users (FirstName, LastName, Email, PasswordHash, HomeLat, HomeLong) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                      Double homeLat, Double homeLong, String username) {
+        String sql = "INSERT INTO Users (FirstName, LastName, Email, PasswordHash, HomeLat, HomeLong, Username) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, firstName);
             ps.setString(2, lastName);
@@ -42,6 +43,7 @@ public class UserDAO implements IUserDAO {
             ps.setString(4, passwordHash);
             setNullableDouble(ps, 5, homeLat);
             setNullableDouble(ps, 6, homeLong);
+            ps.setString(7, username);
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -98,7 +100,7 @@ public class UserDAO implements IUserDAO {
     @Override
     public void update(User user) {
         String sql = "UPDATE Users SET FirstName = ?, LastName = ?, Email = ?, PasswordHash = ?, " +
-                "HomeLat = ?, HomeLong = ?, IsActive = ?, NotifyEnabled = ? WHERE UserID = ?";
+                "HomeLat = ?, HomeLong = ?, IsActive = ?, NotifyEnabled = ?, Username = ? WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
@@ -108,7 +110,8 @@ public class UserDAO implements IUserDAO {
             setNullableDouble(ps, 6, user.getHomeLong());
             ps.setInt(7, user.isActive() ? 1 : 0);
             ps.setInt(8, user.isNotifyEnabled() ? 1 : 0);
-            ps.setInt(9, user.getUserId());
+            ps.setString(9, user.getUsername());
+            ps.setInt(10, user.getUserId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update user: " + user.getUserId(), e);
@@ -182,6 +185,32 @@ public class UserDAO implements IUserDAO {
         }
     }
 
+    @Override
+    public boolean isUsernameTaken(String username, int excludeUserId) {
+        String sql = "SELECT 1 FROM Users WHERE LOWER(Username) = LOWER(?) AND UserID != ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setInt(2, excludeUserId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to check username uniqueness: " + username, e);
+        }
+    }
+
+    @Override
+    public void setUsername(int userId, String username) {
+        String sql = "UPDATE Users SET Username = ? WHERE UserID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to set username for user: " + userId, e);
+        }
+    }
+
     // Package-private and static so other DAOs (e.g. GoingDAO) can map joined User rows.
     static User mapRow(ResultSet rs) throws SQLException {
         return new User(
@@ -194,7 +223,8 @@ public class UserDAO implements IUserDAO {
                 getNullableDouble(rs, "HomeLong"),
                 parseDate(rs.getString("DateCreated")),
                 rs.getInt("IsActive") == 1,
-                rs.getInt("NotifyEnabled") == 1
+                rs.getInt("NotifyEnabled") == 1,
+                rs.getString("Username")
         );
     }
 }

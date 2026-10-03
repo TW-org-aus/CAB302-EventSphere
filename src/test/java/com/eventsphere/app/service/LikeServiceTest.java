@@ -1,17 +1,5 @@
 package com.eventsphere.app.service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.time.Instant;
-
-import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import com.eventsphere.app.Database.DBController;
 import com.eventsphere.app.dao.EventDAO;
 import com.eventsphere.app.dao.LikeDAO;
@@ -19,6 +7,16 @@ import com.eventsphere.app.dao.SourceDAO;
 import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.time.Instant;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 // SCRUM-58: likes are stored per (user, event) and the trigger-maintained count follows.
 class LikeServiceTest {
@@ -43,7 +41,7 @@ class LikeServiceTest {
         likes = new LikeService(likeDao);
 
         int sourceId = new SourceDAO(connection).insert("Test", "https://example.com");
-        userId = new UserDAO(connection).insert("Ada", "Lovelace", "ada@example.com", "hash");
+        userId = new UserDAO(connection).insert("Ada", "Lovelace", "ada@example.com", "hash", null, null, null);
         eventId = new EventDAO(connection).insert(new Event("Test Event", null, Category.MUSIC,
                 START, null, null, null, null, null, null, null, sourceId));
     }

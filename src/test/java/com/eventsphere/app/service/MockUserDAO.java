@@ -15,17 +15,23 @@ class MockUserDAO implements IUserDAO{
     Double lastHomeLat;
     Double lastHomeLong;
 
+    // Last username handed to insert, for assertions.
+    String lastUsername;
+
     @Override
-    public int insert(String firstName, String lastName, String email, String passwordHash) {
-        return insert(firstName, lastName, email, passwordHash, null, null);
+    public int insert(String firstName, String lastName, String email, String passwordHash,
+                      Double homeLat, Double homeLong) {
+        return insert(firstName, lastName, email, passwordHash, homeLat, homeLong, null);
     }
 
     @Override
-    public int insert(String firstName, String lastName, String email, String passwordHash, Double homeLat, Double homeLong) {
+    public int insert(String firstName, String lastName, String email, String passwordHash,
+                      Double homeLat, Double homeLong, String username) {
         lastHomeLat = homeLat;
         lastHomeLong = homeLong;
+        lastUsername = username;
         int id = users.size() + 1;
-        users.add(new User(id, firstName, lastName, email, passwordHash, homeLat, homeLong, LocalDate.now(), true, true));
+        users.add(new User(id, firstName, lastName, email, passwordHash, homeLat, homeLong, LocalDate.now(), true, true, username));
         return id;
     }
 
@@ -89,5 +95,17 @@ class MockUserDAO implements IUserDAO{
     @Override
     public void deactivate(int userId) {
         findById(userId).ifPresent(user -> user.setActive(false));
+    }
+
+    @Override
+    public boolean isUsernameTaken(String username, int excludeUserId) {
+        return users.stream()
+                .filter(u -> u.getUserId() != excludeUserId)
+                .anyMatch(u -> username != null && username.equalsIgnoreCase(u.getUsername()));
+    }
+
+    @Override
+    public void setUsername(int userId, String username) {
+        findById(userId).ifPresent(u -> u.setUsername(username));
     }
 }
