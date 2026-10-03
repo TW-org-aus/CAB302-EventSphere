@@ -122,7 +122,22 @@ public class SettingsController {
 
     @FXML
     protected void onDeleteAccountClick() {
-        System.out.println("Delete account clicked");
+        session.getCurrentUser().ifPresent(user -> {
+            Label warning = new Label("Are you sure you want to delete your account?");
+            warning.setWrapText(true);
+            PasswordField password = new PasswordField();
+
+            EditDialog.show(nameRow.getScene().getWindow(), "Delete account", "Delete", "danger-button", () -> {
+                Optional<String> problem = userService.deleteAccount(user, password.getText());
+                if (problem.isEmpty()) {
+                    authService.logout();
+                }
+                return problem;
+            }, warning, field("Enter your password to confirm", password));
+            if (!session.isLoggedIn()) {
+                Router.navigateTo("login-view.fxml");
+            }
+        });
     }
 }
 

@@ -143,14 +143,45 @@ public class UserDAO implements IUserDAO {
         }
     }
 
+    // Users personal data gets cleared, just keeps messages and comments, to keep understanding in comment chains and message chains
+    private static final String[] PERSONAL_TABLES = {"Likes", "Going", "Notifications", "PreferenceCategories", "Preferences"};
+
     @Override
     public void deactivate(int userId) {
-        String sql = "UPDATE Users SET IsActive = 0 WHERE UserID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.executeUpdate();
+        boolean originalAutoCommit;
+        try {
+            originalAutoCommit = connection.getAutoCommit();
         } catch (SQLException e) {
+            throw new RuntimeException("Failed to read autoCommit state for user: " + userId, e);
+        }
+        try {
+            connection.setAutoCommit(false);
+
+            for (String table : PERSONAL_TABLES) {
+                try (PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table +" WHERE UserID = ?")) {
+                    ps.setInt(1, userId);
+                    ps.executeUpdate();
+                }
+            }
+
+            try (PreparedStatement ps = connection.prepareStatement("UPDATE Users SET IsActive = 0, HomeLat = NULL, HomeLong = NULL WHERE UserID = ?")) {
+                ps.setInt(1, userId);
+                ps.executeUpdate();
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                e.addSuppressed(rollbackEx);
+            }
             throw new RuntimeException("Failed to deactivate user: " + userId, e);
+        } finally {
+            try {
+                connection.setAutoCommit(originalAutoCommit);
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to restore autoCommit state for user: " + userId, e);
+            }
         }
     }
 

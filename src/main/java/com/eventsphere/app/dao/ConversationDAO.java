@@ -79,6 +79,21 @@ public class ConversationDAO implements IConversationDAO {
         }
     }
 
+    @Override
+    public boolean isParticipant(int conversationId, int userId) {
+        String sql = "SELECT 1 FROM Conversations WHERE ConversationID = ? AND (User1ID = ? OR User2ID = ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, conversationId);
+            ps.setInt(2, userId);
+            ps.setInt(3, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to check participant: conversation " + conversationId + ", user" + userId, e);
+        }
+    }
+
     static Conversation mapRow(ResultSet rs) throws SQLException {
         return new Conversation(
                 rs.getInt("ConversationID"),

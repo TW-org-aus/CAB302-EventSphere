@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/21"
@@ -23,15 +21,7 @@
             <VBox styleClass="card" maxWidth="700" spacing="0">
                 <Label text="Messages" styleClass="card-title"/>
 
-                <VBox spacing="0" style="-fx-padding: 18 0 0 0;">
-                    <HBox styleClass="event-row" spacing="16" alignment="CENTER_LEFT" onMouseClicked="#onConversationRowClick">
-                        <Label text="JL" styleClass="avatar"/>
-                        <VBox HBox.hgrow="ALWAYS">
-                            <Label text="Jordan Lee" styleClass="card-title" style="-fx-font-size: 15px;"/>
-                            <Label text="See you at the warehouse show!" styleClass="muted-text"/>
-                        </VBox>
-                    </HBox>
-                </VBox>
+                <VBox fx:id="conversationList" spacing="0" style="-fx-padding: 18 0 0 0;"/>
             </VBox>
         </VBox>
     </content>
