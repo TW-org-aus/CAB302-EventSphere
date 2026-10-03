@@ -35,8 +35,8 @@ class GoingDAOShareGoingEventTest {
         users = new UserDAO(connection);
         going = new GoingDAO(connection);
 
-        angg = users.insert("Angg", "Air", "angg@gmail.com", "hash");
-        zuko = users.insert("Zuko", "Fire", "zuko@gmail.com", "hash");
+        angg = users.insert("Angg", "Air", "angg@gmail.com", "hash", null, null);
+        zuko = users.insert("Zuko", "Fire", "zuko@gmail.com", "hash", null, null);
         int sourceId = new SourceDAO(connection).insert("Test", "https://example.com");
         EventDAO events = new EventDAO(connection);
         concert = events.insert(event("Concert", sourceId));

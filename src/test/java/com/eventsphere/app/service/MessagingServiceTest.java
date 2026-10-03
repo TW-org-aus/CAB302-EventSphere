@@ -48,8 +48,8 @@ class MessagingServiceTest {
         conversations = new ConversationDAO(connection);
         messaging = new MessagingService(conversations, new MessageDAO(connection), users, going);
 
-        angg = users.insert("Angg", "Air", "angg@gmail.com", "hash");
-        zuko = users.insert("Zuko", "Fire", "zuko@gmail.com", "hash");
+        angg = users.insert("Angg", "Air", "angg@gmail.com", "hash", null, null);
+        zuko = users.insert("Zuko", "Fire", "zuko@gmail.com", "hash", null, null);
         int sourceId = new SourceDAO(connection).insert("Test", "https://example.com");
         eventId = new EventDAO(connection).insert(new Event("Test Event", null, Category.MUSIC, Instant.parse("2026-09-01T09:30:00Z"), null, null, null, null, null, null, null, sourceId));
     }
@@ -100,7 +100,7 @@ class MessagingServiceTest {
 
     @Test
     void onlyTwoPeopleInConversation() {
-        int appa = users.insert("Appa", "Air", "appa@gmail.com", "hash");
+        int appa = users.insert("Appa", "Air", "appa@gmail.com", "hash", null, null);
         conversations.findOrCreate(angg, zuko);
 
         assertEquals(1, messaging.inboxFor(angg).size());
@@ -117,7 +117,7 @@ class MessagingServiceTest {
 
     @Test
     void outsiderCannotSendOrRead() {
-        int appa = users.insert("Appa", "Air", "appa@gmail.com", "hash");
+        int appa = users.insert("Appa", "Air", "appa@gmail.com", "hash", null, null);
         Conversation chat = conversations.findOrCreate(angg, zuko);
 
         assertEquals(MessagingService.NOT_A_PARTICIPANT, messaging.send(chat.getConversationId(), appa, "hi").orElseThrow());

@@ -21,7 +21,7 @@ public class UserServiceDeleteAccountTest {
         users = new MockUserDAO();
         userService = new UserService(users, new MockPreferenceDAO());
         auth = new AuthService(users, new SessionManager());
-        int id = users.insert("Angg", "Air", EMAIL, PasswordHasher.hash(PASSWORD));
+        int id = users.insert("Angg", "Air", EMAIL, PasswordHasher.hash(PASSWORD), null, null);
         user = users.findById(id).orElseThrow();
     }
 
