@@ -1,11 +1,12 @@
 package com.eventsphere.app;
 
+import com.eventsphere.app.ai.DescriptionCleaner;
 import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Event;
 import com.eventsphere.app.model.User;
 import com.eventsphere.app.service.*;
-import com.fasterxml.jackson.core.JsonParser;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,14 +19,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class EventPageController {
 
@@ -69,6 +75,7 @@ public class EventPageController {
     private final CommentService commentService;
     private final IGoingDAO going;
     private final SessionManager session;
+    private final DescriptionCleaner descriptions;
 
     private Event currentEvent;
     private List<Comment> currentComments = List.of();
@@ -80,11 +87,12 @@ public class EventPageController {
     // constructor, so the controller cannot reach for a database or session on its own.
     public EventPageController(EventService eventService, LikeService likeService,
                                CommentService commentService, IGoingDAO going,
-                               SessionManager session) {
+                               DescriptionCleaner descriptions, SessionManager session) {
         this.eventService = eventService;
         this.likeService = likeService;
         this.commentService = commentService;
         this.going = going;
+        this.descriptions = descriptions;
         this.session = session;
     }
 
@@ -122,9 +130,12 @@ public class EventPageController {
             descriptionLabel.setVisible(false);
             descriptionLabel.setManaged(false);
         } else {
+            // Show the raw text immediately, then swap in the cleaned version when it
+            // arrives. The call is off the FX thread so the page never blocks on it.
             descriptionLabel.setText(event.getDescription());
             descriptionLabel.setVisible(true);
             descriptionLabel.setManaged(true);
+            cleanDescriptionAsync(event);
         }
 
         dateLabel.setText(DATE_FORMAT.format(event.getStartTime()));
@@ -154,6 +165,26 @@ public class EventPageController {
         clearCommentError();
 
         updateComposerEnabled();
+    }
+
+    // Cleaning calls an external API, so it runs on a background thread. The raw text is
+    // already on screen; this swaps in the cleaned version when it arrives.
+    private void cleanDescriptionAsync(Event event) {
+        Task<String> task = new Task<>() {
+            @Override
+            protected String call() {
+                return descriptions.clean(event.getEventId(), event.getDescription());
+            }
+        };
+        task.setOnSucceeded(e -> {
+            // Ignore the result if the user has already navigated to another event.
+            if (currentEvent != null && currentEvent.getEventId() == event.getEventId()) {
+                descriptionLabel.setText(task.getValue());
+            }
+        });
+        Thread worker = new Thread(task, "clean-description");
+        worker.setDaemon(true);
+        worker.start();
     }
 
     private Integer currentUserId() {
@@ -297,7 +328,7 @@ public class EventPageController {
             System.err.println("Could not open ticket URL: " + e.getMessage());
         }
     }
-    
+
     @FXML
     protected void onSeeGoingClick() {
         if (currentEvent == null) {
@@ -368,7 +399,7 @@ public class EventPageController {
                 Comparator.nullsLast(Comparator.reverseOrder()));
         Comparator<Comment> threadOrder = sortTopButton.isSelected()
                 ? Comparator.<Comment>comparingInt(c -> repliesByTopLevel.get(c).size()).reversed()
-                        .thenComparing(newestFirst)
+                .thenComparing(newestFirst)
                 : newestFirst;
 
         List<Comment> topLevels = new ArrayList<>(repliesByTopLevel.keySet());
@@ -517,7 +548,7 @@ public class EventPageController {
 
         submitEdit.setOnAction(e -> {
             commentService.editComment(comment, editField.getText());
-            content.setText( editField.getText());
+            content.setText(editField.getText());
             content.setVisible(true);
             content.setManaged(true);
             editField.setVisible(false);
@@ -554,8 +585,6 @@ public class EventPageController {
         commentInput.requestFocus();
         commentInput.positionCaret(commentInput.getText().length());
     }
-
-
 
     @FXML
     protected void onCancelReplyClick() {
