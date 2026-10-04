@@ -12,4 +12,7 @@ public interface IConversationDAO {
 
     // Conversations involving userId, hiding ones whose other participant is deactivated.
     List<Conversation> findByUser(int userId);
+
+    // Is true if userId is one of the people in the conversation, checks before reading or sending.
+    boolean isParticipant(int conversationId, int userId);
 }

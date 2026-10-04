@@ -8,6 +8,7 @@ import com.eventsphere.app.Database.Database;
 import com.eventsphere.app.ai.AiClient;
 import com.eventsphere.app.ai.DescriptionCleaner;
 import com.eventsphere.app.dao.CommentDAO;
+import com.eventsphere.app.dao.ConversationDAO;
 import com.eventsphere.app.dao.EventDAO;
 import com.eventsphere.app.dao.GoingDAO;
 import com.eventsphere.app.dao.ICommentDAO;
@@ -15,6 +16,7 @@ import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.dao.ILikeDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.dao.LikeDAO;
+import com.eventsphere.app.dao.MessageDAO;
 import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.places.IPlacesClient;
@@ -24,6 +26,7 @@ import com.eventsphere.app.service.CommentService;
 import com.eventsphere.app.service.EventService;
 import com.eventsphere.app.service.GoingService;
 import com.eventsphere.app.service.LikeService;
+import com.eventsphere.app.service.MessagingService;
 import com.eventsphere.app.service.SessionManager;
 import com.eventsphere.app.service.UserService;
 
@@ -65,6 +68,7 @@ public class Router {
     // GoingService (the "who's going" screen).
     private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
     private static final GoingService GOING_SERVICE = new GoingService(GOING_DAO);
+    private static final MessagingService MESSAGING = new  MessagingService(new ConversationDAO(CONNECTION), new MessageDAO(CONNECTION), USER_DAO, GOING_DAO);
 
     // AI calls: null when no AI_API_KEY is set, so the app still runs without one.
     private static final AiClient AI = AiClient.isConfigured() ? new AiClient() : null;
@@ -102,7 +106,9 @@ public class Router {
         if (type == SettingsController.class) return new SettingsController(AUTH, USERS, SESSION);
         if (type == ProfileController.class) return new ProfileController(USERS, SESSION, GOING_DAO);
         if (type == NavBarController.class) return new NavBarController(AUTH, SESSION);
-        if (type == EventGoingController.class) return new EventGoingController(EVENTS, GOING_SERVICE);
+        if (type == EventGoingController.class) return new EventGoingController(EVENTS, GOING_SERVICE, MESSAGING, SESSION);
+        if (type == MessagesListController.class) return new MessagesListController(MESSAGING, SESSION);
+        if (type == MessagesController.class) return new MessagesController(MESSAGING, SESSION);
         if (type == EventPageController.class) {
             return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE,
                     GOING_DAO, DESCRIPTIONS, SESSION);
