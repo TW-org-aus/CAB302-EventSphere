@@ -6,6 +6,7 @@ import java.sql.Connection;
 
 import com.eventsphere.app.Database.Database;
 import com.eventsphere.app.ai.AiClient;
+import com.eventsphere.app.ai.CandidateSelector;
 import com.eventsphere.app.ai.DescriptionCleaner;
 import com.eventsphere.app.dao.CommentDAO;
 import com.eventsphere.app.dao.ConversationDAO;
@@ -73,6 +74,7 @@ public class Router {
     // AI calls: null when no AI_API_KEY is set, so the app still runs without one.
     private static final AiClient AI = AiClient.isConfigured() ? new AiClient() : null;
     private static final DescriptionCleaner AI_DESCRIPTIONS = new DescriptionCleaner(AI);
+    private static final CandidateSelector CANDIDATES = new CandidateSelector(EVENTS);
 
     private Router() {
     }
