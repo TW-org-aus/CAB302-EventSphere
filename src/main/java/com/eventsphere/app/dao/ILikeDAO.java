@@ -1,5 +1,8 @@
 package com.eventsphere.app.dao;
 
+import com.eventsphere.app.model.Event;
+import java.util.List;
+
 public interface ILikeDAO {
 
     // true if a like was added, false if the user already liked this event.
@@ -11,4 +14,7 @@ public interface ILikeDAO {
 
     // Reads the trigger-maintained Events.LikesCount.
     int countForEvent(int eventId);
+
+    // Events the user has liked, ordered by StartTime ascending.
+    List<Event> findEventsLikedByUser(int userId);
 }
