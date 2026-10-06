@@ -29,6 +29,7 @@ public class HelloApplication extends Application {
 
         TicketmasterIngestor.refreshInBackgroundIfStale(); // after DBController, so the tables and columns exist
         Router.setStage(stage);
+        stage.setMaximized(true); // fit screen to users screen
         stage.setTitle("EventSphere");
         Router.navigateTo("landing-page.fxml");
         stage.show();

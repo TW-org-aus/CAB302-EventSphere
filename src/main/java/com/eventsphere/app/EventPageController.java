@@ -130,9 +130,9 @@ public class EventPageController {
             descriptionLabel.setVisible(false);
             descriptionLabel.setManaged(false);
         } else {
-            // Show the raw text immediately, then swap in the cleaned version when it
+            // Show nothing initially, then swap in the cleaned version when it
             // arrives. The call is off the FX thread so the page never blocks on it.
-            descriptionLabel.setText(event.getDescription());
+            descriptionLabel.setText("Generating description…");
             descriptionLabel.setVisible(true);
             descriptionLabel.setManaged(true);
             cleanDescriptionAsync(event);
@@ -173,7 +173,7 @@ public class EventPageController {
         Task<String> task = new Task<>() {
             @Override
             protected String call() {
-                return descriptions.clean(event.getEventId(), event.getDescription());
+                return descriptions.clean(event);
             }
         };
         task.setOnSucceeded(e -> {
