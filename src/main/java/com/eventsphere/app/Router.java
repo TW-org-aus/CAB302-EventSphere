@@ -72,7 +72,7 @@ public class Router {
 
     // AI calls: null when no AI_API_KEY is set, so the app still runs without one.
     private static final AiClient AI = AiClient.isConfigured() ? new AiClient() : null;
-    private static final DescriptionCleaner DESCRIPTIONS = new DescriptionCleaner(AI);
+    private static final DescriptionCleaner AI_DESCRIPTIONS = new DescriptionCleaner(AI);
 
     private Router() {
     }
@@ -92,7 +92,13 @@ public class Router {
             FXMLLoader fxmlLoader = new FXMLLoader(Router.class.getResource(fxmlFile));
             fxmlLoader.setControllerFactory(Router::createController);
             Parent root = fxmlLoader.load();
-            stage.setScene(new Scene(root, 1280, 800));
+            Scene existing = stage.getScene();
+            if (existing != null) {
+                existing.setRoot(root);
+            } else {
+                stage.setScene(new Scene(root, 1280, 800));
+            }
+
             return fxmlLoader.getController();
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to load " + fxmlFile, e);
@@ -111,7 +117,7 @@ public class Router {
         if (type == MessagesController.class) return new MessagesController(MESSAGING, SESSION);
         if (type == EventPageController.class) {
             return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE,
-                    GOING_DAO, DESCRIPTIONS, SESSION);
+                    GOING_DAO, AI_DESCRIPTIONS, SESSION);
         }
         try {
             return type.getDeclaredConstructor().newInstance();
