@@ -1,5 +1,9 @@
 package com.eventsphere.app;
 
+import com.eventsphere.app.ai.CandidateSelector;
+import com.eventsphere.app.ai.EventRecommender;
+import com.eventsphere.app.ai.InterestProfile;
+import com.eventsphere.app.ai.InterestProfileService;
 import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
@@ -79,6 +83,23 @@ public class ProfileController {
 
         showProfile();
         loadEvents(user);
+
+        var conn = com.eventsphere.app.Database.Database.DBConnect();
+        InterestProfile profile = new InterestProfileService(
+                userService, going, new com.eventsphere.app.dao.LikeDAO(conn)).buildFor(user);
+        List<Event> candidates = new CandidateSelector(
+                new com.eventsphere.app.service.EventService(
+                        new com.eventsphere.app.dao.EventDAO(conn))).candidatesFor(profile);
+
+        new Thread(() -> {
+            var recs = new EventRecommender(
+                    com.eventsphere.app.ai.AiClient.isConfigured()
+                            ? new com.eventsphere.app.ai.AiClient() : null
+            ).recommend(profile, candidates);
+            System.out.println("--- recommendations ---");
+            recs.forEach(r -> System.out.println(
+                    "  " + r.event().getTitle() + " [" + r.event().getCategory() + "]\n    " + r.reason()));
+        }, "rec-test").start();
     }
 
     // ----- bio and interests -----
