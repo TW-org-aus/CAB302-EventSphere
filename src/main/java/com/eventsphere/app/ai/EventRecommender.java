@@ -12,9 +12,10 @@ import java.util.Map;
 
 /**
  * Ranks candidate events against a user's interest profile using the AI client.
- * Falls back to the candidate order whenever ranking is unavailable, so the
+ * Falls back to candidate order whenever ranking is unavailable, so
  * landing page always has something to show.
  */
+
 public class EventRecommender {
 
     private static final String SYSTEM_PROMPT = """
@@ -40,7 +41,6 @@ public class EventRecommender {
 
     // Recommended events for this profile.
     // Never throws as unavailable model returns the candidates unranked.
-
     public List<Recommendation> recommend(InterestProfile profile, List<Event> candidates) {
         if (candidates.isEmpty()) {
             return List.of();
@@ -99,10 +99,8 @@ public class EventRecommender {
                 .toString();
     }
 
-    /**
-     * Reads the model's JSON into Recommendations. Ids are checked against the candidate
-     * list: a model can invent one, and an unknown id would otherwise be a null event.
-     */
+    // Reads the model's JSON into Recommendations.
+    // Ids are checked against the candidates, unknown id would be a null event.
     private List<Recommendation> parse(String reply, List<Event> candidates) throws Exception {
         Map<Integer, Event> byId = new LinkedHashMap<>();
         for (Event event : candidates) {
@@ -119,7 +117,7 @@ public class EventRecommender {
         for (JsonNode node : ranked) {
             Event event = byId.get(node.path("id").asInt(-1));
             if (event == null) {
-                continue;   // id not in the candidate list, so ignore it
+                continue;   // if id not in candidate list, ignore it
             }
             String reason = node.path("reason").asText("").strip();
             results.add(new Recommendation(event, reason));
@@ -130,7 +128,7 @@ public class EventRecommender {
         return results;
     }
 
-    // Models sometimes wrap JSON in ```json fences despite being asked not to.
+    // Model sometimes wraps JSON in ```json fences despite being asked not to.
     private static String stripFences(String reply) {
         String trimmed = reply.strip();
         if (trimmed.startsWith("```")) {

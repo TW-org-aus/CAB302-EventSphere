@@ -5,10 +5,7 @@ import java.io.UncheckedIOException;
 import java.sql.Connection;
 
 import com.eventsphere.app.Database.Database;
-import com.eventsphere.app.ai.AiClient;
-import com.eventsphere.app.ai.CandidateSelector;
-import com.eventsphere.app.ai.DescriptionCleaner;
-import com.eventsphere.app.ai.EventRecommender;
+import com.eventsphere.app.ai.*;
 import com.eventsphere.app.dao.CommentDAO;
 import com.eventsphere.app.dao.ConversationDAO;
 import com.eventsphere.app.dao.EventDAO;
@@ -72,6 +69,10 @@ public class Router {
     private static final GoingService GOING_SERVICE = new GoingService(GOING_DAO);
     private static final MessagingService MESSAGING = new  MessagingService(new ConversationDAO(CONNECTION), new MessageDAO(CONNECTION), USER_DAO, GOING_DAO);
 
+    // Used by the landing page (order of category rows shown) and AI recommender.
+    private static final InterestProfileService INTEREST_PROFILES =
+            new InterestProfileService(USERS, GOING_DAO, LIKE_DAO);
+
     // AI calls: null when no AI_API_KEY is set, so the app still runs without one.
     private static final AiClient AI = AiClient.isConfigured() ? new AiClient() : null;
     private static final DescriptionCleaner AI_DESCRIPTIONS = new DescriptionCleaner(AI);
@@ -110,7 +111,9 @@ public class Router {
     }
 
     private static Object createController(Class<?> type) {
-        if (type == LandingPageController.class) return new LandingPageController(EVENTS, SESSION);
+        if (type == LandingPageController.class) {
+            return new LandingPageController(EVENTS, SESSION, INTEREST_PROFILES, CANDIDATES, RECOMMENDER);
+        }
         if (type == SignUpController.class) return new SignUpController(USERS, PLACES);
         if (type == LoginController.class) return new LoginController(AUTH);
         if (type == SettingsController.class) return new SettingsController(AUTH, USERS, SESSION);
