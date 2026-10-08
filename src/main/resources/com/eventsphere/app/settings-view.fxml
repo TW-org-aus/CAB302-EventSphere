@@ -42,7 +42,7 @@
                 <HBox styleClass="setting-row" alignment="CENTER_LEFT">
                     <Label text="Night Mode" styleClass="body-text" HBox.hgrow="ALWAYS"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <ToggleButton text="Off" onAction="#onNightModeToggle"/>
+                    <ToggleButton fx:id="nightModeToggle" text="Off" onAction="#onNightModeToggle"/>
                 </HBox>
 
                 <Button text="Log Out" styleClass="setting-row" maxWidth="Infinity" onAction="#onLogOutClick"

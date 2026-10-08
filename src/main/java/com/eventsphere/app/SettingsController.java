@@ -45,6 +45,9 @@ public class SettingsController {
     private ToggleButton notificationsToggle;
 
     @FXML
+    private ToggleButton nightModeToggle;
+
+    @FXML
     protected void initialize() {
         refreshAccountRows();
     }
@@ -55,6 +58,10 @@ public class SettingsController {
         passwordRow.setDisable(user.isEmpty());
         emailRow.setDisable(user.isEmpty());
         nameRow.setDisable(user.isEmpty());
+        boolean nightMode = user.map(User::isNightMode).orElse(false);
+        nightModeToggle.setSelected(nightMode);
+        nightModeToggle.setText(nightMode ? "On" : "Off");
+        nightModeToggle.setDisable(user.isEmpty());
     }
 
     @FXML
@@ -104,7 +111,11 @@ public class SettingsController {
 
     @FXML
     protected void onNightModeToggle() {
-        System.out.println("Night mode toggled");
+        session.getCurrentUser().ifPresent(user -> {
+            userService.setNightMode(user, nightModeToggle.isSelected());
+            nightModeToggle.setText(user.isNightMode() ? "On" : "Off");
+            Router.applyTheme(nightModeToggle.getScene().getRoot());
+        });
     }
 
     @FXML

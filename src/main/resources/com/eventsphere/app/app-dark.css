@@ -1,0 +1,83 @@
+/* Night mode, overlays normal app, so keeps original app.css variable names*/
+.root {
+    -bg: #121212;
+    -white: #1E1E1E;
+    -text: #E0E0E0;
+    -muted: #B0B0B0;
+    -accent: #00FF85;
+    -accent-light: #0F3324;
+    -border: #444444;
+    -danger: #bd2b3e;
+    -fx-base: #2A2A2A;
+    -fx-background: #121212;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-accent: #00FF85;
+    fx-focus-color: #00FF85;
+    -fx-faint-focus-color: #00FF8522;
+}
+
+.button .ikonli-font-icon {
+    -fx-icon-color: -text;
+}
+
+.event-thumb,
+.event-card-thumb {
+    -fxbackground-color: -border;
+}
+
+
+.event-page,
+.comment-reply {
+    -fxbackground-color: -bg;
+}
+
+.event-detail-card,
+.composer,
+.comment-row,
+.action-button,
+.sort-pill {
+    -fxbackground-color: -white;
+}
+
+.event-title,
+.comment-author,
+.comment-content,
+.back-button,
+.comments-heading,
+.empty-comments-label,
+.action-button,
+.sort-pill,
+.reply-chip {
+    -fx-text-fill: -text;
+}
+
+.event-meta,
+.event-description,
+.comment-meta {
+    -fx-text-fill: -muted;
+}
+
+.action-button,
+.sort-pill {
+    -fx-border-color: -border;
+}
+
+.action-button:selected,
+.sort-pill:selected,
+.action-button-primary {
+    -fxbackground-color: -accent;
+    -fx-text-fill: -white;
+}
+
+.action-button:selected,
+.sort-pill:selected {
+    -fx-border-color: -accent;
+}
+
+.reply-chip {
+    -fx-background-color: -border;
+}
+
+.reply-link {
+    -fx-text-fill: -accent;
+}

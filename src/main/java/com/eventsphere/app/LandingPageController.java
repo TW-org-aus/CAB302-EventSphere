@@ -82,9 +82,9 @@ public class LandingPageController {
     private static final double DEFAULT_LAT = -27.4698;
     private static final double DEFAULT_LNG = 153.0251;
     private static final String TAB_RIGHT =
-            "-fx-background-radius: 8 0 0 8; -fx-background-color: #dddddd;";
+            "-fx-background-radius: 8 0 0 8; -fx-background-color: -border;";
     private static final String TAB_LEFT =
-            "-fx-background-radius: 0 8 8 0; -fx-background-color: #dddddd;";
+            "-fx-background-radius: 0 8 8 0; -fx-background-color: -border;";
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("EEE d MMM, h:mm a").withZone(ZoneId.systemDefault());
