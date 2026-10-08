@@ -15,6 +15,7 @@ public class User {
     private boolean active;
     private boolean notifyEnabled;
     private String username;
+    private boolean nightMode;
 
     public User(int userId, String firstName, String lastName, String email, String passwordHash,
                 Double homeLat, Double homeLong, LocalDate dateCreated,
@@ -43,6 +44,7 @@ public class User {
     public boolean isActive() { return active; }
     public boolean isNotifyEnabled() { return notifyEnabled; }
     public String getUsername() { return username; }
+    public boolean isNightMode() { return nightMode; }
 
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
@@ -51,6 +53,7 @@ public class User {
     public void setActive(boolean active) { this.active = active; }
     public void setNotifyEnabled(boolean notifyEnabled) { this.notifyEnabled = notifyEnabled; }
     public void setUsername(String username) { this.username = username; }
+    public void setNightMode(boolean nightMode) {this.nightMode = nightMode; }
 
     //Sets both home coordinates, or clears them when passed nulls.
     public void setHome(Double homeLat, Double homeLong) {

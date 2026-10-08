@@ -203,6 +203,12 @@ public class UserService {
         return Optional.empty();
     }
 
+    public void setNightMode(User user, boolean enabled) {
+        boolean old = user.isNightMode();
+        user.setNightMode(enabled);
+        save(user, () -> user.setNightMode(old));
+    }
+
     public boolean isUsernameTaken(String username, int excludeUserId) {
         if (username == null || username.isBlank()) return false;
         return users.isUsernameTaken(username.strip(), excludeUserId);

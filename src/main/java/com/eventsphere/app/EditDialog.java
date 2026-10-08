@@ -35,6 +35,7 @@ final class EditDialog {
 
         DialogPane pane = dialog.getDialogPane();
         pane.getStylesheets().add(EditDialog.class.getResource("app.css").toExternalForm());
+        Router.applyTheme(pane);
         pane.setContent(content);
         pane.getButtonTypes().addAll(confirm, ButtonType.CANCEL);
         pane.lookupButton(confirm).getStyleClass().add(confirmStyle);

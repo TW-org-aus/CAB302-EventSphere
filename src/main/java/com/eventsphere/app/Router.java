@@ -18,6 +18,7 @@ import com.eventsphere.app.dao.LikeDAO;
 import com.eventsphere.app.dao.MessageDAO;
 import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
+import com.eventsphere.app.model.User;
 import com.eventsphere.app.places.IPlacesClient;
 import com.eventsphere.app.places.PlacesClient;
 import com.eventsphere.app.service.AuthService;
@@ -79,6 +80,9 @@ public class Router {
     private static final CandidateSelector CANDIDATES = new CandidateSelector(EVENTS);
     private static final EventRecommender RECOMMENDER = new EventRecommender(AI);
 
+    // When dark mode toggled, app-dark.css layers over regular app.css
+    private static final String DARK_CSS = Router.class.getResource("app-dark.css").toExternalForm();
+
     private Router() {
     }
 
@@ -97,6 +101,7 @@ public class Router {
             FXMLLoader fxmlLoader = new FXMLLoader(Router.class.getResource(fxmlFile));
             fxmlLoader.setControllerFactory(Router::createController);
             Parent root = fxmlLoader.load();
+            applyTheme(root);
             Scene existing = stage.getScene();
             if (existing != null) {
                 existing.setRoot(root);
@@ -107,6 +112,14 @@ public class Router {
             return fxmlLoader.getController();
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to load " + fxmlFile, e);
+        }
+    }
+
+    // Adds or removed dark theme
+    public static void applyTheme (Parent root) {
+        root.getStylesheets().remove(DARK_CSS);
+        if (SESSION.getCurrentUser().map(User::isNightMode).orElse(false)) {
+            root.getStylesheets().add(DARK_CSS);
         }
     }
 

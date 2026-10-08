@@ -37,6 +37,7 @@ public class DBController {
         addColumnIfMissing("Events", "TicketmasterID", "TEXT");
         addColumnIfMissing("Preferences", "Bio", "TEXT");
         addColumnIfMissing("Users", "Username", "TEXT");
+        addColumnIfMissing("Users", "NightMode", "INTEGER NOT NULL DEFAULT 0 CHECK (NightMode IN (0, 1))");
         try (Statement statement = connect.createStatement()) {
             statement.executeUpdate(
                     "CREATE UNIQUE INDEX IF NOT EXISTS idx_events_ticketmasterid ON Events (TicketmasterID);");

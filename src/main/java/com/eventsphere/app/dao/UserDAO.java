@@ -17,7 +17,7 @@ public class UserDAO implements IUserDAO {
     // Every column of Users, in the order mapRow reads them.
     static final String COLUMNS =
             "UserID, FirstName, LastName, Email, PasswordHash, " +
-            "HomeLat, HomeLong, DateCreated, IsActive, NotifyEnabled, Username";
+            "HomeLat, HomeLong, DateCreated, IsActive, NotifyEnabled, Username, NightMode";
 
     private final Connection connection;
 
@@ -100,7 +100,7 @@ public class UserDAO implements IUserDAO {
     @Override
     public void update(User user) {
         String sql = "UPDATE Users SET FirstName = ?, LastName = ?, Email = ?, PasswordHash = ?, " +
-                "HomeLat = ?, HomeLong = ?, IsActive = ?, NotifyEnabled = ?, Username = ? WHERE UserID = ?";
+                "HomeLat = ?, HomeLong = ?, IsActive = ?, NotifyEnabled = ?, Username = ?, NightMode = ? WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
@@ -111,7 +111,8 @@ public class UserDAO implements IUserDAO {
             ps.setInt(7, user.isActive() ? 1 : 0);
             ps.setInt(8, user.isNotifyEnabled() ? 1 : 0);
             ps.setString(9, user.getUsername());
-            ps.setInt(10, user.getUserId());
+            ps.setInt(10, user.isNightMode() ? 1 : 0);
+            ps.setInt(11, user.getUserId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update user: " + user.getUserId(), e);
@@ -213,7 +214,7 @@ public class UserDAO implements IUserDAO {
 
     // Package-private and static so other DAOs (e.g. GoingDAO) can map joined User rows.
     static User mapRow(ResultSet rs) throws SQLException {
-        return new User(
+        User user = new User(
                 rs.getInt("UserID"),
                 rs.getString("FirstName"),
                 rs.getString("LastName"),
@@ -226,5 +227,7 @@ public class UserDAO implements IUserDAO {
                 rs.getInt("NotifyEnabled") == 1,
                 rs.getString("Username")
         );
+        user.setNightMode(rs.getInt("NightMode") == 1);
+        return user;
     }
 }
