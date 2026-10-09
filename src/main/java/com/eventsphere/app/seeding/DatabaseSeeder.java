@@ -313,7 +313,8 @@ public class DatabaseSeeder {
                             && Objects.equals(notification.getRelatedConversationId(), conversationId));
 
             if (!exists) {
-                notifications.insert(userId, type, eventId, commentId, conversationId);
+                String message = node.path("message").asText("");
+                notifications.insert(userId, type, eventId, commentId, conversationId, message);
                 n++;
             }
         }

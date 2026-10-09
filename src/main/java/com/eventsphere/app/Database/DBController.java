@@ -38,11 +38,48 @@ public class DBController {
         addColumnIfMissing("Preferences", "Bio", "TEXT");
         addColumnIfMissing("Users", "Username", "TEXT");
         addColumnIfMissing("Users", "NightMode", "INTEGER NOT NULL DEFAULT 0 CHECK (NightMode IN (0, 1))");
+        recreateNotificationsIfStale();
         try (Statement statement = connect.createStatement()) {
             statement.executeUpdate(
                     "CREATE UNIQUE INDEX IF NOT EXISTS idx_events_ticketmasterid ON Events (TicketmasterID);");
             statement.executeUpdate(
                     "CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON Users (LOWER(Username));");
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+
+    /** Drops and recreates Notifications when the Message column is absent (adds new types too). */
+    private void recreateNotificationsIfStale() {
+        try (Statement st = connect.createStatement()) {
+            try (ResultSet rs = st.executeQuery("PRAGMA table_info(Notifications)")) {
+                while (rs.next()) {
+                    if (rs.getString("name").equalsIgnoreCase("Message")) return;
+                }
+            }
+            st.executeUpdate("DROP TABLE IF EXISTS Notifications");
+            st.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS Notifications (" +
+                "    NotificationID          INTEGER  PRIMARY KEY AUTOINCREMENT," +
+                "    UserID                  INTEGER  NOT NULL," +
+                "    Type                    TEXT     NOT NULL CHECK (Type IN (" + NOTIFICATION_TYPE_LIST + "))," +
+                "    RelatedEventID          INTEGER," +
+                "    RelatedCommentID        INTEGER," +
+                "    RelatedConversationID   INTEGER," +
+                "    Message                 TEXT     NOT NULL DEFAULT ''," +
+                "    CreatedAt               DATETIME NOT NULL DEFAULT (datetime('now'))," +
+                "    IsRead                  INTEGER  NOT NULL DEFAULT 0 CHECK (IsRead IN (0, 1))," +
+                "    FOREIGN KEY (UserID) REFERENCES Users (UserID)" +
+                "        ON DELETE CASCADE ON UPDATE CASCADE," +
+                "    FOREIGN KEY (RelatedEventID) REFERENCES Events (EventID)" +
+                "        ON DELETE CASCADE ON UPDATE CASCADE," +
+                "    FOREIGN KEY (RelatedCommentID) REFERENCES Comments (CommentID)" +
+                "        ON DELETE CASCADE ON UPDATE CASCADE," +
+                "    FOREIGN KEY (RelatedConversationID) REFERENCES Conversations (ConversationID)" +
+                "        ON DELETE CASCADE ON UPDATE CASCADE" +
+                ");"
+            );
+            st.executeUpdate("CREATE INDEX IF NOT EXISTS idx_notifications_userid ON Notifications (UserID);");
         } catch (SQLException ex) {
             System.err.println(ex);
         }
@@ -214,6 +251,7 @@ public class DBController {
                         "    RelatedEventID          INTEGER," +
                         "    RelatedCommentID        INTEGER," +
                         "    RelatedConversationID   INTEGER," +
+                        "    Message                 TEXT     NOT NULL DEFAULT ''," +
                         "    CreatedAt               DATETIME NOT NULL DEFAULT (datetime('now'))," +
                         "    IsRead                  INTEGER  NOT NULL DEFAULT 0 CHECK (IsRead IN (0, 1))," +
                         "    FOREIGN KEY (UserID) REFERENCES Users (UserID)" +

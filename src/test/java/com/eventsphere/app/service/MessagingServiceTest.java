@@ -2,15 +2,17 @@ package com.eventsphere.app.service;
 
 import com.eventsphere.app.Database.DBController;
 import com.eventsphere.app.dao.ConversationDAO;
-import com.eventsphere.app.dao.MessageDAO;
 import com.eventsphere.app.dao.EventDAO;
-import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.dao.GoingDAO;
+import com.eventsphere.app.dao.MessageDAO;
+import com.eventsphere.app.dao.NotificationDAO;
 import com.eventsphere.app.dao.SourceDAO;
+import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.model.Category;
-import com.eventsphere.app.model.Message;
 import com.eventsphere.app.model.Conversation;
 import com.eventsphere.app.model.Event;
+import com.eventsphere.app.model.Message;
+import com.eventsphere.app.model.NotificationType;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,7 @@ class MessagingServiceTest {
     private UserDAO users;
     private GoingDAO going;
     private MessagingService messaging;
+    private NotificationDAO notificationDAO;
     private int angg;
     private int zuko;
     private int eventId;
@@ -46,7 +49,8 @@ class MessagingServiceTest {
         users = new UserDAO(connection);
         going = new GoingDAO(connection);
         conversations = new ConversationDAO(connection);
-        messaging = new MessagingService(conversations, new MessageDAO(connection), users, going);
+        notificationDAO = new NotificationDAO(connection);
+        messaging = new MessagingService(conversations, new MessageDAO(connection), users, going, notificationDAO);
 
         angg = users.insert("Angg", "Air", "angg@gmail.com", "hash", null, null);
         zuko = users.insert("Zuko", "Fire", "zuko@gmail.com", "hash", null, null);
@@ -134,5 +138,57 @@ class MessagingServiceTest {
         List<Message> thread = messaging.openChat(chat.getConversationId(), zuko);
         assertNotNull(thread.get(0).getReadAt());
         assertNull(thread.get(1).getReadAt());
+    }
+
+    // ----- stage 2: NEW_MESSAGE notifications -----
+
+    @Test
+    void sendingAMessageInsertsNEW_MESSAGENotificationForRecipient() {
+        Conversation chat = conversations.findOrCreate(angg, zuko);
+
+        messaging.send(chat.getConversationId(), angg, "Hello Zuko!");
+
+        var notifs = notificationDAO.findByUser(zuko);
+        assertEquals(1, notifs.size());
+        assertEquals(NotificationType.NEW_MESSAGE, notifs.get(0).getType());
+        assertEquals(chat.getConversationId(), notifs.get(0).getRelatedConversationId());
+    }
+
+    @Test
+    void sendingAMessageDoesNotNotifySender() {
+        Conversation chat = conversations.findOrCreate(angg, zuko);
+
+        messaging.send(chat.getConversationId(), angg, "Hello!");
+
+        assertTrue(notificationDAO.findByUser(angg).isEmpty());
+    }
+
+    @Test
+    void notificationMessageContainsSenderFirstName() {
+        Conversation chat = conversations.findOrCreate(angg, zuko);
+
+        messaging.send(chat.getConversationId(), angg, "Hey!");
+
+        String message = notificationDAO.findByUser(zuko).get(0).getMessage();
+        assertTrue(message.contains("Angg"), "message should contain sender's first name");
+    }
+
+    @Test
+    void blankMessageDoesNotInsertNotification() {
+        Conversation chat = conversations.findOrCreate(angg, zuko);
+
+        messaging.send(chat.getConversationId(), angg, "   ");
+
+        assertTrue(notificationDAO.findByUser(zuko).isEmpty());
+    }
+
+    @Test
+    void eachMessageInsertsASeparateNotification() {
+        Conversation chat = conversations.findOrCreate(angg, zuko);
+
+        messaging.send(chat.getConversationId(), angg, "Hi");
+        messaging.send(chat.getConversationId(), angg, "How are you?");
+
+        assertEquals(2, notificationDAO.findByUser(zuko).size());
     }
 }

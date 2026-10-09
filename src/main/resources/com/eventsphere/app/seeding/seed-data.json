@@ -406,14 +406,14 @@
   ],
 
   "notifications": [
-    { "user": "demo1", "type": "CommentReply", "event": "demo-night", "comment": "c-demo-2" },
-    { "user": "sam", "type": "CommentReply", "event": "retro-lan", "comment": "c-lan-2" },
-    { "user": "demo2", "type": "NewMessage", "conversation": "conv-demo" },
-    { "user": "sam", "type": "NewMessage", "conversation": "conv-priya-sam" },
-    { "user": "demo1", "type": "NewMessage", "conversation": "conv-jordan" },
-    { "user": "demo1", "type": "EventReminder", "event": "boiler-room" },
-    { "user": "jordan", "type": "EventReminder", "event": "run-club" },
-    { "user": "priya", "type": "EventReminder", "event": "comedy-cellar" },
-    { "user": "sam", "type": "EventReminder", "event": "java-workshop" }
+    { "user": "demo1", "type": "CommentReply", "event": "demo-night", "comment": "c-demo-2", "message": "Someone replied to your comment on Demo Night" },
+    { "user": "sam", "type": "CommentReply", "event": "retro-lan", "comment": "c-lan-2", "message": "Someone replied to your comment on Retro LAN" },
+    { "user": "demo2", "type": "NewMessage", "conversation": "conv-demo", "message": "Someone sent you a message" },
+    { "user": "sam", "type": "NewMessage", "conversation": "conv-priya-sam", "message": "Someone sent you a message" },
+    { "user": "demo1", "type": "NewMessage", "conversation": "conv-jordan", "message": "Someone sent you a message" },
+    { "user": "demo1", "type": "EventReminderWeek", "event": "boiler-room", "message": "Boiler Room is happening in 1 week" },
+    { "user": "jordan", "type": "EventReminderWeek", "event": "run-club", "message": "Run Club is happening in 1 week" },
+    { "user": "priya", "type": "EventReminderWeek", "event": "comedy-cellar", "message": "Comedy Cellar is happening in 1 week" },
+    { "user": "sam", "type": "EventReminderWeek", "event": "java-workshop", "message": "Java Workshop is happening in 1 week" }
   ]
 }

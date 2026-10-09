@@ -1,6 +1,8 @@
 package com.eventsphere.app.service;
 
 import com.eventsphere.app.dao.ICommentDAO;
+import com.eventsphere.app.dao.IEventDAO;
+import com.eventsphere.app.dao.INotificationDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.User;
@@ -32,10 +34,14 @@ public class CommentService {
 
     private final ICommentDAO comments;
     private final IUserDAO users;
+    private final IEventDAO events;
+    private final INotificationDAO notifications;
 
-    public CommentService(ICommentDAO comments, IUserDAO users) {
+    public CommentService(ICommentDAO comments, IUserDAO users, IEventDAO events, INotificationDAO notifications) {
         this.comments = comments;
         this.users = users;
+        this.events = events;
+        this.notifications = notifications;
     }
 
     /** All comments on the event, oldest first (the UI groups them into threads). */

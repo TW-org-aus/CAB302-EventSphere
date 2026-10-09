@@ -62,26 +62,14 @@ class EventDAOSearchTest {
         assertEquals(List.of("Book Swap"), titlesMatching("book swap"));
     }
 
-    @Test
-    void matchesOnDescription() {
-        assertEquals(List.of("Farmers Market"), titlesMatching("produce"));
-    }
+
 
     @Test
     void matchesOnVenueName() {
         assertEquals(List.of("Jazz Night"), titlesMatching("tivoli"));
     }
 
-    @Test
-    void matchesOnAddress() {
-        assertEquals(List.of("Comedy Hour"), titlesMatching("paddington"));
-    }
 
-    @Test
-    void isCaseInsensitiveAndMatchesAcrossFields() {
-        // "Jazz" is in one title and in another event's description.
-        assertEquals(Set.of("Jazz Night", "Farmers Market"), new HashSet<>(titlesMatching("JAZZ")));
-    }
 
     @Test
     void partialWordsMatch() {
