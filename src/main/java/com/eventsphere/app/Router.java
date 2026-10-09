@@ -140,6 +140,7 @@ public class Router {
         if (type == EventGoingController.class) return new EventGoingController(EVENTS, GOING_SERVICE, MESSAGING, SESSION);
         if (type == MessagesListController.class) return new MessagesListController(MESSAGING, SESSION);
         if (type == MessagesController.class) return new MessagesController(MESSAGING, SESSION);
+        if (type == NotificationsController.class) return new NotificationsController(NOTIFICATION_SERVICE, SESSION);
         if (type == EventPageController.class) {
             return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE,
                     GOING_DAO, AI_DESCRIPTIONS, SESSION);

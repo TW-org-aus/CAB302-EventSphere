@@ -5,6 +5,8 @@ import com.eventsphere.app.dao.IEventDAO;
 import com.eventsphere.app.dao.INotificationDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.model.Comment;
+import com.eventsphere.app.model.Event;
+import com.eventsphere.app.model.NotificationType;
 import com.eventsphere.app.model.User;
 
 import java.time.Instant;
@@ -80,7 +82,11 @@ public class CommentService {
         if (replyToCommentId != null) {
             validateReplyTarget(eventId, replyToCommentId);
         }
-        return comments.insert(userId, eventId, text, replyToCommentId);
+        int commentId = comments.insert(userId, eventId, text, replyToCommentId);
+        if (replyToCommentId != null) {
+            notifyReply(userId, eventId, replyToCommentId);
+        }
+        return commentId;
     }
 
     // One read of the event's comments is enough to check every reply rule.
@@ -117,6 +123,19 @@ public class CommentService {
 
     public void deleteComment(int commentId) {
         comments.delete(commentId);
+    }
+
+    private void notifyReply(int replierId, int eventId, int parentCommentId) {
+        Comment parent = comments.findByEvent(eventId).stream()
+                .filter(c -> c.getCommentId() == parentCommentId)
+                .findFirst().orElse(null);
+        if (parent == null || parent.getUserId() == replierId) return;
+        String replierName = users.findById(replierId).map(User::getFirstName).orElse("Someone");
+        Event event = events.findById(eventId);
+        String eventTitle = event != null ? event.getTitle() : "an event";
+        notifications.insert(parent.getUserId(), NotificationType.COMMENT_REPLY,
+                eventId, parentCommentId, null,
+                replierName + " replied to your comment on " + eventTitle);
     }
 
     public boolean UsersComment(Comment comment, User user){

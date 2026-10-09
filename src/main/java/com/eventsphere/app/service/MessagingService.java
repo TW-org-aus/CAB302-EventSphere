@@ -7,6 +7,7 @@ import com.eventsphere.app.dao.INotificationDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.model.Conversation;
 import com.eventsphere.app.model.Message;
+import com.eventsphere.app.model.NotificationType;
 import com.eventsphere.app.model.User;
 
 import java.util.ArrayList;
@@ -67,6 +68,12 @@ public class MessagingService {
             return Optional.of(EMPTY_MESSAGE);
         }
         messages.insert(conversationId, senderId, text);
+        conversations.findById(conversationId).ifPresent(convo -> {
+            int recipientId = convo.otherUserId(senderId);
+            String senderName = users.findById(senderId).map(User::getFirstName).orElse("Someone");
+            notifications.insert(recipientId, NotificationType.NEW_MESSAGE, null, null, conversationId,
+                    senderName + " sent you a message");
+        });
         return Optional.empty();
     }
 }

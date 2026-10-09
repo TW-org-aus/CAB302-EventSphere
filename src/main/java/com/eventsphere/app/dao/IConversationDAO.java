@@ -3,6 +3,7 @@ package com.eventsphere.app.dao;
 import com.eventsphere.app.model.Conversation;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IConversationDAO {
 
@@ -15,4 +16,6 @@ public interface IConversationDAO {
 
     // Is true if userId is one of the people in the conversation, checks before reading or sending.
     boolean isParticipant(int conversationId, int userId);
+
+    Optional<Conversation> findById(int conversationId);
 }
