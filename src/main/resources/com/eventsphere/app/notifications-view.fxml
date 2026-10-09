@@ -23,23 +23,7 @@
             <VBox styleClass="card" maxWidth="700" spacing="0">
                 <Label text="Notifications" styleClass="card-title"/>
 
-                <VBox spacing="0" style="-fx-padding: 18 0 0 0;">
-                    <VBox styleClass="event-row" spacing="4">
-                        <Label text="New reply to your comment" styleClass="body-text"/>
-                        <Label text="Jordan Lee replied: &quot;See you there!&quot; on Warehouse night: local DJs" styleClass="muted-text" wrapText="true"/>
-                        <Label text="2 hours ago" styleClass="muted-text"/>
-                    </VBox>
-                    <VBox styleClass="event-row" spacing="4">
-                        <Label text="New message" styleClass="body-text"/>
-                        <Label text="Jordan Lee sent you a new message" styleClass="muted-text" wrapText="true"/>
-                        <Label text="5 hours ago" styleClass="muted-text"/>
-                    </VBox>
-                    <VBox styleClass="event-row" spacing="4">
-                        <Label text="Event reminder" styleClass="body-text"/>
-                        <Label text="Sunrise 5k along the river starts tomorrow at 06:00" styleClass="muted-text" wrapText="true"/>
-                        <Label text="1 day ago" styleClass="muted-text"/>
-                    </VBox>
-                </VBox>
+                <VBox fx:id="notificationList" spacing="0" style="-fx-padding: 18 0 0 0;"/>
             </VBox>
         </VBox>
     </content>

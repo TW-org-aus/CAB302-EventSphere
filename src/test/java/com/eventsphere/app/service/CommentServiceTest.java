@@ -3,11 +3,13 @@ package com.eventsphere.app.service;
 import com.eventsphere.app.Database.DBController;
 import com.eventsphere.app.dao.CommentDAO;
 import com.eventsphere.app.dao.EventDAO;
+import com.eventsphere.app.dao.NotificationDAO;
 import com.eventsphere.app.dao.SourceDAO;
 import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Event;
+import com.eventsphere.app.model.NotificationType;
 import com.eventsphere.app.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +32,7 @@ class CommentServiceTest {
 
     private Connection connection;
     private CommentService comments;
+    private NotificationDAO notificationDAO;
     private int userId;
     private int otherUserId;
     private int eventId;
@@ -43,8 +47,6 @@ class CommentServiceTest {
         new DBController(connection);
 
         UserDAO users = new UserDAO(connection);
-        comments = new CommentService(new CommentDAO(connection), users);
-
         int sourceId = new SourceDAO(connection).insert("Test", "https://example.com");
         userId = users.insert("Ada", "Lovelace", "ada@example.com", "hash", null, null, null);
         otherUserId = users.insert("Grace", "Hopper", "grace@example.com", "hash", null, null, null);
@@ -52,6 +54,9 @@ class CommentServiceTest {
         EventDAO events = new EventDAO(connection);
         eventId = events.insert(event("Test Event", sourceId));
         otherEventId = events.insert(event("Other Event", sourceId));
+
+        notificationDAO = new NotificationDAO(connection);
+        comments = new CommentService(new CommentDAO(connection), users, events, notificationDAO);
     }
 
     private static Event event(String title, int sourceId) {
@@ -254,5 +259,50 @@ class CommentServiceTest {
         User other = new UserDAO(connection).findById(otherUserId).orElseThrow();
 
         assertFalse(comments.UsersComment(comment, other));
+    }
+
+    // ----- stage 2: COMMENT_REPLY notifications -----
+
+    @Test
+    void postingAReplyInsertsCOMMENT_REPLYNotificationForParentAuthor() {
+        int parentId = comments.postComment(userId, eventId, "Anyone going?", null);
+
+        comments.postComment(otherUserId, eventId, "Yes, see you there.", parentId);
+
+        List<com.eventsphere.app.model.Notification> notifs = notificationDAO.findByUser(userId);
+        assertEquals(1, notifs.size());
+        assertEquals(NotificationType.COMMENT_REPLY, notifs.get(0).getType());
+        assertEquals(eventId, notifs.get(0).getRelatedEventId());
+    }
+
+    @Test
+    void replyNotificationMessageContainsReplierNameAndEventTitle() {
+        int parentId = comments.postComment(userId, eventId, "Question?", null);
+
+        comments.postComment(otherUserId, eventId, "Answer!", parentId);
+
+        String message = notificationDAO.findByUser(userId).get(0).getMessage();
+        assertTrue(message.contains("Grace"), "message should include replier's first name");
+        assertTrue(message.contains("Test Event"), "message should include event title");
+    }
+
+    @Test
+    void replyingToOwnCommentDoesNotInsertSelfNotification() {
+        // userId replies to their own comment — no self-notification expected
+        int parentId = comments.postComment(otherUserId, eventId, "Hey all!", null);
+        comments.postComment(userId, eventId, "Hi!", parentId);
+
+        // userId (the replier) should not get a notification for themselves
+        assertTrue(notificationDAO.findByUser(userId).isEmpty());
+        // otherUserId (the parent author) gets the notification
+        assertEquals(1, notificationDAO.findByUser(otherUserId).size());
+    }
+
+    @Test
+    void postingTopLevelCommentDoesNotInsertAnyNotification() {
+        comments.postComment(userId, eventId, "Just a comment", null);
+
+        assertTrue(notificationDAO.findByUser(userId).isEmpty());
+        assertTrue(notificationDAO.findByUser(otherUserId).isEmpty());
     }
 }

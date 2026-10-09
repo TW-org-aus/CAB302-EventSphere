@@ -1,20 +1,20 @@
 package com.eventsphere.app;
 
-import java.util.List;
-
 import com.eventsphere.app.model.Event;
 import com.eventsphere.app.model.User;
 import com.eventsphere.app.service.EventService;
 import com.eventsphere.app.service.GoingService;
 import com.eventsphere.app.service.MessagingService;
 import com.eventsphere.app.service.SessionManager;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.List;
 
 public class EventGoingController {
 
@@ -89,17 +89,25 @@ public class EventGoingController {
             name.getStyleClass().add("body-text");
         }
 
-        HBox row = new HBox(14, avatar, name);
+        Button messageBtn = new Button("Message");
+        messageBtn.setOnAction(event -> openChatWith(user));
+
+        HBox row = new HBox(14, avatar, name, messageBtn);
         row.setAlignment(Pos.CENTER_LEFT);
         row.getStyleClass().add("going-row");
         return row;
     }
 
     private void openChatWith(User other) {
-        session.getCurrentUser().flatMap(me -> messaging.openConversation(me.getUserId(), other.getUserId())).ifPresent(conversation -> {
-            MessagesController chat = Router.navigateToWithController("messages-view.fxml");
-            chat.setConversation(conversation, other);
-        });
+        session.getCurrentUser().ifPresentOrElse(me -> {
+            var conv = messaging.openConversation(me.getUserId(), other.getUserId());
+            System.out.println("openConversation result: " + conv);
+            conv.ifPresentOrElse(conversation -> {
+                System.out.println("Routing to messages-view");
+                MessagesController chat = Router.navigateToWithController("messages-view.fxml");
+                chat.setConversation(conversation, other);
+            }, () -> System.out.println("openConversation returned empty — users may not share a going event"));
+        }, () -> System.out.println("No logged-in user"));
     }
 
     private Label muted(String text) {

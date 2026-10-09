@@ -13,9 +13,11 @@ import com.eventsphere.app.dao.GoingDAO;
 import com.eventsphere.app.dao.ICommentDAO;
 import com.eventsphere.app.dao.IGoingDAO;
 import com.eventsphere.app.dao.ILikeDAO;
+import com.eventsphere.app.dao.INotificationDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.dao.LikeDAO;
 import com.eventsphere.app.dao.MessageDAO;
+import com.eventsphere.app.dao.NotificationDAO;
 import com.eventsphere.app.dao.PreferenceDAO;
 import com.eventsphere.app.dao.UserDAO;
 import com.eventsphere.app.model.User;
@@ -27,6 +29,7 @@ import com.eventsphere.app.service.EventService;
 import com.eventsphere.app.service.GoingService;
 import com.eventsphere.app.service.LikeService;
 import com.eventsphere.app.service.MessagingService;
+import com.eventsphere.app.service.NotificationService;
 import com.eventsphere.app.service.SessionManager;
 import com.eventsphere.app.service.UserService;
 
@@ -61,14 +64,16 @@ public class Router {
     // resolve from the same Users table that login and sign-up write to.
     private static final ILikeDAO LIKE_DAO = new LikeDAO(CONNECTION);
     private static final ICommentDAO COMMENT_DAO = new CommentDAO(CONNECTION);
+    private static final INotificationDAO NOTIFICATION_DAO = new NotificationDAO(CONNECTION);
     private static final LikeService LIKE_SERVICE = new LikeService(LIKE_DAO);
-    private static final CommentService COMMENT_SERVICE = new CommentService(COMMENT_DAO, USER_DAO);
 
     // One GoingDAO shared by the event page (toggle), the profile (Going/Been tabs) and
     // GoingService (the "who's going" screen).
     private static final IGoingDAO GOING_DAO = new GoingDAO(CONNECTION);
     private static final GoingService GOING_SERVICE = new GoingService(GOING_DAO);
-    private static final MessagingService MESSAGING = new  MessagingService(new ConversationDAO(CONNECTION), new MessageDAO(CONNECTION), USER_DAO, GOING_DAO);
+    private static final NotificationService NOTIFICATION_SERVICE = new NotificationService(NOTIFICATION_DAO, GOING_DAO, new EventDAO(CONNECTION));
+    private static final CommentService COMMENT_SERVICE = new CommentService(COMMENT_DAO, USER_DAO, new EventDAO(CONNECTION), NOTIFICATION_DAO);
+    private static final MessagingService MESSAGING = new MessagingService(new ConversationDAO(CONNECTION), new MessageDAO(CONNECTION), USER_DAO, GOING_DAO, NOTIFICATION_DAO);
 
     // Used by the landing page (order of category rows shown) and AI recommender.
     private static final InterestProfileService INTEREST_PROFILES =
@@ -135,6 +140,7 @@ public class Router {
         if (type == EventGoingController.class) return new EventGoingController(EVENTS, GOING_SERVICE, MESSAGING, SESSION);
         if (type == MessagesListController.class) return new MessagesListController(MESSAGING, SESSION);
         if (type == MessagesController.class) return new MessagesController(MESSAGING, SESSION);
+        if (type == NotificationsController.class) return new NotificationsController(NOTIFICATION_SERVICE, SESSION);
         if (type == EventPageController.class) {
             return new EventPageController(EVENTS, LIKE_SERVICE, COMMENT_SERVICE,
                     GOING_DAO, AI_DESCRIPTIONS, SESSION);

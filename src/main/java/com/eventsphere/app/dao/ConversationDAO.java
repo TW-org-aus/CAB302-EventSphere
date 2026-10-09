@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.eventsphere.app.dao.DaoHelpers.parseTimestamp;
 
@@ -91,6 +92,19 @@ public class ConversationDAO implements IConversationDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to check participant: conversation " + conversationId + ", user" + userId, e);
+        }
+    }
+
+    @Override
+    public Optional<Conversation> findById(int conversationId) {
+        String sql = "SELECT " + COLUMNS + " FROM Conversations WHERE ConversationID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, conversationId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? Optional.of(mapRow(rs)) : Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find conversation: " + conversationId, e);
         }
     }
 

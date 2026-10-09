@@ -1,11 +1,13 @@
 package com.eventsphere.app.service;
 
 import com.eventsphere.app.dao.IConversationDAO;
-import com.eventsphere.app.dao.IMessageDAO;
 import com.eventsphere.app.dao.IGoingDAO;
+import com.eventsphere.app.dao.IMessageDAO;
+import com.eventsphere.app.dao.INotificationDAO;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.model.Conversation;
 import com.eventsphere.app.model.Message;
+import com.eventsphere.app.model.NotificationType;
 import com.eventsphere.app.model.User;
 
 import java.util.ArrayList;
@@ -22,12 +24,14 @@ public class MessagingService {
     private final IMessageDAO messages;
     private final IUserDAO users;
     private final IGoingDAO going;
+    private final INotificationDAO notifications;
 
-    public MessagingService(IConversationDAO conversations, IMessageDAO messages, IUserDAO users, IGoingDAO going) {
+    public MessagingService(IConversationDAO conversations, IMessageDAO messages, IUserDAO users, IGoingDAO going, INotificationDAO notifications) {
         this.conversations = conversations;
         this.messages = messages;
         this.users = users;
         this.going = going;
+        this.notifications = notifications;
     }
     // Empty unless both users are going to same event
     public Optional<Conversation> openConversation(int userId, int otherUserId) {
@@ -64,6 +68,12 @@ public class MessagingService {
             return Optional.of(EMPTY_MESSAGE);
         }
         messages.insert(conversationId, senderId, text);
+        conversations.findById(conversationId).ifPresent(convo -> {
+            int recipientId = convo.otherUserId(senderId);
+            String senderName = users.findById(senderId).map(User::getFirstName).orElse("Someone");
+            notifications.insert(recipientId, NotificationType.NEW_MESSAGE, null, null, conversationId,
+                    senderName + " sent you a message");
+        });
         return Optional.empty();
     }
 }

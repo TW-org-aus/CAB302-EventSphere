@@ -4,7 +4,10 @@ package com.eventsphere.app.model;
 public enum NotificationType {
     COMMENT_REPLY("CommentReply"),
     NEW_MESSAGE("NewMessage"),
-    EVENT_REMINDER("EventReminder");
+    EVENT_REMINDER_WEEK("EventReminderWeek"),
+    EVENT_REMINDER_DAY("EventReminderDay"),
+    EVENT_REMINDER_12H("EventReminder12H"),
+    EVENT_UPDATED("EventUpdated");
 
     private final String dbValue;
 

@@ -11,18 +11,20 @@ public class Notification {
     private final Integer relatedEventId;
     private final Integer relatedCommentId;
     private final Integer relatedConversationId;
+    private final String message;
     private final Instant createdAt;
     private boolean read;
 
     public Notification(int notificationId, int userId, NotificationType type,
                         Integer relatedEventId, Integer relatedCommentId, Integer relatedConversationId,
-                        Instant createdAt, boolean read) {
+                        String message, Instant createdAt, boolean read) {
         this.notificationId = notificationId;
         this.userId = userId;
         this.type = Objects.requireNonNull(type, "type");
         this.relatedEventId = relatedEventId;
         this.relatedCommentId = relatedCommentId;
         this.relatedConversationId = relatedConversationId;
+        this.message = Objects.requireNonNull(message, "message");
         this.createdAt = createdAt;
         this.read = read;
     }
@@ -33,6 +35,7 @@ public class Notification {
     public Integer getRelatedEventId() { return relatedEventId; }
     public Integer getRelatedCommentId() { return relatedCommentId; }
     public Integer getRelatedConversationId() { return relatedConversationId; }
+    public String getMessage() { return message; }
     public Instant getCreatedAt() { return createdAt; }
     public boolean isRead() { return read; }
 

@@ -153,10 +153,8 @@ public class EventDAO implements IEventDAO {
         List<Object> values = new ArrayList<>();
 
         if (text != null) {
-            clauses.add("(Title LIKE ? OR Description LIKE ? OR VenueName LIKE ? OR Address LIKE ?)");
+            clauses.add("(Title LIKE ? OR VenueName LIKE ?)");
             String pattern = "%" + text + "%";
-            values.add(pattern);
-            values.add(pattern);
             values.add(pattern);
             values.add(pattern);
         }

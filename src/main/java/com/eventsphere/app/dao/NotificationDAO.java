@@ -14,10 +14,9 @@ import static com.eventsphere.app.dao.DaoHelpers.*;
 
 public class NotificationDAO implements INotificationDAO {
 
-
     static final String COLUMNS =
             "NotificationID, UserID, Type, RelatedEventID, RelatedCommentID, RelatedConversationID, " +
-            "CreatedAt, IsRead";
+            "Message, CreatedAt, IsRead";
 
     private final Connection connection;
 
@@ -27,20 +26,20 @@ public class NotificationDAO implements INotificationDAO {
 
     @Override
     public int insert(int userId, NotificationType type, Integer relatedEventId,
-                       Integer relatedCommentId, Integer relatedConversationId) {
-        String sql = "INSERT INTO Notifications (UserID, Type, RelatedEventID, RelatedCommentID, RelatedConversationID) " +
-                "VALUES (?, ?, ?, ?, ?)";
+                      Integer relatedCommentId, Integer relatedConversationId, String message) {
+        String sql = "INSERT INTO Notifications " +
+                "(UserID, Type, RelatedEventID, RelatedCommentID, RelatedConversationID, Message) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, userId);
             ps.setString(2, type.getDbValue());
             setNullableInteger(ps, 3, relatedEventId);
             setNullableInteger(ps, 4, relatedCommentId);
             setNullableInteger(ps, 5, relatedConversationId);
+            ps.setString(6, message);
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return keys.getInt(1);
-                }
+                if (keys.next()) return keys.getInt(1);
                 throw new SQLException("Insert into Notifications did not return a generated key.");
             }
         } catch (SQLException e) {
@@ -56,9 +55,7 @@ public class NotificationDAO implements INotificationDAO {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 List<Notification> notifications = new ArrayList<>();
-                while (rs.next()) {
-                    notifications.add(mapRow(rs));
-                }
+                while (rs.next()) notifications.add(mapRow(rs));
                 return notifications;
             }
         } catch (SQLException e) {
@@ -77,6 +74,32 @@ public class NotificationDAO implements INotificationDAO {
         }
     }
 
+    @Override
+    public void markAllRead(int userId) {
+        String sql = "UPDATE Notifications SET IsRead = 1 WHERE UserID = ? AND IsRead = 0";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to mark all notifications read for user: " + userId, e);
+        }
+    }
+
+    @Override
+    public boolean existsForEvent(int userId, NotificationType type, int eventId) {
+        String sql = "SELECT 1 FROM Notifications WHERE UserID = ? AND Type = ? AND RelatedEventID = ? LIMIT 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setString(2, type.getDbValue());
+            ps.setInt(3, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to check notification existence for user: " + userId, e);
+        }
+    }
+
     static Notification mapRow(ResultSet rs) throws SQLException {
         return new Notification(
                 rs.getInt("NotificationID"),
@@ -85,6 +108,7 @@ public class NotificationDAO implements INotificationDAO {
                 getNullableInteger(rs, "RelatedEventID"),
                 getNullableInteger(rs, "RelatedCommentID"),
                 getNullableInteger(rs, "RelatedConversationID"),
+                rs.getString("Message"),
                 parseTimestamp(rs.getString("CreatedAt")),
                 rs.getInt("IsRead") == 1
         );
