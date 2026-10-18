@@ -26,7 +26,7 @@
                 <Label text="Settings" styleClass="card-title"/>
 
                 <Label text="Account Settings" styleClass="section-heading" style="-fx-padding: 20 0 10 0;"/>
-                <Button text="Username: Ava Chen" styleClass="setting-row" maxWidth="Infinity" onAction="#onUsernameClick"/>
+                <Button fx:id="UsernameRow" styleClass="setting-row" maxWidth="Infinity" onAction="#onUsernameClick"/>
                 <Button fx:id="passwordRow" text="Password: ••••••••" styleClass="setting-row" maxWidth="Infinity" onAction="#onPasswordClick"/>
                 <Button fx:id="emailRow" styleClass="setting-row" maxWidth="Infinity" onAction="#onEmailClick"/>
                 <Button fx:id="nameRow" styleClass="setting-row" maxWidth="Infinity" onAction="#onNameClick"/>

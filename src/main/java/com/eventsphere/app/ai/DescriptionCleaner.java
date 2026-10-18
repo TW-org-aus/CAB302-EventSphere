@@ -26,10 +26,10 @@ public class DescriptionCleaner {
 
     private static final int MAX_TOKENS = 400;
 
-    private final AiClient ai;
+    private final IAiClient ai;
     private final Map<Integer, String> cache = new ConcurrentHashMap<>();
 
-    public DescriptionCleaner(AiClient ai) {
+    public DescriptionCleaner(IAiClient ai) {
         this.ai = ai;
     }
 

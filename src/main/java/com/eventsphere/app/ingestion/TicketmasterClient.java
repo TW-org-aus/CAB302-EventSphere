@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-public class TicketmasterClient {
+public class TicketmasterClient implements ITicketmasterClient {
 
     private static final String BASE_URL = "https://app.ticketmaster.com/discovery/v2/events.json";
 
@@ -38,9 +38,8 @@ public class TicketmasterClient {
         this(EnvConfig.require("TICKETMASTER_API_KEY"));
     }
 
-    //second constructor gets key passed from first constructor above --> this is mainly
-    // here because of testing, you can run tests with this class without needing an env
-    //connection :)
+    //second constructor gets key passed from first constructor above --> this is just
+    // here because of testing, you can run tests with this class without needing an env connection :)
     public TicketmasterClient(String apiKey) {
         this.apiKey = apiKey;
         this.http = HttpClient.newBuilder()

@@ -33,16 +33,20 @@ public class TicketmasterIngestor {
     // Keeps us under the API's limit of 5 requests a second.
     private static final long REQUEST_GAP_MS = 250;
 
-    private final TicketmasterClient client;
+    private final ITicketmasterClient client;
     private final Connection connection;
     private final IEventDAO events;
     private final ISourceDAO sources;
 
-    public TicketmasterIngestor(TicketmasterClient client, Connection connection) {
+    public TicketmasterIngestor(ITicketmasterClient client, Connection connection) {
+        this(client, new EventDAO(connection), new SourceDAO(connection), connection);
+    }
+
+    TicketmasterIngestor(ITicketmasterClient client, IEventDAO events, ISourceDAO sources, Connection connection) {
         this.client = client;
         this.connection = connection;
-        this.events = new EventDAO(connection);
-        this.sources = new SourceDAO(connection);
+        this.events = events;
+        this.sources = sources;
     }
 
 

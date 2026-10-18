@@ -32,10 +32,10 @@ public class EventRecommender {
     private static final int MAX_TOKENS = 700;
     private static final int MAX_RESULTS = 8;
 
-    private final AiClient ai;
+    private final IAiClient ai;
     private final ObjectMapper json = new ObjectMapper();
 
-    public EventRecommender(AiClient ai) {
+    public EventRecommender(IAiClient ai) {
         this.ai = ai;
     }
 

@@ -15,7 +15,7 @@ import java.time.Duration;
 
 // Client for OpenAI-compatible chat completions endpoint.
 // Same shape so switching is two values in .env rather than a code change if limits are reached or models change.
-public class AiClient {
+public class AiClient implements IAiClient {
 
     private static final String DEFAULT_BASE_URL =
             "https://generativelanguage.googleapis.com/v1beta/openai/";
@@ -34,7 +34,7 @@ public class AiClient {
                 orDefault(EnvConfig.get("AI_MODEL"), DEFAULT_MODEL));
     }
 
-    // Explicit configuration, so tests can run without a .env.
+    // so tests can run without a .env.
     public AiClient(String apiKey, String baseUrl, String model) {
         this.apiKey = apiKey;
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
