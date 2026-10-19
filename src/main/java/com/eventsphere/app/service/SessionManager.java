@@ -3,8 +3,7 @@ package com.eventsphere.app.service;
 import com.eventsphere.app.model.User;
 
 import java.util.Optional;
-// Holds the currently logged-in user for the app.
-// Router owns a single SessionManager instance and shares it (currently via AuthService).
+/** Holds the currently logged-in user; Router owns a single instance and shares it via AuthService. */
 public class SessionManager {
 
     private User currentUser;

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/** SQLite implementation of IGoingDAO. */
 public class GoingDAO implements IGoingDAO {
 
     private final Connection connection;

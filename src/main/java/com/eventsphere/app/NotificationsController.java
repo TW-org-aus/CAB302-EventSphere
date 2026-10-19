@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
+/** JavaFX controller for the notifications panel; marks items read on open. */
 public class NotificationsController {
 
     private final NotificationService notificationService;

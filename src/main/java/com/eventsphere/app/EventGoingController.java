@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
+/** JavaFX controller for the "who's going" panel on an event page; lists attendees with a going count. */
 public class EventGoingController {
 
     @FXML private Label eventTitleLabel;

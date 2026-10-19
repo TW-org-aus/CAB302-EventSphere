@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/** Reusable category bubble-picker component used on sign-up and in settings to select event interests. */
 public class InterestPicker {
     private static final String BUBBLE_DEFAULT_STYLE = "-fx-background-color: #F7F7F7; -fx-text-fill: #1A1A1A; -fx-border-color: #E5E7EB; " +
             "-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-padding: 6 14 6 14; -fx-font-size: 12px;";

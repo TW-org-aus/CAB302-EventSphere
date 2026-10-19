@@ -16,6 +16,7 @@ import javafx.scene.layout.Priority;
 import java.util.List;
 import java.util.Optional;
 
+/** JavaFX controller for the conversation list sidebar; shows all threads the current user is in. */
 public class MessagesListController {
 
     @FXML private VBox conversationList;

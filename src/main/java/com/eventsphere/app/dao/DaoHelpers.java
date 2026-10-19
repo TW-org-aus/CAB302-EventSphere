@@ -12,8 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
-// Shared JDBC helpers for the DAO classes.
- class DaoHelpers {
+/** Shared JDBC helpers for the DAO classes: type-safe column reads and SQLite timestamp conversion. */
+class DaoHelpers {
 
     // sqlite has a weird date time so this formates it for java classes to use
     private static final DateTimeFormatter TIMESTAMP = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

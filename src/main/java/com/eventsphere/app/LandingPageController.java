@@ -50,6 +50,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
+/** JavaFX controller for the main landing page; manages the event feed, search/filter bar, map, and AI recommendation panel. */
 public class LandingPageController {
 
     @FXML private StackPane rootPane;

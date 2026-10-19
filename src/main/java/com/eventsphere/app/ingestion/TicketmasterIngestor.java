@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// Batch job that pulls upcoming Events from Ticketmaster and upserts them by Ticketmaster id.
+/** Batch job that pulls upcoming events from Ticketmaster and upserts them by Ticketmaster id. */
 public class TicketmasterIngestor {
 
     static final String SOURCE_NAME = "Ticketmaster";

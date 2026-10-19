@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// Turns one Ticketmaster event node into an unsaved Event.
+/** Converts one Ticketmaster API event node (Jackson JsonNode) into an unsaved Event domain object. */
 public class TicketmasterEventMapper {
 
     private TicketmasterEventMapper() { }

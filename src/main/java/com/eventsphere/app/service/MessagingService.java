@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/** Orchestrates conversation creation and message sending; enforces the shared-Going-event requirement before opening a thread. */
 public class MessagingService {
     static final String EMPTY_MESSAGE = "Message cannot be empty";
     static final String NOT_A_PARTICIPANT = "You are not part of this conversation";

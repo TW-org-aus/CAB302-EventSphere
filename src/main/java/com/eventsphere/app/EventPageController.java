@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/** JavaFX controller for the full event detail page; handles like/going toggles, comment threads, and AI description cleaning. */
 public class EventPageController {
 
     private static final double IMAGE_W = 464.0;

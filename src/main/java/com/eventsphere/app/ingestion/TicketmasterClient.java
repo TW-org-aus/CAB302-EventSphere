@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
+/** HTTP client for the Ticketmaster Discovery v2 API; fetches paginated events for a given city and date range. */
 public class TicketmasterClient implements ITicketmasterClient {
 
     private static final String BASE_URL = "https://app.ticketmaster.com/discovery/v2/events.json";

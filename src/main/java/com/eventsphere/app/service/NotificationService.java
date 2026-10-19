@@ -10,6 +10,7 @@ import com.eventsphere.app.model.NotificationType;
 import java.time.Instant;
 import java.util.List;
 
+/** Creates and deduplicates event-reminder and comment-reply notifications; driven by ScreenPoller. */
 public class NotificationService {
 
     private static final long SECONDS_12H = 12 * 3600L;

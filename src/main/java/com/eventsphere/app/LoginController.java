@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import com.eventsphere.app.service.AuthService;
 import com.eventsphere.app.service.LoginResult;
 
+/** JavaFX controller for the login screen; delegates credential checks to AuthService. */
 public class LoginController {
 
     private final AuthService authService;

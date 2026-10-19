@@ -29,6 +29,7 @@ import java.util.Set;
 
 import static com.eventsphere.app.EditDialog.field;
 
+/** JavaFX controller for the user profile page; shows liked events, going events, and edit dialogs for personal details. */
 public class ProfileController {
 
     private static final DateTimeFormatter ROW_DATE =

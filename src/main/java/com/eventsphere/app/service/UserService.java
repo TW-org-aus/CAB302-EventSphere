@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/** Profile update and account management operations; validates inputs before delegating to UserDAO and PreferenceDAO. */
 public class UserService {
 
     public static final int MAX_INTERESTS = 5;

@@ -3,6 +3,7 @@ package com.eventsphere.app;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+/** Legacy stub controller for event comments; active comment UI is in EventPageController. */
 public class EventCommentsController {
 
     @FXML

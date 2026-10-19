@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/** Argon2id password hashing via BouncyCastle; produces self-describing hash strings and verifies them. */
 public class PasswordHasher {
 
     private static final String PREFIX = "argon2id";

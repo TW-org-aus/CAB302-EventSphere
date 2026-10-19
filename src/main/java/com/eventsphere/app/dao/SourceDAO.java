@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import static com.eventsphere.app.dao.DaoHelpers.*;
 
+/** SQLite implementation of ISourceDAO. */
 public class SourceDAO implements ISourceDAO {
 
 

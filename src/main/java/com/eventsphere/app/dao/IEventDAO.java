@@ -7,26 +7,25 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+/** DAO for event listings; supports full insert, Ticketmaster upsert, and multi-filter search. */
 public interface IEventDAO {
 
-    // Returns the generated EventID. The id on the passed Event is ignored (an unsaved event has id 0).
+    /** Inserts a new event and returns the generated EventID; the id on the passed Event is ignored. */
     int insert(Event event);
 
-    // Inserts the Event, or updates the row that already has its Ticketmaster id. The EventID of an
-    // existing row never changes.
+    /** Inserts the event, or updates the existing row that already holds its Ticketmaster id; the row's EventID never changes. */
     void upsertByTicketmasterId(Event event);
 
     Event findById(int eventId);
 
-
     List<Event> findAll();
 
-    // Events in the given category, ordered by StartTime ascending.
+    /** Returns events in the given category, ordered by StartTime ascending. */
     List<Event> findByCategory(Category category);
 
-    // Events with StartTime at or after now, ordered by StartTime ascending.
+    /** Returns events whose StartTime is at or after now, ordered by StartTime ascending. */
     List<Event> findUpcoming();
 
-    // Every parameter may be null, and a null skips that filter.
+    /** Full-text + filter search; any parameter may be null and a null parameter skips that filter. */
     List<Event> search(String text, Category category, Instant from, Instant to);
 }

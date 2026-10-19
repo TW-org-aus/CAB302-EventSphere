@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+/** Creates and drops the full database schema; used in tests to reset state and in the app on first launch. */
 public class DBController {
     private final Connection connect;
 

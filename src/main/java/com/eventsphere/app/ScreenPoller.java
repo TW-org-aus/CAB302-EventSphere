@@ -6,7 +6,7 @@ import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
-//
+/** Runs a periodic JavaFX Timeline to drive notification checks and other background polling while the app is open. */
 final class ScreenPoller {
     private static final Duration INTERVAL = Duration.seconds(5);
 

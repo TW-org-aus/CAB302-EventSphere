@@ -5,8 +5,7 @@ import com.eventsphere.app.service.EventService;
 
 import java.util.List;
 
-// This selector narrows the pool of events the AI ranker chooses from to reduce token usage.
-
+/** Narrows the event pool to at most MAX_CANDIDATES before AI ranking, to keep token usage bounded. */
 public class CandidateSelector {
 
     private static final int MAX_CANDIDATES = 40;

@@ -2,13 +2,14 @@ package com.eventsphere.app.model;
 
 import java.util.Objects;
 
-// the site from where every event comes from (since we are just using ticketmaster and seeding data this class is not too useful but will be in a prod env)
+/** Origin site for event listings; distinguishes seeded data from Ticketmaster imports and future scraped sources. */
 public class Source {
 
     private final int sourceId;
     private final String siteName;
     private final String siteUrl;
 
+    /** Creates a Source as read from the database. */
     public Source(int sourceId, String siteName, String siteUrl) {
         this.sourceId = sourceId;
         this.siteName = Objects.requireNonNull(siteName, "siteName");

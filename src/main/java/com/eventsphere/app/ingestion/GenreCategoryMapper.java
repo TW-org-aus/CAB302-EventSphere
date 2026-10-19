@@ -12,9 +12,7 @@ import static java.util.Map.entry;
 //attempts to fix that by doing a rough genre mapping
 
 // Maps a Ticketmaster classification (segment > genre > sub-genre) onto one of the fixed Categories.
-// Genre is checked first: the categories below only appear at genre level, not segment level.
-// Uni Events, Markets, Charity, Tech and Outdoors are app-only, so ingestion never produces them.
-// Workshops and Gaming likely have a genre too, but the names are unconfirmed so they land in OTHER.
+/** Maps Ticketmaster segment/genre strings to app Category values; genre is checked before segment since some categories only appear at genre level. */
 public class GenreCategoryMapper {
 
 

@@ -3,6 +3,7 @@ package com.eventsphere.app.model;
 import java.time.Instant;
 import java.util.Objects;
 
+/** Domain model representing a user comment on an event, with optional reply-to threading. */
 public class Comment {
 
     private final int commentId;
@@ -15,6 +16,7 @@ public class Comment {
     // Null = parent comment, non-null = tagged reply.
     private final Integer replyToCommentId;
 
+    /** Creates a fully-hydrated Comment as read from the database. */
     public Comment(int commentId, int userId, int eventId, String content,
                    Instant createdAt, Instant updatedAt, Integer replyToCommentId) {
         this.commentId = commentId;

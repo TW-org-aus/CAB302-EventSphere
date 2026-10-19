@@ -1,6 +1,6 @@
 package com.eventsphere.app.service;
 
-// Date options for the landing page filter bar. toString() is the label the ComboBox shows.
+/** Date filter options for the landing page; toString() returns the label shown in the ComboBox. */
 public enum DateRange {
     ANY("Any time"),
     TODAY("Today"),

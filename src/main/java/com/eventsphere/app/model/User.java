@@ -2,6 +2,7 @@ package com.eventsphere.app.model;
 
 import java.time.LocalDate;
 
+/** Domain model for a registered user, including profile, credentials, and notification preferences. */
 public class User {
 
     private final int userId;
@@ -17,6 +18,7 @@ public class User {
     private String username;
     private boolean nightMode;
 
+    /** Creates a fully-hydrated User as read from the database. */
     public User(int userId, String firstName, String lastName, String email, String passwordHash,
                 Double homeLat, Double homeLong, LocalDate dateCreated,
                 boolean active, boolean notifyEnabled, String username) {
@@ -55,13 +57,13 @@ public class User {
     public void setUsername(String username) { this.username = username; }
     public void setNightMode(boolean nightMode) {this.nightMode = nightMode; }
 
-    //Sets both home coordinates, or clears them when passed nulls.
+    /** Sets both home coordinates atomically, or clears them when passed nulls. */
     public void setHome(Double homeLat, Double homeLong) {
         this.homeLat = homeLat;
         this.homeLong = homeLong;
     }
 
-    // Display name for the UI.
+    /** Returns firstName + space + lastName for display. */
     public String getFullName() {
         return firstName + " " + lastName;
     }

@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.eventsphere.app.model.Event;
 
+/** SQLite implementation of ILikeDAO. */
 public class LikeDAO implements ILikeDAO {
 
     private final Connection connection;

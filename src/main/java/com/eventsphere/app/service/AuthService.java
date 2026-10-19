@@ -5,7 +5,7 @@ import com.eventsphere.app.model.User;
 
 import java.util.Locale;
 import java.util.Optional;
-// login and logout
+/** Handles login validation and logout; hides which credential is wrong to prevent enumeration. */
 public class AuthService {
     // only one message for wrong password or email so there is no sign which is wrong
     static final String INVALID_CREDS = "Incorrect email or password";

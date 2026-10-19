@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static com.eventsphere.app.dao.DaoHelpers.*;
 
+/** SQLite implementation of IUserDAO, including soft-delete and username uniqueness checks. */
 public class UserDAO implements IUserDAO {
 
     // Every column of Users, in the order mapRow reads them.

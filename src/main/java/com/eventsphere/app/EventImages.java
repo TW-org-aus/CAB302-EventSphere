@@ -3,9 +3,7 @@ package com.eventsphere.app;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
 
-// new helper class made to de-couple the private image loader that was in the landing page
-// Resolves the display URL for a stored event image. Shared by LandingPageController
-// and EventPageController so there is a centralised way for resolving img url's
+/** Resolves the display URL for an event image; shared by LandingPageController and EventPageController to centralise image URL resolution. */
 public class EventImages {
 
     private EventImages() {
