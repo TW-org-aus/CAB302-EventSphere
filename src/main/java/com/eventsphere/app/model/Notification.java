@@ -3,6 +3,7 @@ package com.eventsphere.app.model;
 import java.time.Instant;
 import java.util.Objects;
 
+/** Domain model for a user notification, linking to the event, comment, or conversation that triggered it. */
 public class Notification {
 
     private final int notificationId;
@@ -15,6 +16,7 @@ public class Notification {
     private final Instant createdAt;
     private boolean read;
 
+    /** Creates a fully-hydrated Notification as read from the database. */
     public Notification(int notificationId, int userId, NotificationType type,
                         Integer relatedEventId, Integer relatedCommentId, Integer relatedConversationId,
                         String message, Instant createdAt, boolean read) {

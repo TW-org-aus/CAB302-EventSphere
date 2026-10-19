@@ -3,6 +3,7 @@ package com.eventsphere.app.model;
 import java.time.Instant;
 import java.util.Objects;
 
+/** Domain model for an event listing, sourced from Ticketmaster ingestion or database seeding. */
 public class Event {
 
     private final int eventId;
@@ -28,6 +29,7 @@ public class Event {
     private final int commentsCount;
 
 
+    /** Creates a fully-hydrated Event as returned from the database, including its generated id and trigger-maintained counts. */
     public Event(int eventId, String title, String description, Category category,
                  Instant startTime, Instant endTime, String venueName, String address,
                  Double lat, Double lng, String imageUrl, String ticketUrl,
@@ -53,9 +55,7 @@ public class Event {
         this.commentsCount = commentsCount;
     }
 
-    // Unsaved Event (e.g. freshly mapped from Ticketmaster). eventId = 0 means "not saved yet";
-    // EventDAO.insert should ignore it and return the generated id. createdAt, hasOccurred and
-    // the counts are left for the DB defaults to fill in.
+    /** Creates an unsaved Event from Ticketmaster with a Ticketmaster id; eventId is 0 until the DAO assigns one. */
     public Event(String title, String description, Category category,
                  Instant startTime, Instant endTime, String venueName, String address,
                  Double lat, Double lng, String imageUrl, String ticketUrl, int sourceId,
@@ -64,7 +64,7 @@ public class Event {
                 lat, lng, imageUrl, ticketUrl, null, false, sourceId, ticketmasterId, 0, 0);
     }
 
-    // Unsaved Event with no Ticketmaster id, for seeded and scraped Events.
+    /** Creates an unsaved Event without a Ticketmaster id, used for seeded and scraped events. */
     public Event(String title, String description, Category category,
                  Instant startTime, Instant endTime, String venueName, String address,
                  Double lat, Double lng, String imageUrl, String ticketUrl, int sourceId) {

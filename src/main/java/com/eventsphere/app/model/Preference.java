@@ -2,7 +2,7 @@ package com.eventsphere.app.model;
 
 import java.util.*;
 
-// this object contains the details for the 3 tables of address, bio and catagories that the user prefferences
+/** User preference record, aggregating home address, bio, and chosen event categories. */
 public class Preference {
 
     private final int userId;
@@ -10,6 +10,7 @@ public class Preference {
     private String bio;
     private final EnumSet<Category> categories = EnumSet.noneOf(Category.class);
 
+    /** Creates a Preference record from database values; categories may be empty but not null. */
     public Preference(int userId, String address, String bio, Collection<Category> categories) {
         this.userId = userId;
         this.address = address;

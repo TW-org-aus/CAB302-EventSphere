@@ -12,6 +12,7 @@ import java.util.List;
 
 import static com.eventsphere.app.dao.DaoHelpers.*;
 
+/** SQLite implementation of INotificationDAO. */
 public class NotificationDAO implements INotificationDAO {
 
     static final String COLUMNS =

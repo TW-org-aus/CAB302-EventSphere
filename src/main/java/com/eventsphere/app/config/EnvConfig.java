@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-// ENV reader
+/** Reads key=value pairs from a .env file at startup and exposes them as typed accessors. */
 public final class EnvConfig {
 
     private static final Map<String, String> VALUES = load(Path.of(".env"));

@@ -2,6 +2,8 @@ package com.eventsphere.app.seeding;
 
 import com.eventsphere.app.Database.DBController;
 import com.eventsphere.app.Database.Database;
+import com.eventsphere.app.dao.EventDAO;
+import com.eventsphere.app.dao.SourceDAO;
 import com.eventsphere.app.ingestion.TicketmasterClient;
 import com.eventsphere.app.ingestion.TicketmasterIngestor;
 
@@ -14,15 +16,15 @@ import java.sql.Connection;
 // so that nobody is confused about what it does. You can't win em all.
 
 
-// Runs one Ticketmaster pull immediately, ignoring the staleness check. Use it to seed a fresh database.db or to test ingestion.
+/** Standalone entry point that runs one Ticketmaster pull immediately, bypassing the staleness check; useful for seeding a fresh database or testing ingestion. */
 public class TicketmasterIngestMain {
 
-    private TicketmasterIngestMain() { }
+
 
     public static void main(String[] args) throws Exception {
         try (Connection connection = Database.openConnection()) {
             new DBController(connection);
-            int count = new TicketmasterIngestor(new TicketmasterClient(), connection).run();
+            int count = new TicketmasterIngestor(new TicketmasterClient(), new EventDAO(connection), new SourceDAO(connection), connection).run();
             System.out.println("Ticketmaster: " + count + " events upserted in total");
         }
     }

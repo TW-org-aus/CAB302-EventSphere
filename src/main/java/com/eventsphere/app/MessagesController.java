@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+/** JavaFX controller for an open conversation thread; renders message history and the send input. */
 public class MessagesController {
 
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("h:mm a");

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/** Gluon MapLayer that plots clickable event markers on the map; fires a callback when a marker is selected. */
 public class EventMapLayer extends MapLayer {
 
     private final List<Event> events = new ArrayList<>();

@@ -6,8 +6,7 @@ import com.eventsphere.app.model.Event;
 
 // Tidies event descriptions for display. Ingested descriptions arrive with HTML
 // tags, entities and marketing boilerplate that read badly on the event page.
-// Results are cached per event id for the life of the run, so reopening a page costs nothing.
-// Any failure returns original text, so the page always shows something even with no API key.
+/** Uses the AI client to reformat raw Ticketmaster HTML descriptions into clean prose; results are cached per event id for the run lifetime, and any failure falls back to the original text. */
 public class DescriptionCleaner {
 
     private static final String SYSTEM_PROMPT = """

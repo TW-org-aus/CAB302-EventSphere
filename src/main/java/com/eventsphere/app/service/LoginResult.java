@@ -1,7 +1,7 @@
 package com.eventsphere.app.service;
 
 import com.eventsphere.app.model.User;
-// Used by LoginController to return either the authenticated user or an error message.
+/** Returned by AuthService to LoginController: carries the authenticated User on success or an error message on failure. */
 public class LoginResult {
 
     private final boolean success;

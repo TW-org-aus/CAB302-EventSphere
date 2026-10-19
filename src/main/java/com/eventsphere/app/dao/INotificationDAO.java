@@ -5,6 +5,7 @@ import com.eventsphere.app.model.NotificationType;
 
 import java.util.List;
 
+/** DAO for user notifications; supports insert, bulk read-mark, and deduplication by event+type. */
 public interface INotificationDAO {
 
     /** Writes the notification and returns the generated NotificationID. */

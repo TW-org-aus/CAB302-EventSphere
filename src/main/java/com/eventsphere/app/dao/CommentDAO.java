@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.eventsphere.app.dao.DaoHelpers.*;
 
+/** SQLite implementation of ICommentDAO. */
 public class CommentDAO implements ICommentDAO {
 
 

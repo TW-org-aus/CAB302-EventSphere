@@ -17,6 +17,7 @@ import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Comment;
 import com.eventsphere.app.model.Event;
 
+/** Queries and sorts events; proximity sort uses the Haversine formula against the user's saved home location. */
 public class EventService {
 
     private static final double EARTH_RADIUS_KM = 6371.0;

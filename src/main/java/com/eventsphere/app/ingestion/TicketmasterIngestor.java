@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// Batch job that pulls upcoming Events from Ticketmaster and upserts them by Ticketmaster id.
+/** Batch job that pulls upcoming events from Ticketmaster and upserts them by Ticketmaster id. */
 public class TicketmasterIngestor {
 
     static final String SOURCE_NAME = "Ticketmaster";
@@ -42,7 +42,7 @@ public class TicketmasterIngestor {
         this(client, new EventDAO(connection), new SourceDAO(connection), connection);
     }
 
-    TicketmasterIngestor(ITicketmasterClient client, IEventDAO events, ISourceDAO sources, Connection connection) {
+    public TicketmasterIngestor(ITicketmasterClient client, IEventDAO events, ISourceDAO sources, Connection connection) {
         this.client = client;
         this.connection = connection;
         this.events = events;

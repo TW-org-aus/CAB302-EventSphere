@@ -16,7 +16,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-// Client for the Places API : autocomplete + place details.
+/** HTTP client for the Google Places API: autocomplete and place-details (lat/lng resolution). */
 public class PlacesClient implements IPlacesClient {
 
     private static final String AUTOCOMPLETE_URL = "https://places.googleapis.com/v1/places:autocomplete";

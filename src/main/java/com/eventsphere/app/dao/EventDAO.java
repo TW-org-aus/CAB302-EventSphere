@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import static com.eventsphere.app.dao.DaoHelpers.*;
 
+/** SQLite implementation of IEventDAO, including full-text search and Ticketmaster upsert. */
 public class EventDAO implements IEventDAO {
 
 

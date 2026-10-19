@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
+/** Loads static seed data from seed-data.json into the database; used to populate a fresh install without running the Ticketmaster ingestor. */
 public class DatabaseSeeder {
 
     private static final String SEED_FILE = "seed-data.json";

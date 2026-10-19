@@ -1,6 +1,6 @@
 package com.eventsphere.app.places;
 
-// Coordinates resolved for a selected place.
+/** Lat/lng pair resolved for a selected autocomplete suggestion via the Places details call. */
 public class PlaceLocation {
 
     private final double lat;

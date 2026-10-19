@@ -5,17 +5,18 @@ import com.eventsphere.app.model.Preference;
 
 import java.util.Collection;
 
+/** DAO for user preferences; always returns a non-null Preference with empty fields when no row exists. */
 public interface IPreferenceDAO {
 
-    // Never returns null: returns no address, no categories when none is saved.
+    /** Returns the user's stored preferences; never null — address and bio default to null, categories to empty. */
     Preference findByUser(int userId);
 
-    // address may be null.
+    /** Upserts the home address; null clears it. */
     void upsertAddress(int userId, String address);
 
-    // bio may be null
+    /** Upserts the bio; null clears it. */
     void upsertBio(int userId, String bio);
 
-    // Replaces the whole set with new ones and creates the Preferences row if missing.(even if there are more old than new the old ones will still be gone :(
+    /** Replaces the full category set and creates the Preferences row if it is missing. */
     void replaceCategories(int userId, Collection<Category> categories);
 }

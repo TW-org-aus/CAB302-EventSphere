@@ -3,6 +3,7 @@ package com.eventsphere.app.model;
 import java.time.Instant;
 import java.util.Objects;
 
+/** Domain model for a single message within a private conversation thread. */
 public class Message {
 
     private final int messageId;
@@ -13,6 +14,7 @@ public class Message {
     // Null = unread.
     private Instant readAt;
 
+    /** Creates a fully-hydrated Message as read from the database. */
     public Message(int messageId, int conversationId, int senderId, String content,
                    Instant sentAt, Instant readAt) {
         this.messageId = messageId;

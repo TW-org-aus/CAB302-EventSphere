@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-/* multi-step sign-up, changed from single step to multi-step */
+/** JavaFX controller for the multi-step sign-up flow: personal details, address autocomplete via Places API, and interest selection. */
 public class SignUpController {
 
     private final UserService userService;

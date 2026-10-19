@@ -5,16 +5,16 @@ import com.eventsphere.app.model.Conversation;
 import java.util.List;
 import java.util.Optional;
 
+/** DAO for 1:1 message threads; enforces user ordering so (A,B) and (B,A) share a row. */
 public interface IConversationDAO {
 
-    // Argument order doesn't matter. Throws IllegalArgumentException if both ids are the same.
-    // NOTE!! Doesn't check that the users share a Going event, that is handeled by messagingService. --> users need to go to same event to msg one another
+    /** Returns the existing conversation between the two users, or creates one; argument order does not matter. The Going-event check is enforced by MessagingService, not here. */
     Conversation findOrCreate(int userA, int userB);
 
-    // Conversations involving userId, hiding ones whose other participant is deactivated.
+    /** Returns conversations involving userId, hiding threads whose other participant is deactivated. */
     List<Conversation> findByUser(int userId);
 
-    // Is true if userId is one of the people in the conversation, checks before reading or sending.
+    /** Returns true if userId is a participant in the conversation; used to gate reads and sends. */
     boolean isParticipant(int conversationId, int userId);
 
     Optional<Conversation> findById(int conversationId);

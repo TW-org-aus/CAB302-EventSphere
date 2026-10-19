@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/** SQLite implementation of IPreferenceDAO. */
 public class PreferenceDAO implements IPreferenceDAO {
 
     private final Connection connection;

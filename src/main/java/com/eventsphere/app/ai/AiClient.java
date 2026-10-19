@@ -13,8 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-// Client for OpenAI-compatible chat completions endpoint.
-// Same shape so switching is two values in .env rather than a code change if limits are reached or models change.
+/** HTTP client for OpenAI-compatible chat-completion endpoints; base URL and model are configured via .env to avoid code changes on provider switch. */
 public class AiClient implements IAiClient {
 
     private static final String DEFAULT_BASE_URL =

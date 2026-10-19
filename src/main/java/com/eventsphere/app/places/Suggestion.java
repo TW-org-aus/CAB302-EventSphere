@@ -1,6 +1,6 @@
 package com.eventsphere.app.places;
 
-// One row of the Places autocomplete dropdown.
+/** One row in the Places autocomplete dropdown: a place id (for the detail call) and its display text. */
 public class Suggestion {
 
     private final String placeId;

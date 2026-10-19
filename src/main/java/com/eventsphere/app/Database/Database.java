@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
+/** Manages the single SQLite connection for the app; call getInstance() to get or lazily create it. */
 public class Database {
 
     private static String DB_FILE = "database.db";

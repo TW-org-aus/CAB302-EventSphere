@@ -1,5 +1,6 @@
 package com.eventsphere.app.service;
 
+/** Returned by AuthService after a registration attempt: carries success state and any validation error. */
 public class RegisterResult {
 
     private final boolean success;

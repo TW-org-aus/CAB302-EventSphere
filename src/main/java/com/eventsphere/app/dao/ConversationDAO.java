@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static com.eventsphere.app.dao.DaoHelpers.parseTimestamp;
 
+/** SQLite implementation of IConversationDAO. */
 public class ConversationDAO implements IConversationDAO {
 
 

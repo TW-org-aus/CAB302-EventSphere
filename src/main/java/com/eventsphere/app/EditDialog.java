@@ -9,6 +9,7 @@ import javafx.stage.Window;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+/** Factory for inline TextInputDialog-based edit dialogs; used by ProfileController to edit individual fields. */
 final class EditDialog {
     private EditDialog() {
     }

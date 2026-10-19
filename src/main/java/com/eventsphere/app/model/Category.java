@@ -1,6 +1,6 @@
 package com.eventsphere.app.model;
 
-// Fixed Event categories. DBController builds the Category CHECK lists from this enum.
+/** Fixed event categories; DBController derives the CHECK constraints from this enum's values. */
 public enum Category {
     MUSIC("Music"),
     SPORTS("Sports"),
@@ -30,6 +30,7 @@ public enum Category {
 
     public String getDbValue() { return dbValue; }
 
+    /** Returns the Category whose database value matches the given string, or throws IllegalArgumentException. */
     public static Category fromDbValue(String dbValue) {
         for (Category category : values()) {
             if (category.dbValue.equals(dbValue)) {

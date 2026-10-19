@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.sql.Connection;
 
+/** JavaFX Application that sets up the database, wires all dependencies, and launches the login screen. */
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) {

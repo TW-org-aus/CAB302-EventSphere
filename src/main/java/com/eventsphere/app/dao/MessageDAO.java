@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.eventsphere.app.dao.DaoHelpers.parseTimestamp;
 
+/** SQLite implementation of IMessageDAO. */
 public class MessageDAO implements IMessageDAO {
 
     // will be used in message server or will be used in hosted db if sockets get scrapped

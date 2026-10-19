@@ -2,6 +2,5 @@ package com.eventsphere.app.ai;
 
 import com.eventsphere.app.model.Event;
 
-// Gives a recommended event and a reason for the model's decision.
-
+/** Pairs a recommended event with the AI's one-line reasoning for the suggestion. */
 public record Recommendation(Event event, String reason) { }

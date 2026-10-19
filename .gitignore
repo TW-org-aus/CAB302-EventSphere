@@ -42,3 +42,9 @@ database.db-shm
 .env
 
 /docs/JavaDocs/
+
+# Local presentation notes — not for submission
+PRESENTATION_NOTES.md
+
+# Raw sprint notes — formatted versions live in docs/retrospectives/
+Revisions/

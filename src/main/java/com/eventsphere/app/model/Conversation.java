@@ -2,7 +2,7 @@ package com.eventsphere.app.model;
 
 import java.time.Instant;
 
-// Private 1:1 thread. user1Id < user2Id mirrors the schema CHECK, so (A,B) and (B,A) can't both exist.
+/** Domain model for a private 1:1 message thread; user1Id is always the lesser id so (A,B) and (B,A) cannot both exist. */
 public class Conversation {
 
     private final int conversationId;
@@ -10,6 +10,7 @@ public class Conversation {
     private final int user2Id;
     private final Instant createdAt;
 
+    /** Creates a Conversation; throws IllegalArgumentException if user1Id is not strictly less than user2Id. */
     public Conversation(int conversationId, int user1Id, int user2Id, Instant createdAt) {
         if (user1Id >= user2Id) {
             throw new IllegalArgumentException(
@@ -26,7 +27,7 @@ public class Conversation {
     public int getUser2Id() { return user2Id; }
     public Instant getCreatedAt() { return createdAt; }
 
-    // find the other participant for the chat header.
+    /** Returns the id of the other participant; throws IllegalArgumentException when userId is not in this conversation. */
     public int otherUserId(int userId) {
         if (userId == user1Id) {
             return user2Id;

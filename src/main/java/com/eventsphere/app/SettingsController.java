@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
 
+/** JavaFX controller for the settings screen; handles password change, notification toggle, and account deactivation. */
 public class SettingsController {
 
     private final AuthService authService;

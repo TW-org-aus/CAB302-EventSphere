@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 
+/** JavaFX controller for the persistent top navigation bar; handles search and logout. */
 public class NavBarController {
 
     private final AuthService authService;
