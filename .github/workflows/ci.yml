@@ -23,7 +23,7 @@ jobs:
       - name: Make Maven wrapper executable
         run: chmod +x mvnw
 
-      - run: ./mvnw -B verify
+      - run: xvfb-run --auto-servernum ./mvnw -B verify
 
       - name: Generate Javadoc
         run: ./mvnw -B javadoc:javadoc
