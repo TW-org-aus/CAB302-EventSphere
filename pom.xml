@@ -89,6 +89,18 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>4.0.18</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>4.0.18</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -122,6 +134,7 @@
                     <!-- Run tests on the classpath, not the module path, so module-info.java's
                          `opens` list doesn't need to cover every package JUnit reflects into -->
                     <useModulePath>false</useModulePath>
+                    <argLine>-Dprism.order=sw</argLine>
                 </configuration>
             </plugin>
             <plugin>

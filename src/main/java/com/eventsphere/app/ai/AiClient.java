@@ -34,7 +34,7 @@ public class AiClient implements IAiClient {
                 orDefault(EnvConfig.get("AI_MODEL"), DEFAULT_MODEL));
     }
 
-    // so tests can run without a .env.
+    // Explicit configuration, so tests can run without a .env.
     public AiClient(String apiKey, String baseUrl, String model) {
         this.apiKey = apiKey;
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";

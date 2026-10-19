@@ -38,8 +38,9 @@ public class TicketmasterClient implements ITicketmasterClient {
         this(EnvConfig.require("TICKETMASTER_API_KEY"));
     }
 
-    //second constructor gets key passed from first constructor above --> this is just
-    // here because of testing, you can run tests with this class without needing an env connection :)
+    //second constructor gets key passed from first constructor above --> this is mainly
+    // here because of testing, you can run tests with this class without needing an env
+    //connection :)
     public TicketmasterClient(String apiKey) {
         this.apiKey = apiKey;
         this.http = HttpClient.newBuilder()
