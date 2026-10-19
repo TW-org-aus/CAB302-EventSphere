@@ -42,7 +42,7 @@ public class TicketmasterIngestor {
         this(client, new EventDAO(connection), new SourceDAO(connection), connection);
     }
 
-    TicketmasterIngestor(ITicketmasterClient client, IEventDAO events, ISourceDAO sources, Connection connection) {
+    public TicketmasterIngestor(ITicketmasterClient client, IEventDAO events, ISourceDAO sources, Connection connection) {
         this.client = client;
         this.connection = connection;
         this.events = events;

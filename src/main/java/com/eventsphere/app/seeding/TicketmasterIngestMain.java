@@ -19,7 +19,7 @@ import java.sql.Connection;
 /** Standalone entry point that runs one Ticketmaster pull immediately, bypassing the staleness check; useful for seeding a fresh database or testing ingestion. */
 public class TicketmasterIngestMain {
 
-    private TicketmasterIngestMain() { }
+
 
     public static void main(String[] args) throws Exception {
         try (Connection connection = Database.openConnection()) {
