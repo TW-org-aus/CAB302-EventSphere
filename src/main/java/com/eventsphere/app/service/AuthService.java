@@ -1,5 +1,6 @@
 package com.eventsphere.app.service;
 
+import com.eventsphere.app.ai.RecommendationCache;
 import com.eventsphere.app.dao.IUserDAO;
 import com.eventsphere.app.model.User;
 
@@ -12,10 +13,17 @@ public class AuthService {
 
     private final IUserDAO users;
     private final SessionManager session;
+    private final RecommendationCache recommendations;
 
+    // Kept so tests can build an AuthService without the AI side of the app.
     public AuthService(IUserDAO users, SessionManager session) {
+        this(users, session, null);
+    }
+
+    public AuthService(IUserDAO users, SessionManager session, RecommendationCache recommendations) {
         this.users = users;
         this.session = session;
+        this.recommendations = recommendations;
     }
 
     public LoginResult login(String email, String rawPassword) {
@@ -44,5 +52,10 @@ public class AuthService {
 
     public void logout() {
         session.clear();
+        // Ending the session drops the per-user state that went with it, so one user's
+        // ranking is not held in memory after they log out.
+        if (recommendations != null) {
+            recommendations.clear();
+        }
     }
 }

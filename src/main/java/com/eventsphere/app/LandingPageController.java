@@ -14,6 +14,7 @@ import com.eventsphere.app.ai.EventRecommender;
 import com.eventsphere.app.ai.InterestProfile;
 import com.eventsphere.app.ai.InterestProfileService;
 import com.eventsphere.app.ai.Recommendation;
+import com.eventsphere.app.ai.RecommendationCache;
 import com.eventsphere.app.dao.EventDAO;
 import com.eventsphere.app.model.Category;
 import com.eventsphere.app.model.Event;
@@ -36,6 +37,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -100,19 +102,23 @@ public class LandingPageController {
     private final InterestProfileService interestProfiles;
     private final CandidateSelector candidates;
     private final EventRecommender recommender;
+    private final RecommendationCache recommendationCache;
     private final SessionManager session;
 
     private Category selectedCategory;       // null = explore mode
     private boolean filtersReady = false;    // stops setValue() in initFilters firing queries
+    private int recommendationRequest = 0;   // discards a ranking superseded by a newer one
 
     public LandingPageController(EventService eventService, SessionManager session,
                                  InterestProfileService interestProfiles,
-                                 CandidateSelector candidates, EventRecommender recommender) {
+                                 CandidateSelector candidates, EventRecommender recommender,
+                                 RecommendationCache recommendationCache) {
         this.eventService = eventService;
         this.session = session;
         this.interestProfiles = interestProfiles;
         this.candidates = candidates;
         this.recommender = recommender;
+        this.recommendationCache = recommendationCache;
     }
 
     @FXML
@@ -182,8 +188,7 @@ public class LandingPageController {
 
     // ----- rendering -----
 
-    // Explore mode: 1 row per category, every category with enough events has a row.
-    // Personalisation changes order of rows according to user's interest profile.
+    // Personalisation reorders the rows; it never hides a category.
     private void renderExplore(List<Event> events) {
         sectionsBox.getChildren().clear();
 
@@ -203,8 +208,7 @@ public class LandingPageController {
         loadRecommendationsAsync();
     }
 
-    // Single-category mode: one wrapping grid, so the whole category is browsable by
-    // scrolling rather than hidden off the right edge of a strip.
+    // A grid rather than a strip, so the whole category is reachable by scrolling down.
     private void renderSingle(String title, List<Event> events) {
         sectionsBox.getChildren().clear();
 
@@ -225,8 +229,7 @@ public class LandingPageController {
         sectionsBox.getChildren().add(grid);
     }
 
-    // Interests first, remaining events ordered by event count.
-    // User always sees their own categories at the top but still can access the others.
+    // Every category still gets a row, so a user whose tastes miss the data loses nothing.
     private List<Category> orderCategories(Map<Category, List<Event>> byCategory) {
         List<Category> ordered = new ArrayList<>();
 
@@ -247,15 +250,14 @@ public class LandingPageController {
         return ordered;
     }
 
-    // Switches to single-category mode, keeping the set date and distance filters.
+    // Keeps the date and distance filters as they are.
     private void selectCategory(Category category) {
         selectedCategory = category;
         applyFilters();
     }
 
-    // Groups events by category, dropping any category with too few events to fill a row.
-    // Events with no category are skipped rather than bucketed, since "Other" is a real category,
-    // separate from a missing value.
+    // Uncategorised events are skipped rather than bucketed: "Other" is a real category,
+    // not the same thing as a missing value.
     private Map<Category, List<Event>> groupByCategory(List<Event> events, int minPerRow) {
         Map<Category, List<Event>> byCategory = new EnumMap<>(Category.class);
         for (Event event : events) {
@@ -267,9 +269,8 @@ public class LandingPageController {
         return byCategory;
     }
 
-    // Multi-night events arrive from Ticketmaster as one row per performance: 48 rows for
-    // La Ronde, 30 for My Fair Lady. Keyed on title and venue so a run collapses to one
-    // card while a tour playing several cities keeps an entry per city.
+    // Ticketmaster stores one row per performance, so a run fills a whole strip with the
+    // same show. Keyed on venue too, so a tour keeps an entry per city.
     private static List<Event> dedupeByTitleAndVenue(List<Event> events) {
         Map<String, Event> soonest = new LinkedHashMap<>();
         for (Event event : events) {
@@ -280,8 +281,7 @@ public class LandingPageController {
         return List.copyOf(soonest.values());
     }
 
-    // A titled horizontal strip of event cards. Title and "View all" link both
-    // open full list for the selected category, so either is valid to click on.
+    // The heading and the "View all" link both open the section, so either is clickable.
     private VBox buildSection(String title, List<Event> events, Runnable onViewAll) {
         Label heading = new Label(title);
         heading.getStyleClass().add("section-heading-large");
@@ -324,34 +324,91 @@ public class LandingPageController {
 
     // ----- AI recommendations -----
 
-    // Ranking is an API call, runs off the FX thread and the row is inserted when it
-    // arrives. Rest of the page renders immediately rather than waiting on it.
-    // No row appears when logged out as no profile to rank with.
+    // Ranking is an API call, so it runs off the FX thread behind a placeholder. A cached
+    // ranking skips that, which is what makes filter changes and revisits free.
     private void loadRecommendationsAsync() {
         User user = session.getCurrentUser().orElse(null);
         if (user == null || recommender == null) {
+            return;   // logged out, or no API key: no row at all
+        }
+
+        final int request = ++recommendationRequest;
+
+        // Local database reads, and what the cache is keyed on.
+        InterestProfile profile = profileFor(user);
+        if (profile == null) {
             return;
         }
+
+        List<Recommendation> cached = recommendationCache.get(user.getUserId(), profile);
+        if (cached != null) {
+            showRecommendations(cached, request);
+            return;
+        }
+
+        Node loading = buildRecommendationsLoading();
+        sectionsBox.getChildren().add(0, loading);
 
         Task<List<Recommendation>> task = new Task<>() {
             @Override
             protected List<Recommendation> call() {
-                InterestProfile profile = interestProfiles.buildFor(user);
-                return recommender.recommend(profile, candidates.candidatesFor(profile));
+                List<Recommendation> ranked =
+                        recommender.recommend(profile, candidates.candidatesFor(profile));
+                // Cached even if the user has moved on, so the call is not wasted.
+                recommendationCache.put(user.getUserId(), profile, ranked);
+                return ranked;
             }
         };
         task.setOnSucceeded(e -> {
-            List<Recommendation> results = task.getValue();
-            // Only show the row in explore mode: a user who has since picked a category
-            // is looking at something specific and should not have it pushed down.
-            if (!results.isEmpty() && selectedCategory == null) {
-                List<Event> events = results.stream().map(Recommendation::event).toList();
-                sectionsBox.getChildren().add(0, buildSection("Recommended for you", events, null));
-            }
+            sectionsBox.getChildren().remove(loading);
+            showRecommendations(task.getValue(), request);
         });
+        task.setOnFailed(e -> {
+            System.err.println("Could not rank recommendations: " + task.getException());
+            sectionsBox.getChildren().remove(loading);
+        });
+
         Thread worker = new Thread(task, "recommendations");
         worker.setDaemon(true);
         worker.start();
+    }
+
+    // A user who has since picked a category should not have it pushed down by a late row.
+    private void showRecommendations(List<Recommendation> results, int request) {
+        if (request != recommendationRequest || selectedCategory != null || results.isEmpty()) {
+            return;
+        }
+        List<Event> events = results.stream().map(Recommendation::event).toList();
+        sectionsBox.getChildren().add(0, buildSection("Recommended for you", events, null));
+    }
+
+    // Holds the row's place, so it does not appear from nowhere seconds later.
+    private Node buildRecommendationsLoading() {
+        Label heading = new Label("Recommended for you");
+        heading.getStyleClass().add("section-heading-large");
+
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setPrefSize(18, 18);
+
+        Label message = new Label("Finding events for you…");
+        message.getStyleClass().add("muted-text");
+
+        HBox status = new HBox(10, spinner, message);
+        status.setAlignment(Pos.CENTER_LEFT);
+
+        VBox section = new VBox(16, heading, status);
+        section.setMinWidth(0);
+        return section;
+    }
+
+    // A profile failure must not take the category rows down with it.
+    private InterestProfile profileFor(User user) {
+        try {
+            return interestProfiles.buildFor(user);
+        } catch (Exception e) {
+            System.err.println("Could not build interest profile: " + e.getMessage());
+            return null;
+        }
     }
 
     // ----- filters and search -----
@@ -441,7 +498,6 @@ public class LandingPageController {
         applyFilters();
     }
 
-    // The logged-in user, only if they have a home location saved.
     private User homeUser() {
         return session.getCurrentUser()
                 .filter(user -> user.getHomeLat() != null && user.getHomeLong() != null)
@@ -513,7 +569,6 @@ public class LandingPageController {
         openEvent(event);
     }
 
-    // Opens the full event page for the given event, passing its id across the navigation.
     private void openEvent(Event event) {
         EventPageController page = Router.navigateToWithController("EventPage.fxml");
         page.showEvent(event.getEventId());
@@ -558,8 +613,7 @@ public class LandingPageController {
         close.setGraphic(closeIcon);
         close.getStyleClass().add("close-button");
         close.setOnAction(e -> hideEventDetails());
-        // The panel itself opens the event on click, so the close button's click is
-        // consumed before it can bubble up and navigate away.
+        // The panel opens the event on click, so this must not bubble up to it.
         close.addEventHandler(MouseEvent.MOUSE_CLICKED, MouseEvent::consume);
 
         HBox topRow = new HBox(close);
