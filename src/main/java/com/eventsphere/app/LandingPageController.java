@@ -26,6 +26,8 @@ import com.gluonhq.maps.MapPoint;
 import com.gluonhq.maps.MapView;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.concurrent.Task;
@@ -52,7 +54,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
-/** JavaFX controller for the main landing page; manages the event feed, search/filter bar, map, and AI recommendation panel. */
+/** JavaFX controller for the landing page: event feed, filters, hero carousel, map drawer and recommendations row. */
 public class LandingPageController {
 
     @FXML private StackPane rootPane;
@@ -73,7 +75,8 @@ public class LandingPageController {
     @FXML private VBox detailsPanel;
     @FXML private StackPane mapPanel;
 
-    private static final double TAB_W = 28.0;
+    private static final double TAB_W = 56.0;
+    private static final int BLURB_MAX = 150;
     private static final double DETAILS_W = 420.0;
     private static final double CARD_W = 280.0;
     private static final double THUMB_H = 150.0;
@@ -84,19 +87,24 @@ public class LandingPageController {
     private static final Double ANY_DISTANCE = 0.0;
     private static final double DEFAULT_LAT = -27.4698;
     private static final double DEFAULT_LNG = 153.0251;
-    private static final String TAB_RIGHT =
-            "-fx-background-radius: 8 0 0 8; -fx-background-color: -border;";
-    private static final String TAB_LEFT =
-            "-fx-background-radius: 0 8 8 0; -fx-background-color: -border;";
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("EEE d MMM, h:mm a").withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter ROW_WEEKDAY =
+            DateTimeFormatter.ofPattern("EEE").withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter ROW_DAY =
+            DateTimeFormatter.ofPattern("d").withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter ROW_MONTH =
+            DateTimeFormatter.ofPattern("MMM").withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter ROW_TIME =
+            DateTimeFormatter.ofPattern("h:mm a").withZone(ZoneId.systemDefault());
 
     private int state = 0;   // 0 closed, 1 map, 2 map + details
 
     private List<Event> heroEvents = List.of();
     private int heroIndex = 0;
     private Event selectedEvent;
+    private MapView mapView;
 
     private final EventService eventService;
     private final InterestProfileService interestProfiles;
@@ -168,12 +176,25 @@ public class LandingPageController {
         Event event = heroEvents.get(heroIndex);
 
         heroTitle.setText(event.getTitle().toUpperCase());
-        heroBlurb.setText(event.getDescription() == null ? "" : event.getDescription());
+        heroBlurb.setText(shortBlurb(event.getDescription()));
 
         String url = EventImages.resolveImageUrlWithPlaceholder(event);
         heroImage.setImage(url == null
                 ? null
                 : new Image(url, 1600, HERO_H, false, true, true));
+    }
+
+    // Descriptions run to paragraphs; the hero has room for about two lines.
+    private static String shortBlurb(String text) {
+        if (text == null) {
+            return "";
+        }
+        String oneLine = text.replaceAll("\\s+", " ").trim();
+        if (oneLine.length() <= BLURB_MAX) {
+            return oneLine;
+        }
+        int cut = oneLine.lastIndexOf(' ', BLURB_MAX);
+        return oneLine.substring(0, cut < 40 ? BLURB_MAX : cut) + "…";
     }
 
     @FXML
@@ -250,14 +271,12 @@ public class LandingPageController {
         return ordered;
     }
 
-    // Keeps the date and distance filters as they are.
     private void selectCategory(Category category) {
         selectedCategory = category;
         applyFilters();
     }
 
-    // Uncategorised events are skipped rather than bucketed: "Other" is a real category,
-    // not the same thing as a missing value.
+    // Uncategorised events are skipped and not bucketed: "Other" is a real category, not a missing value.
     private Map<Category, List<Event>> groupByCategory(List<Event> events, int minPerRow) {
         Map<Category, List<Event>> byCategory = new EnumMap<>(Category.class);
         for (Event event : events) {
@@ -451,12 +470,26 @@ public class LandingPageController {
     private void initFilters() {
         dateFilter.getItems().setAll(DateRange.values());
         dateFilter.setValue(DateRange.ANY);
+        dateFilter.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(DateRange range) {
+                if (range == null || range == DateRange.ANY) {
+                    return "ANY TIME";
+                }
+                return range.name().replace('_', ' ');
+            }
+
+            @Override
+            public DateRange fromString(String text) {
+                return null;   // not editable
+            }
+        });
 
         distanceFilter.getItems().setAll(ANY_DISTANCE, 5.0, 10.0, 25.0, 50.0);
         distanceFilter.setConverter(new StringConverter<>() {
             @Override
             public String toString(Double km) {
-                return km == null || km <= 0 ? "Any distance" : "Within " + km.intValue() + " km";
+                return km == null || km <= 0 ? "ANY DISTANCE" : "WITHIN " + km.intValue() + " KM";
             }
 
             @Override
@@ -577,33 +610,58 @@ public class LandingPageController {
     // ----- map drawer -----
 
     private void initMap() {
-        MapView mapView = new MapView();
-
-        User user = session.getCurrentUser().orElse(null);
-        double lat = user != null && user.getHomeLat() != null ? user.getHomeLat() : DEFAULT_LAT;
-        double lng = user != null && user.getHomeLong() != null ? user.getHomeLong() : DEFAULT_LNG;
-
+        mapView = new MapView();
         mapView.setZoom(15);
-        mapView.flyTo(0, new MapPoint(lat, lng), 0.1);
 
         EventMapLayer layer = new EventMapLayer(this::onPinClick);
         mapView.addLayer(layer);
         mapPanel.getChildren().setAll(mapView);
 
         try {
-            layer.setEvents(new EventDAO(Database.DBConnect()).findUpcoming());
+            layer.setEvents(dedupeByTitleAndVenue(
+                    new EventDAO(Database.DBConnect()).findUpcoming()));
         } catch (Exception e) {
             System.err.println("Could not load map pins: " + e.getMessage());
         }
+
+        centreWhenSized();
     }
 
-    private void onPinClick(Event event) {
-        selectedEvent = event;
-        showEventSummary(event);
+    private void centreWhenSized() {
+        if (mapPanel.getWidth() > 0 && mapPanel.getHeight() > 0) {
+            centreMap();
+            return;
+        }
+        mapPanel.heightProperty().addListener(new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> obs, Number old, Number now) {
+                if (mapPanel.getWidth() > 0 && now.doubleValue() > 0) {
+                    mapPanel.heightProperty().removeListener(this);
+                    centreMap();
+                }
+            }
+        });
+    }
+
+    private void centreMap() {
+        User user = session.getCurrentUser().orElse(null);
+        double lat = user != null && user.getHomeLat() != null ? user.getHomeLat() : DEFAULT_LAT;
+        double lng = user != null && user.getHomeLong() != null ? user.getHomeLong() : DEFAULT_LNG;
+        mapView.flyTo(0, new MapPoint(lat, lng), 0.1);
+    }
+
+    private void onPinClick(List<Event> atPoint) {
+        if (atPoint.size() == 1) {
+            selectedEvent = atPoint.get(0);
+            showEventSummary(selectedEvent);
+        } else {
+            showVenueSummary(atPoint);
+        }
         showEventDetails();
     }
 
-    private void showEventSummary(Event event) {
+    private void showVenueSummary(List<Event> atPoint) {
+        selectedEvent = null;
         detailsPanel.getChildren().clear();
 
         FontIcon closeIcon = new FontIcon("bi-x");
@@ -613,11 +671,102 @@ public class LandingPageController {
         close.setGraphic(closeIcon);
         close.getStyleClass().add("close-button");
         close.setOnAction(e -> hideEventDetails());
-        // The panel opens the event on click, so this must not bubble up to it.
-        close.addEventHandler(MouseEvent.MOUSE_CLICKED, MouseEvent::consume);
 
         HBox topRow = new HBox(close);
         topRow.setAlignment(Pos.CENTER_RIGHT);
+
+        Event first = atPoint.get(0);
+        Label venue = new Label(first.getVenueName() == null ? "This venue" : first.getVenueName());
+        venue.getStyleClass().add("card-title");
+        venue.setWrapText(true);
+
+        Label count = new Label(atPoint.size() + " events");
+        count.getStyleClass().add("muted-text");
+
+        VBox rows = new VBox();
+        atPoint.forEach(event -> rows.getChildren().add(buildVenueRow(event, atPoint)));
+
+        ScrollPane scroller = new ScrollPane(rows);
+        scroller.setFitToWidth(true);
+        scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroller.getStyleClass().add("panel-scroll");
+        VBox.setVgrow(scroller, Priority.ALWAYS);
+
+        detailsPanel.getChildren().addAll(topRow, venue, count, scroller);
+    }
+
+    private Node buildVenueRow(Event event, List<Event> atPoint) {
+        Label weekday = new Label(ROW_WEEKDAY.format(event.getStartTime()).toUpperCase());
+        weekday.getStyleClass().add("row-date-small");
+
+        Label day = new Label(ROW_DAY.format(event.getStartTime()));
+        day.getStyleClass().add("row-date-day");
+
+        Label month = new Label(ROW_MONTH.format(event.getStartTime()).toUpperCase());
+        month.getStyleClass().add("row-date-small");
+
+        VBox date = new VBox(weekday, day, month);
+        date.getStyleClass().add("row-date");
+        date.setAlignment(Pos.CENTER);
+
+        Label title = new Label(event.getTitle());
+        title.getStyleClass().add("row-title");
+        title.setWrapText(true);
+
+        Label time = new Label(ROW_TIME.format(event.getStartTime()));
+        time.getStyleClass().add("muted-text");
+
+        VBox text = new VBox(3, title, time);
+        text.setAlignment(Pos.CENTER_LEFT);
+        text.setMinWidth(0);   // lets the title wrap instead of forcing the row wider
+        HBox.setHgrow(text, Priority.ALWAYS);
+
+        HBox row = new HBox(14, date, text);
+        row.getStyleClass().add("venue-row");
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setCursor(Cursor.HAND);
+        row.setOnMouseClicked(e -> {
+            e.consume();
+            selectedEvent = event;
+            showEventSummary(event, () -> showVenueSummary(atPoint));
+        });
+
+        return row;
+    }
+
+    private void showEventSummary(Event event) {
+        showEventSummary(event, null);
+    }
+
+    // Row in venue list passes a way back to that list; single pin/event passes null.
+    private void showEventSummary(Event event, Runnable onBack) {
+        detailsPanel.getChildren().clear();
+
+        FontIcon closeIcon = new FontIcon("bi-x");
+        closeIcon.setIconSize(22);
+
+        Button close = new Button();
+        close.setGraphic(closeIcon);
+        close.getStyleClass().add("close-button");
+        close.setOnAction(e -> hideEventDetails());
+        close.addEventHandler(MouseEvent.MOUSE_CLICKED, MouseEvent::consume);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        HBox topRow = new HBox();
+        topRow.setAlignment(Pos.CENTER_LEFT);
+
+        if (onBack != null) {
+            Button back = new Button("← " + (event.getVenueName() == null
+                    ? "Back" : event.getVenueName()));
+            back.getStyleClass().add("view-all-link");
+            back.setMaxWidth(260);
+            back.setOnAction(e -> onBack.run());
+            back.addEventHandler(MouseEvent.MOUSE_CLICKED, MouseEvent::consume);
+            topRow.getChildren().add(back);
+        }
+        topRow.getChildren().addAll(spacer, close);
         detailsPanel.getChildren().add(topRow);
 
         Node thumb = buildThumb(event, 372, 200);
@@ -655,7 +804,6 @@ public class LandingPageController {
         moreInfo.getStyleClass().add("primary-button");
         moreInfo.setMaxWidth(Double.MAX_VALUE);
         moreInfo.setOnAction(e -> openEvent(event));
-        // Avoid navigating twice: the panel's own click handler would otherwise also fire.
         moreInfo.addEventHandler(MouseEvent.MOUSE_CLICKED, MouseEvent::consume);
         detailsPanel.getChildren().add(moreInfo);
     }
@@ -679,23 +827,31 @@ public class LandingPageController {
     protected void onToggleDrawer() {
         if (state == 0) {
             state = 1;
-            drawerTabIcon.setIconLiteral("bi-chevron-right");
-            drawerTab.setStyle(TAB_LEFT);
+            setTabOpen(true);
             slide(drawer, 0);
             slide(drawerTab, -(rootPane.getWidth() - TAB_W));
         } else {
             state = 0;
-            drawerTabIcon.setIconLiteral("bi-chevron-left");
-            drawerTab.setStyle(TAB_RIGHT);
+            setTabOpen(false);
             slide(drawer, rootPane.getWidth());
             slide(detailsPanel, -DETAILS_W);
             slide(drawerTab, 0);
         }
     }
 
+    private void setTabOpen(boolean open) {
+        drawerTab.getTooltip().setText(open ? "Back to events" : "Map");
+        drawerTabIcon.setIconLiteral(open ? "bi-house" : "bi-map");
+        drawerTabIcon.setIconSize(open ? 28 : 22);
+        if (open && !drawerTab.getStyleClass().contains("map-tab-open")) {
+            drawerTab.getStyleClass().add("map-tab-open");
+        } else if (!open) {
+            drawerTab.getStyleClass().remove("map-tab-open");
+        }
+    }
+
     public void showEventDetails() {
         state = 2;
-        drawerTabIcon.setIconLiteral("bi-chevron-right");
         slide(detailsPanel, TAB_W);
     }
 
