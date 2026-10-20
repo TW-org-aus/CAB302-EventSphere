@@ -10,6 +10,15 @@
     -danger: #D64545;
 }
 
+/* Shared button base. Size, weight and cursor live here so a button that
+   forgets its own styleClass still matches the rest; variants below change
+   only colour, radius and padding. Must stay above those variants. */
+.button {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
 .page-bg {
     -fx-background-color: -bg;
 }
@@ -233,6 +242,256 @@
 .close-button:hover {
     -fx-background-color: derive(-border, 40%);
     -fx-background-radius: 999;
+}
+
+/* ----- Hero carousel ----- */
+
+/* Taller, denser scrim than a plain 2-stop gradient: event artwork is often
+   bright at the bottom edge, which is exactly where the text sits. */
+.hero-scrim {
+    -fx-background-color: linear-gradient(to top,
+    rgba(0,0,0,0.92) 0%,
+    rgba(0,0,0,0.78) 22%,
+    rgba(0,0,0,0.40) 48%,
+    rgba(0,0,0,0.0) 78%);
+}
+
+.hero-kicker {
+    -fx-text-fill: -white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-opacity: 0.85;
+}
+
+.hero-title {
+    -fx-text-fill: -white;
+    -fx-font-size: 40px;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 12, 0.2, 0, 2);
+}
+
+.hero-blurb {
+    -fx-text-fill: rgba(255,255,255,0.92);
+    -fx-font-size: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 8, 0.2, 0, 1);
+}
+
+.hero-button {
+    -fx-background-color: -white;
+    -fx-text-fill: -text;
+    -fx-background-radius: 24;
+    -fx-padding: 12 28 12 28;
+    -fx-font-weight: 700;
+}
+
+.hero-button:hover {
+    -fx-background-color: derive(-white, -10%);
+}
+
+.hero-nav-button {
+    -fx-background-color: rgba(255,255,255,0.18);
+    -fx-background-radius: 999;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-max-width: 36;
+    -fx-max-height: 36;
+    -fx-padding: 0;
+}
+
+.hero-nav-button:hover {
+    -fx-background-color: rgba(255,255,255,0.38);
+}
+
+/* ----- Map drawer tab ----- */
+
+.map-tab {
+    -fx-background-color: -accent;
+    -fx-text-fill: -white;
+    -fx-background-radius: 24 0 0 24;
+    -fx-padding: 16 16 16 16;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.2, -2, 2);
+}
+
+/* The tab slides to the opposite edge when the drawer opens. */
+.map-tab-open {
+    -fx-background-radius: 0 24 24 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.2, 2, 2);
+}
+
+.map-pin {
+    -fx-icon-color: -bg;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 6, 0.2, 0, 2);
+}
+
+.map-pin:hover {
+    -fx-icon-color: derive(-bg, -25%);
+}
+
+.map-pin-label {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 8 12 8 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0.2, 0, 3);
+}
+
+.map-pin-venue {
+    -fx-text-fill: -muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+.map-pin-title {
+    -fx-text-fill: #111111;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+.map-tab .ikonli-font-icon {
+    -fx-icon-color: -white;
+}
+
+/* ----- Venue event list ----- */
+
+.panel-scroll,
+.panel-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.panel-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8;
+}
+
+.panel-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(-muted, 55%);
+    -fx-background-radius: 4;
+}
+
+.panel-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: -muted;
+}
+
+.panel-scroll .scroll-bar .increment-button,
+.panel-scroll .scroll-bar .decrement-button,
+.panel-scroll .scroll-bar .increment-arrow,
+.panel-scroll .scroll-bar .decrement-arrow {
+    -fx-padding: 0;
+    -fx-shape: null;
+}
+
+.venue-row {
+    -fx-padding: 10 8 10 8;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cursor: hand;
+}
+
+.venue-row:hover {
+    -fx-background-color: #F7F8FA;
+}
+
+.row-date {
+    -fx-background-color: -accent-light;
+    -fx-background-radius: 10;
+    -fx-padding: 7 0 7 0;
+    -fx-min-width: 52;
+    -fx-max-width: 52;
+}
+
+.row-date-small {
+    -fx-text-fill: -muted;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+
+.row-date-day {
+    -fx-text-fill: -accent;
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+}
+
+.row-title {
+    -fx-text-fill: -text;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+/* ----- Filter dropdowns ----- */
+
+.filter-combo {
+    -fx-background-color: -white;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-pref-height: 40;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.filter-combo:hover {
+    -fx-background-color: derive(-white, -8%);
+}
+
+.filter-combo > .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 0 0 0 28;
+    -fx-alignment: center;
+}
+
+.filter-combo > .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 14 0 6;
+}
+
+.filter-combo > .arrow-button > .arrow {
+    -fx-background-color: -text;
+}
+
+/* Keep the text legible when disabled: the default 0.4 opacity over the
+   orange band is unreadable. */
+.filter-combo:disabled {
+    -fx-opacity: 1;
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-cursor: default;
+}
+
+.filter-combo:disabled > .list-cell {
+    -fx-text-fill: -muted;
+}
+
+.filter-combo:disabled > .arrow-button > .arrow {
+    -fx-background-color: -muted;
+}
+
+.combo-box-popup > .list-view {
+    -fx-background-color: -white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 14, 0.2, 0, 4);
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-text-fill: -text;
+    -fx-font-size: 13px;
+    -fx-padding: 9 14 9 14;
+    -fx-alignment: center;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background-color: -accent-light;
+    -fx-text-fill: -accent;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
+    -fx-background-color: -accent;
+    -fx-text-fill: -white;
 }
 
 /* ----- Event details page ----- */

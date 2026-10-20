@@ -13,7 +13,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<StackPane fx:id="rootPane" prefHeight="800" prefWidth="1280" stylesheets="@app.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
+<?import javafx.scene.control.Tooltip?>
+<StackPane fx:id="rootPane" prefHeight="800" prefWidth="1280" stylesheets="@app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.LandingPageController">
 
     <BorderPane>
         <top>
@@ -27,22 +28,22 @@
                             <StackPane fx:id="heroPane" prefHeight="400.0" maxHeight="400.0" VBox.vgrow="NEVER">
                                 <ImageView fx:id="heroImage" fitHeight="400.0" preserveRatio="false"/>
 
-                                <Region style="-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.85), transparent);"/>
+                                <Region styleClass="hero-scrim"/>
 
                                 <VBox spacing="8.0" maxWidth="700" StackPane.alignment="BOTTOM_LEFT">
                                     <padding><Insets bottom="60.0" left="48.0"/></padding>
-                                    <Label text="FEATURED" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
-                                    <Label fx:id="heroTitle" text="BOILER ROOM" style="-fx-text-fill: white; -fx-font-size: 40px; -fx-font-weight: bold;"/>
-                                    <Label fx:id="heroBlurb" text="Event description goes here." wrapText="true" style="-fx-text-fill: white; -fx-font-size: 15px;"/>
-                                    <Button text="MORE INFO" onAction="#onMoreInfoClick" style="-fx-background-radius: 24; -fx-padding: 12 28 12 28;"/>
+                                    <Label text="FEATURED" styleClass="hero-kicker"/>
+                                    <Label fx:id="heroTitle" text="BOILER ROOM" styleClass="hero-title"/>
+                                    <Label fx:id="heroBlurb" text="Event description goes here." wrapText="true" styleClass="hero-blurb"/>
+                                    <Button text="MORE INFO" onAction="#onMoreInfoClick" styleClass="hero-button"/>
                                 </VBox>
 
                                 <HBox fx:id="heroNav" spacing="12.0" alignment="CENTER" maxHeight="40" StackPane.alignment="BOTTOM_CENTER">
-                                    <Button onAction="#onPrevHero">
-                                        <graphic><FontIcon iconLiteral="bi-chevron-left"/></graphic>
+                                    <Button onAction="#onPrevHero" styleClass="hero-nav-button">
+                                        <graphic><FontIcon iconLiteral="bi-chevron-left" styleClass="icon-white"/></graphic>
                                     </Button>
-                                    <Button onAction="#onNextHero">
-                                        <graphic><FontIcon iconLiteral="bi-chevron-right"/></graphic>
+                                    <Button onAction="#onNextHero" styleClass="hero-nav-button">
+                                        <graphic><FontIcon iconLiteral="bi-chevron-right" styleClass="icon-white"/></graphic>
                                     </Button>
                                 </HBox>
                             </StackPane>
@@ -57,11 +58,11 @@
                                 <Button text="FILM" userData="Film" onAction="#onCategoryFilter" styleClass="category-button"/>
                                 <Button text="OTHER" userData="Other" onAction="#onCategoryFilter" styleClass="category-button"/>
                             </HBox>
-                            
+
                             <HBox alignment="CENTER" spacing="16.0" styleClass="page-bg">
                                 <padding><Insets bottom="8.0"/></padding>
-                                <ComboBox fx:id="dateFilter" onAction="#onFiltersChanged" prefWidth="180.0"/>
-                                <ComboBox fx:id="distanceFilter" onAction="#onFiltersChanged" prefWidth="180.0"/>
+                                <ComboBox fx:id="dateFilter" onAction="#onFiltersChanged" prefWidth="180.0" styleClass="filter-combo"/>
+                                <ComboBox fx:id="distanceFilter" onAction="#onFiltersChanged" prefWidth="180.0" styleClass="filter-combo"/>
                             </HBox>
 
                             <VBox fx:id="sectionsBox" spacing="36.0" minWidth="0">
@@ -81,18 +82,18 @@
         </StackPane>
     </HBox>
 
-    <VBox fx:id="detailsPanel" prefWidth="420.0" maxWidth="420.0 " spacing="12.0"
+    <VBox fx:id="detailsPanel" prefWidth="420.0" maxWidth="420.0" spacing="12.0"
           StackPane.alignment="CENTER_LEFT"
           style="-fx-background-color: -white; -fx-border-color: -border; -fx-border-width: 0 1 0 0;">
         <padding><Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/></padding>
         <Label text="Event details" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
     </VBox>
 
-    <Button fx:id="drawerTab" prefWidth="28.0" maxWidth="28.0" maxHeight="80.0"
+    <Button fx:id="drawerTab" prefWidth="56.0" maxWidth="56.0"
             onAction="#onToggleDrawer"
-            StackPane.alignment="CENTER_RIGHT"
-            style="-fx-background-radius: 8 0 0 8; -fx-background-color: -border;">
-        <graphic><FontIcon fx:id="drawerTabIcon" iconLiteral="bi-chevron-left"/></graphic>
+            styleClass="map-tab" StackPane.alignment="CENTER_RIGHT">
+        <graphic><FontIcon fx:id="drawerTabIcon" iconLiteral="bi-map" iconSize="22"/></graphic>
+        <tooltip><Tooltip text="Map"/></tooltip>
     </Button>
 
 </StackPane>
