@@ -57,6 +57,7 @@ public class Router {
     private static final UserService USERS =
             new UserService(USER_DAO, new PreferenceDAO(CONNECTION));
     private static final SessionManager SESSION = new SessionManager();
+    private static final RecommendationCache RECOMMENDATIONS = new RecommendationCache();
     private static final AuthService AUTH = new AuthService(USER_DAO, SESSION);
     private static final IPlacesClient PLACES = new PlacesClient();
 
@@ -130,7 +131,7 @@ public class Router {
 
     private static Object createController(Class<?> type) {
         if (type == LandingPageController.class) {
-            return new LandingPageController(EVENTS, SESSION, INTEREST_PROFILES, CANDIDATES, RECOMMENDER);
+            return new LandingPageController(EVENTS, SESSION, INTEREST_PROFILES, CANDIDATES, RECOMMENDER, RECOMMENDATIONS);
         }
         if (type == SignUpController.class) return new SignUpController(USERS, PLACES);
         if (type == LoginController.class) return new LoginController(AUTH);
