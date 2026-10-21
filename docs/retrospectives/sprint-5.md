@@ -7,15 +7,16 @@
 
 ## What went well
 
-- OOP and UX refactoring progressed well — service classes were restructured and UI flows cleaned up.
+- OOP and UX refactoring progressed well. Service classes were restructured and UI flows cleaned up.
 - Co-owned features (one person implements part 1, another finishes part 2 in a later sprint) worked without major conflicts, useful as other team members had overlapping assignment deadlines.
 - The project was approaching completion for must-have features.
+- All members with sufficiant work
 
 ## What went badly
 
 - TDD had not been adopted: tests were still written after features, not before. This was identified as a critical gap.
-- User testing had not started — no UX feedback had been collected from actual users.
-- AI recommendations were still not implemented despite being added to the backlog in Sprint 4.
+- User testing had not started, no UX feedback had been collected from actual users.
+- The AI recommendations were still not implemented despite being added to the backlog in Sprint 4.
 - Several UI rough edges (leftover from informal testing) were not yet fixed.
 
 ## Decisions made
