@@ -7,7 +7,7 @@
 
 ## What went well
 
-- Each developer owning their own tests (introduced in Sprint 2) worked better — no bottleneck at the end.
+- Each member responsible for their own tests (introduced in Sprint 2) worked better, no bottleneck at the end.
 - The delete-and-rebuild DB approach was easy for everyone to follow.
 - Significant visible progress: the main landing page was completed, map integration was nearly done (Kai).
 - Sprint pacing and workload balance were good.
