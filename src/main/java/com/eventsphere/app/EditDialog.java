@@ -65,4 +65,3 @@ final class EditDialog {
         return new VBox(6, caption, input);
     }
 }
-\
