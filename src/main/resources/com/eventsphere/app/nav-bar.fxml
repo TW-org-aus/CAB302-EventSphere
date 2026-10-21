@@ -9,12 +9,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<HBox alignment="CENTER_LEFT" prefHeight="72.0" spacing="16.0" style="-fx-background-color: #0B0B0B;"
+<HBox alignment="CENTER_LEFT" prefHeight="72.0" spacing="16.0" style="-fx-background-color: -black;"
       xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventsphere.app.NavBarController">
     <children>
         <Button text="EVENTSPHERE" onAction="#onLogoClick"
-                style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-cursor: hand;">
+                style="-fx-background-color: transparent; -fx-text-fill: -on-dark; -fx-font-size: 22px; -fx-font-weight: bold; -fx-cursor: hand;">
             <HBox.margin>
                 <Insets left="24.0"/>
             </HBox.margin>
@@ -24,9 +24,9 @@
 
         <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="709.0" pickOnBounds="false"
               prefHeight="41.0" prefWidth="647.0" spacing="8.0"
-              style="-fx-background-color: white; -fx-background-radius: 21; -fx-padding: 0 16 0 16;">
+              style="-fx-background-color: -white; -fx-background-radius: 21; -fx-padding: 0 16 0 16;">
             <children>
-                <FontIcon iconLiteral="bi-search" iconSize="15" iconColor="#6B7280"/>
+                <FontIcon iconLiteral="bi-search" iconSize="15" styleClass="icon-muted"/>
                 <TextField fx:id="searchField" promptText="Search events, hosts, locations..."
                            style="-fx-background-color: transparent; -fx-border-color: transparent;"
                            onAction="#onSearch" HBox.hgrow="ALWAYS"/>
@@ -39,30 +39,30 @@
             <children>
                 <StackPane fx:id="notificationsButton" alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
                            prefHeight="38.0" prefWidth="38.0"
-                           style="-fx-background-color: white; -fx-background-radius: 50px; -fx-cursor: hand;"
+                           style="-fx-background-color: -white; -fx-background-radius: 50px; -fx-cursor: hand;"
                            onMouseClicked="#onNotificationsClick">
                     <children>
-                        <FontIcon iconLiteral="bi-bell" iconSize="16" iconColor="#111111"/>
+                        <FontIcon iconLiteral="bi-bell" iconSize="16" styleClass="icon-text"/>
                     </children>
                 </StackPane>
                 <StackPane fx:id="messagesButton" alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
                            prefHeight="38.0" prefWidth="38.0"
-                           style="-fx-background-color: white; -fx-background-radius: 50px; -fx-cursor: hand;"
+                           style="-fx-background-color: -white; -fx-background-radius: 50px; -fx-cursor: hand;"
                            onMouseClicked="#onMessagesClick">
                     <children>
-                        <FontIcon iconLiteral="bi-chat-dots" iconSize="16" iconColor="#111111"/>
+                        <FontIcon iconLiteral="bi-chat-dots" iconSize="16" styleClass="icon-text"/>
                     </children>
                 </StackPane>
                 <StackPane fx:id="profileButton" alignment="CENTER" maxHeight="38.0" maxWidth="38.0" minHeight="38.0" minWidth="38.0"
                            prefHeight="38.0" prefWidth="38.0"
-                           style="-fx-background-color: #2E6BE8; -fx-background-radius: 50px; -fx-cursor: hand;"
+                           style="-fx-background-color: -accent; -fx-background-radius: 50px; -fx-cursor: hand;"
                            onMouseClicked="#onProfileClick">
                     <children>
-                        <FontIcon iconLiteral="bi-person-fill" iconSize="16" iconColor="white"/>
+                        <FontIcon iconLiteral="bi-person-fill" iconSize="16" styleClass="icon-white"/>
                     </children>
                 </StackPane>
                 <Button fx:id="authButton" onAction="#onAuthClick"
-                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-underline: true; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent; -fx-text-fill: -on-dark; -fx-underline: true; -fx-cursor: hand;"/>
             </children>
             <HBox.margin>
                 <Insets right="24.0"/>

@@ -8,11 +8,15 @@
     -accent-light: #0F3324;
     -border: #444444;
     -danger: #bd2b3e;
+    -success: #4CAF50;
+    -surface: #2A2A2A;
+    -chip: #333333;
+    -on-dark: #FFFFFF;
     -fx-base: #2A2A2A;
     -fx-background: #121212;
     -fx-control-inner-background: #1E1E1E;
     -fx-accent: #00FF85;
-    fx-focus-color: #00FF85;
+    -fx-focus-color: #00FF85;
     -fx-faint-focus-color: #00FF8522;
 }
 
@@ -22,13 +26,13 @@
 
 .event-thumb,
 .event-card-thumb {
-    -fxbackground-color: -border;
+    -fx-background-color: -border;
 }
 
 
 .event-page,
 .comment-reply {
-    -fxbackground-color: -bg;
+    -fx-background-color: -bg;
 }
 
 .event-detail-card,
@@ -36,7 +40,7 @@
 .comment-row,
 .action-button,
 .sort-pill {
-    -fxbackground-color: -white;
+    -fx-background-color: -white;
 }
 
 .event-title,
@@ -65,7 +69,7 @@
 .action-button:selected,
 .sort-pill:selected,
 .action-button-primary {
-    -fxbackground-color: -accent;
+    -fx-background-color: -accent;
     -fx-text-fill: -white;
 }
 

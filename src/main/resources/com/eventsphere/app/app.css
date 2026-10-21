@@ -1,6 +1,6 @@
 .root {
     -bg: #F4502F;
-    -black: #000000;
+    -black: #0B0B0B;
     -white: #FFFFFF;
     -text: #1A1A1A;
     -muted: #6B7280;
@@ -8,6 +8,10 @@
     -accent-light: #E3F0FF;
     -border: #E5E7EB;
     -danger: #D64545;
+    -success: #1E8E3E;
+    -surface: #F7F7F7;
+    -chip: #E7EAEF;
+    -on-dark: #FFFFFF;
 }
 
 /* Shared button base. Size, weight and cursor live here so a button that
@@ -257,14 +261,14 @@
 }
 
 .hero-kicker {
-    -fx-text-fill: -white;
+    -fx-text-fill: -on-dark;
     -fx-font-size: 13px;
     -fx-font-weight: 700;
     -fx-opacity: 0.85;
 }
 
 .hero-title {
-    -fx-text-fill: -white;
+    -fx-text-fill: -on-dark;
     -fx-font-size: 40px;
     -fx-font-weight: 800;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 12, 0.2, 0, 2);
@@ -329,7 +333,7 @@
 }
 
 .map-pin-label {
-    -fx-background-color: white;
+    -fx-background-color: -white;
     -fx-background-radius: 10;
     -fx-padding: 8 12 8 12;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0.2, 0, 3);
@@ -342,7 +346,7 @@
 }
 
 .map-pin-title {
-    -fx-text-fill: #111111;
+    -fx-text-fill: -text;
     -fx-font-size: 13px;
     -fx-font-weight: 700;
 }
@@ -389,7 +393,7 @@
 }
 
 .venue-row:hover {
-    -fx-background-color: #F7F8FA;
+    -fx-background-color: -surface;
 }
 
 .row-date {
@@ -497,12 +501,12 @@
 /* ----- Event details page ----- */
 
 .event-page {
-    -fx-background-color: #F0512B;
+    -fx-background-color: -bg;
 }
 
 .back-button {
     -fx-background-color: transparent;
-    -fx-text-fill: white;
+    -fx-text-fill: -on-dark;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-padding: 0 0 0 2;
@@ -513,38 +517,38 @@
    landing page's event cards with different styling, so reusing it here would
    have silently overridden theirs. */
 .event-detail-card {
-    -fx-background-color: white;
+    -fx-background-color: -white;
     -fx-background-radius: 16px;
     -fx-padding: 18px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0.2, 0, 4);
 }
 
 .event-image-frame {
-    -fx-background-color: #161616;
+    -fx-background-color: -black;
     -fx-background-radius: 10px;
 }
 
 .event-title {
     -fx-font-size: 22px;
     -fx-font-weight: bold;
-    -fx-text-fill: #111111;
+    -fx-text-fill: -text;
 }
 
 .event-meta {
-    -fx-text-fill: #555555;
+    -fx-text-fill: -muted;
     -fx-font-size: 13px;
 }
 
 .event-description {
-    -fx-text-fill: #555555;
+    -fx-text-fill: -muted;
     -fx-font-size: 13px;
 }
 
 .action-button {
-    -fx-background-color: white;
-    -fx-text-fill: #222222;
+    -fx-background-color: -white;
+    -fx-text-fill: -text;
     -fx-background-radius: 18px;
-    -fx-border-color: #DDDDDD;
+    -fx-border-color: -border;
     -fx-border-radius: 18px;
     -fx-padding: 8 18 8 18;
     -fx-font-size: 13px;
@@ -552,14 +556,14 @@
 }
 
 .action-button:selected {
-    -fx-background-color: #2E6BE8;
-    -fx-text-fill: white;
-    -fx-border-color: #2E6BE8;
+    -fx-background-color: -accent;
+    -fx-text-fill: -white;
+    -fx-border-color: -accent;
 }
 
 .action-button-primary {
-    -fx-background-color: #2E6BE8;
-    -fx-text-fill: white;
+    -fx-background-color: -accent;
+    -fx-text-fill: -white;
     -fx-background-radius: 18px;
     -fx-padding: 8 22 8 22;
     -fx-font-size: 13px;
@@ -567,27 +571,27 @@
 }
 
 .comments-heading {
-    -fx-text-fill: white;
+    -fx-text-fill: -on-dark;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
 .comments-count-badge {
-    -fx-background-color: #D8431F;
+    -fx-background-color: derive(-bg, -15%);
     -fx-background-radius: 12px;
     -fx-padding: 2 9 2 9;
 }
 
 .comments-count-label {
-    -fx-text-fill: white;
+    -fx-text-fill: -on-dark;
     -fx-font-size: 12px;
 }
 
 .sort-pill {
-    -fx-background-color: white;
-    -fx-text-fill: #222222;
+    -fx-background-color: -white;
+    -fx-text-fill: -text;
     -fx-background-radius: 18px;
-    -fx-border-color: #DDDDDD;
+    -fx-border-color: -border;
     -fx-border-radius: 18px;
     -fx-padding: 8 20 8 20;
     -fx-font-size: 13px;
@@ -595,13 +599,13 @@
 }
 
 .sort-pill:selected {
-    -fx-background-color: #2E6BE8;
-    -fx-text-fill: white;
-    -fx-border-color: #2E6BE8;
+    -fx-background-color: -accent;
+    -fx-text-fill: -white;
+    -fx-border-color: -accent;
 }
 
 .composer {
-    -fx-background-color: white;
+    -fx-background-color: -white;
     -fx-background-radius: 18px;
     -fx-padding: 12px 16px 12px 16px;
     -fx-spacing: 8px;
@@ -609,10 +613,10 @@
 }
 
 .reply-chip {
-    -fx-background-color: #E7EAEF;
+    -fx-background-color: -chip;
     -fx-background-radius: 14px;
     -fx-padding: 4 10 4 10;
-    -fx-text-fill: #222222;
+    -fx-text-fill: -text;
     -fx-font-size: 12px;
 }
 
@@ -622,38 +626,38 @@
 }
 
 .comment-row {
-    -fx-background-color: white;
+    -fx-background-color: -white;
     -fx-background-radius: 14px;
     -fx-padding: 14px;
     -fx-spacing: 6px;
 }
 
 .comment-reply {
-    -fx-background-color: #F7F8FA;
+    -fx-background-color: -surface;
     -fx-background-radius: 12px;
     -fx-padding: 10px;
     -fx-spacing: 4px;
 }
 
 .comment-author {
-    -fx-text-fill: #111111;
+    -fx-text-fill: -text;
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
 .comment-content {
-    -fx-text-fill: #1A1A1A;
+    -fx-text-fill: -text;
     -fx-font-size: 13px;
 }
 
 .comment-meta {
-    -fx-text-fill: #888888;
+    -fx-text-fill: -muted;
     -fx-font-size: 11px;
 }
 
 .reply-link {
     -fx-background-color: transparent;
-    -fx-text-fill: #2E6BE8;
+    -fx-text-fill: -accent;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding: 0;
@@ -661,12 +665,12 @@
 }
 
 .empty-comments-label {
-    -fx-text-fill: white;
+    -fx-text-fill: -on-dark;
     -fx-font-size: 14px;
 }
 
 .comment-error {
-    -fx-text-fill: #D8431F;
+    -fx-text-fill: -danger;
     -fx-font-size: 12px;
 }
 
@@ -689,4 +693,26 @@
     -fx-min-height: 40;
     -fx-max-width: 40;
     -fx-max-height: 40;
+}
+
+/* ----- Interest picker bubbles -----
+   Uses :selected rather than a second class so it outranks .toggle-button:selected,
+   which has equal specificity, by being declared later. */
+
+.interest-bubble {
+    -fx-background-color: -surface;
+    -fx-text-fill: -text;
+    -fx-border-color: -border;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+.interest-bubble:selected {
+    -fx-background-color: -accent-light;
+    -fx-text-fill: -accent;
+    -fx-border-color: -accent;
+    -fx-font-weight: bold;
 }

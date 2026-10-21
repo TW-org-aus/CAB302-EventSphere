@@ -77,8 +77,8 @@
 
     <HBox fx:id="drawer" alignment="CENTER" pickOnBounds="false"
           StackPane.alignment="CENTER_RIGHT">
-        <StackPane fx:id="mapPanel" HBox.hgrow="ALWAYS" style="-fx-background-color: #e8e8e8;">
-            <Label text="Map goes here" style="-fx-text-fill: #888888;"/>
+        <StackPane fx:id="mapPanel" HBox.hgrow="ALWAYS" style="-fx-background-color: -border;">
+            <Label text="Map goes here" style="-fx-text-fill: -muted;"/>
         </StackPane>
     </HBox>
 
