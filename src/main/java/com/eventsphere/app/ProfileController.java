@@ -9,6 +9,7 @@ import com.eventsphere.app.service.SessionManager;
 import com.eventsphere.app.service.UserService;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -214,6 +215,11 @@ public class ProfileController {
         HBox row = new HBox(16, thumb, text);
         row.getStyleClass().add("event-row");
         row.setAlignment(Pos.CENTER_LEFT);
+        row.setCursor(Cursor.HAND);
+        row.setOnMouseClicked(e -> {
+            EventPageController page = Router.navigateToWithController("EventPage.fxml");
+            page.showEvent(event.getEventId());
+        });
         return row;
     }
 

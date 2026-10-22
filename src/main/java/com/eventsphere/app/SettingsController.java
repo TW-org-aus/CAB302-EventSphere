@@ -38,6 +38,7 @@ public class SettingsController {
         this.session = session;
     }
 
+    @FXML private Button UsernameRow;
     @FXML private Button passwordRow;
     @FXML private Button emailRow;
     @FXML private Button nameRow;
@@ -54,8 +55,10 @@ public class SettingsController {
     }
     private void refreshAccountRows() {
         Optional<User> user = session.getCurrentUser();
+        UsernameRow.setText("Username: " + user.map(User::getUsername).filter(s -> !s.isBlank()).orElse("-"));
         emailRow.setText("Email: " + user.map(User::getEmail).orElse("-"));
         nameRow.setText("Name: " + user.map(User::getFullName).orElse("-"));
+        UsernameRow.setDisable(user.isEmpty());
         passwordRow.setDisable(user.isEmpty());
         emailRow.setDisable(user.isEmpty());
         nameRow.setDisable(user.isEmpty());
@@ -67,7 +70,11 @@ public class SettingsController {
 
     @FXML
     protected void onUsernameClick() {
-        System.out.println("Username setting clicked");
+        session.getCurrentUser().ifPresent(user -> {
+            TextField username = new TextField(user.getUsername() == null ? "" : user.getUsername());
+            openEditor("Change username", () -> userService.changeUsername(user, username.getText()),
+                    field("Username", username));
+        });
     }
 
     @FXML

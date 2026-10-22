@@ -7,14 +7,14 @@
 
 ## What went well
 
-- Task split was even and clear — each team member had a defined piece of work.
+- Task split was even and clear, each team member had a defined piece of work.
 - Jira setup with sprints and epics worked well for tracking progress.
 - The project's layered architecture (models, DAOs, services) was established early and gave everyone a shared structure to build on.
 
 ## What went badly
 
 - Tests assigned to Huji were left until the end of the sprint. Because everyone was still implementing right up to the deadline, there was no time to write them. Tests were skipped entirely for that sprint.
-- Database migrations caused integration issues — the schema change process was fragile and slowed down the whole team.
+- Database migrations caused integration issues, the schema change process was fragile and slowed down the whole team.
 - The initial plan to use a hosted MySQL database added unnecessary cost and complexity for a project of this scale.
 
 ## Decisions made

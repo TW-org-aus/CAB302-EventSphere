@@ -8,17 +8,16 @@
 ## What went well
 
 - Major feature throughput: messages, comments, event details page, and profile/settings all progressed significantly.
-- Javadoc generation added to the CI pipeline — documentation is now built automatically on every push to main.
-- CI now runs all tests before a branch can merge — quality gate in place.
+- Javadoc generation added to the CI pipeline, documentation is now built automatically on every push to main.
+- CI now runs all tests before a branch can merge, quality gate in place.
 
 ## What went badly
 
-- UX feedback from informal testing was not being acted on systematically — refactoring was needed but not yet scheduled.
+- UX feedback from informal testing was not being acted on systematically, refactoring was needed but not yet scheduled.
 - Test coverage was insufficient; tests were being written after features, not before.
-- Huji's workload was still lighter than other team members — needed better task assignment.
+- Huji's workload was still lighter than other team members, needed better task assignment.
 - The sign-in flow was incomplete: the username section was missing.
-- AI recommendations were entirely absent from the sprint plan — they had been overlooked at planning time.
-
+- AI recommendations were entirely absent from the sprint plan.
 ## Decisions made
 
 | Decision | Reason |
