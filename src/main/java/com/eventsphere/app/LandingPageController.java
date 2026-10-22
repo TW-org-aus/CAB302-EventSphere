@@ -24,6 +24,8 @@ import com.eventsphere.app.service.EventService;
 import com.eventsphere.app.service.SessionManager;
 import com.gluonhq.maps.MapPoint;
 import com.gluonhq.maps.MapView;
+import javafx.geometry.Insets;
+import javafx.scene.shape.Shape;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import javafx.beans.value.ChangeListener;
@@ -335,7 +337,7 @@ public class LandingPageController {
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setMinWidth(0);
-        scroller.setStyle("-fx-background-color: transparent;");
+        scroller.getStyleClass().add("row-scroll");
 
         section.getChildren().add(scroller);
         return section;
@@ -546,11 +548,10 @@ public class LandingPageController {
     }
 
     private VBox buildEventCard(Event event) {
-        VBox card = new VBox(8.0);
+        VBox card = new VBox();
         card.getStyleClass().add("event-card");
         card.setPrefWidth(CARD_W);
         card.setMaxWidth(CARD_W);
-
         card.getChildren().add(buildThumb(event));
 
         Label when = new Label(DATE_FORMAT.format(event.getStartTime()));
@@ -559,16 +560,19 @@ public class LandingPageController {
         Label title = new Label(event.getTitle());
         title.getStyleClass().add("card-title");
         title.setWrapText(true);
-        title.setMaxWidth(CARD_W);
+        title.setMaxWidth(CARD_W - 28);
 
-        card.getChildren().addAll(when, title);
+        // The text is inset; the image still runs edge to edge.
+        VBox text = new VBox(6, when, title);
+        text.setPadding(new Insets(12, 14, 14, 14));
 
         if (event.getVenueName() != null) {
             Label venue = new Label(event.getVenueName());
             venue.getStyleClass().add("muted-text");
-            card.getChildren().add(venue);
+            text.getChildren().add(venue);
         }
 
+        card.getChildren().add(text);
         card.setCursor(Cursor.HAND);
         card.setOnMouseClicked(e -> onEventCardClick(event));
         return card;
@@ -586,10 +590,12 @@ public class LandingPageController {
         view.setFitHeight(height);
         view.setPreserveRatio(false);
 
-        Rectangle clip = new Rectangle(width, height);
-        clip.setArcWidth(24);
-        clip.setArcHeight(24);
-        view.setClip(clip);
+        // only rounded on top corners
+        Rectangle rounded = new Rectangle(width, height);
+        rounded.setArcWidth(24);
+        rounded.setArcHeight(24);
+        Rectangle square = new Rectangle(0, height / 2, width, height / 2);
+        view.setClip(Shape.union(rounded, square));
 
         StackPane wrapper = new StackPane(view);
         wrapper.getStyleClass().add("event-card-thumb");

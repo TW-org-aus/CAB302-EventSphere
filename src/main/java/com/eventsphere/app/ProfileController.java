@@ -116,7 +116,7 @@ public class ProfileController {
             TextField usernameField = new TextField(Objects.requireNonNullElse(user.getUsername(), ""));
             usernameField.setPromptText("3–30 chars, letters/numbers/underscores");
             Label usernameError = new Label();
-            usernameError.setStyle("-fx-font-size: 11px; -fx-text-fill: #C0392B");
+            usernameError.setStyle("-fx-font-size: 11px; -fx-text-fill: -danger");
             usernameError.managedProperty().bind(usernameError.visibleProperty());
             usernameError.setVisible(false);
             usernameField.focusedProperty().addListener((obs, wasFocused, isNow) -> {

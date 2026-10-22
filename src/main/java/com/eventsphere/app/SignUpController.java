@@ -31,9 +31,9 @@ public class SignUpController {
         this.places = places;
     }
 
-    private static final String ERROR_STYLE = "-fx-font-size: 12px; -fx-text-fill: #C0392B;";
-    private static final String SUCCESS_STYLE = "-fx-font-size: 11px; -fx-text-fill: #27AE60;";
-    private static final String WARN_STYLE = "-fx-font-size: 11px; -fx-text-fill: #C0392B;";
+    private static final String ERROR_STYLE = "-fx-font-size: 12px; -fx-text-fill: -danger;";
+    private static final String SUCCESS_STYLE = "-fx-font-size: 11px; -fx-text-fill: -success;";
+    private static final String WARN_STYLE = "-fx-font-size: 11px; -fx-text-fill: -danger;";
 
     // Step containers
     @FXML private VBox step1Content;

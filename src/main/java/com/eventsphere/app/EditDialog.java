@@ -26,7 +26,7 @@ final class EditDialog {
 
         Label error = new Label();
         error.setWrapText(true);
-        error.setStyle("-fx-font-size: 12px; -fx-text-fill: #C0392B");
+        error.setStyle("-fx-font-size: 12px; -fx-text-fill: -danger");
         error.managedProperty().bind(error.visibleProperty());
         error.setVisible(false);
 

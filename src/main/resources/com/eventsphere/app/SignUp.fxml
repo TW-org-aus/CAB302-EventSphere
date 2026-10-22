@@ -18,26 +18,26 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <?import javafx.scene.control.ListView?>
-<AnchorPane prefHeight="730.0" prefWidth="1200.0" style="-fx-background-color: #F0512B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.SignUpController">
+<AnchorPane prefHeight="730.0" prefWidth="1200.0" style="-fx-background-color: -bg;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eventsphere.app.SignUpController">
    <children>
       <fx:include source="nav-bar.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
          <children>
-            <VBox alignment="CENTER" maxHeight="680.0" maxWidth="460.0" prefHeight="680.0" prefWidth="460.0" style="-fx-background-color: white; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0.2, 0, 6);">
+            <VBox alignment="CENTER" maxHeight="680.0" maxWidth="460.0" prefHeight="680.0" prefWidth="460.0" style="-fx-background-color: -white; -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0.2, 0, 6);">
                <children>
                   <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox style="-fx-background-color: white;">
+                        <VBox style="-fx-background-color: -white;">
 
 
                            <VBox fx:id="step1Content" spacing="14.0" style="-fx-padding: 32 40 36 40;">
                               <children>
                                  <HBox alignment="CENTER_LEFT" spacing="14.0">
                                     <children>
-                                       <FontIcon iconLiteral="bi-arrow-left" iconSize="20" iconColor="#111111" />
-                                       <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="Create your account" />
+                                       <FontIcon iconLiteral="bi-arrow-left" iconSize="20" styleClass="icon-text" />
+                                       <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -text;" text="Create your account" />
                                        <Region HBox.hgrow="ALWAYS" />
-                                       <Label style="-fx-font-size: 12px; -fx-text-fill: #6B7280;" text="Step 1 of 2" />
+                                       <Label style="-fx-font-size: 12px; -fx-text-fill: -muted;" text="Step 1 of 2" />
                                     </children>
                                  </HBox>
                                  <Region prefHeight="6.0" />
@@ -45,30 +45,30 @@
                                     <children>
                                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                                           <children>
-                                             <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* First name">
+                                             <Label style="-fx-font-size: 14; -fx-text-fill: -text;" text="* First name">
                                                 <font><Font size="18.0" /></font>
                                              </Label>
-                                             <TextField fx:id="firstNameField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                                             <TextField fx:id="firstNameField" maxWidth="Infinity" style="-fx-background-color: -surface; -fx-background-radius: 8px; -fx-border-color: -border; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
                                           </children>
                                        </VBox>
                                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                                           <children>
-                                             <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* Last name">
+                                             <Label style="-fx-font-size: 14; -fx-text-fill: -text;" text="* Last name">
                                                 <font><Font size="18.0" /></font>
                                              </Label>
-                                             <TextField fx:id="lastNameField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                                             <TextField fx:id="lastNameField" maxWidth="Infinity" style="-fx-background-color: -surface; -fx-background-radius: 8px; -fx-border-color: -border; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
                                           </children>
                                        </VBox>
                                     </children>
                                  </HBox>
-                                 <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* Email">
+                                 <Label style="-fx-font-size: 14; -fx-text-fill: -text;" text="* Email">
                                     <font><Font size="18.0" /></font>
                                  </Label>
-                                 <TextField fx:id="emailField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
-                                 <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* Password">
+                                 <TextField fx:id="emailField" maxWidth="Infinity" style="-fx-background-color: -surface; -fx-background-radius: 8px; -fx-border-color: -border; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                                 <Label style="-fx-font-size: 14; -fx-text-fill: -text;" text="* Password">
                                     <font><Font size="18.0" /></font>
                                  </Label>
-                                 <PasswordField fx:id="passwordField" maxWidth="Infinity" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                                 <PasswordField fx:id="passwordField" maxWidth="Infinity" style="-fx-background-color: -surface; -fx-background-radius: 8px; -fx-border-color: -border; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
                               </children>
                            </VBox>
 
@@ -77,43 +77,43 @@
                               <children>
                                  <HBox alignment="CENTER_LEFT" spacing="14.0">
                                     <children>
-                                       <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="Almost there!" />
+                                       <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -text;" text="Almost there!" />
                                        <Region HBox.hgrow="ALWAYS" />
-                                       <Label style="-fx-font-size: 12px; -fx-text-fill: #6B7280;" text="Step 2 of 2" />
+                                       <Label style="-fx-font-size: 12px; -fx-text-fill: -muted;" text="Step 2 of 2" />
                                     </children>
                                  </HBox>
                                  <Region prefHeight="6.0" />
 
                                  <!-- Username -->
-                                 <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="* Username">
+                                 <Label style="-fx-font-size: 14; -fx-text-fill: -text;" text="* Username">
                                     <font><Font size="18.0" /></font>
                                  </Label>
-                                 <Label style="-fx-font-size: 11px; -fx-text-fill: #6B7280;" text="3–30 characters, letters, numbers and underscores" wrapText="true" />
-                                 <TextField fx:id="usernameField" maxWidth="Infinity" promptText="e.g. tom_wehl" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                                 <Label style="-fx-font-size: 11px; -fx-text-fill: -muted;" text="3–30 characters, letters, numbers and underscores" wrapText="true" />
+                                 <TextField fx:id="usernameField" maxWidth="Infinity" promptText="e.g. tom_wehl" style="-fx-background-color: -surface; -fx-background-radius: 8px; -fx-border-color: -border; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
                                  <Label fx:id="usernameCheckLabel" managed="false" visible="false" wrapText="true" style="-fx-font-size: 11px;" />
 
                                  <!-- Bio -->
-                                 <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="Bio">
+                                 <Label style="-fx-font-size: 14; -fx-text-fill: -text;" text="Bio">
                                     <font><Font size="18.0" /></font>
                                  </Label>
-                                 <Label style="-fx-font-size: 11px; -fx-text-fill: #6B7280;" text="Optional · up to 50 words" wrapText="true" />
-                                 <TextArea fx:id="bioField" maxWidth="Infinity" prefRowCount="3" wrapText="true" promptText="Tell people a bit about yourself..." style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                                 <Label style="-fx-font-size: 11px; -fx-text-fill: -muted;" text="Optional · up to 50 words" wrapText="true" />
+                                 <TextArea fx:id="bioField" maxWidth="Infinity" prefRowCount="3" wrapText="true" promptText="Tell people a bit about yourself..." style="-fx-background-color: -surface; -fx-background-radius: 8px; -fx-border-color: -border; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
 
                                  <!-- Address -->
                                  <Region prefHeight="4.0" />
-                                 <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="What's your address?">
+                                 <Label style="-fx-font-size: 14; -fx-text-fill: -text;" text="What's your address?">
                                     <font><Font size="18.0" /></font>
                                  </Label>
-                                 <Label style="-fx-font-size: 11px; -fx-text-fill: #6B7280;" text="So we can find events closer to you" wrapText="true" />
-                                 <TextField fx:id="addressField" maxWidth="Infinity" promptText="e.g. 2 George St, Brisbane City" style="-fx-background-color: #F7F7F7; -fx-background-radius: 8px; -fx-border-color: #E4E4E4; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
+                                 <Label style="-fx-font-size: 11px; -fx-text-fill: -muted;" text="So we can find events closer to you" wrapText="true" />
+                                 <TextField fx:id="addressField" maxWidth="Infinity" promptText="e.g. 2 George St, Brisbane City" style="-fx-background-color: -surface; -fx-background-radius: 8px; -fx-border-color: -border; -fx-border-radius: 8px; -fx-padding: 10 12 10 12;" />
                                  <ListView fx:id="suggestionsList" maxHeight="140" visible="false" managed="false"/>
 
                                  <!-- Interests -->
                                  <Region prefHeight="4.0" />
-                                 <Label style="-fx-font-size: 14; -fx-text-fill: #333333;" text="What are you into?">
+                                 <Label style="-fx-font-size: 14; -fx-text-fill: -text;" text="What are you into?">
                                     <font><Font size="18.0" /></font>
                                  </Label>
-                                 <Label fx:id="interestsHintLabel" style="-fx-font-size: 11px; -fx-text-fill: #6B7280;" text="Pick up to 5 categories" wrapText="true" />
+                                 <Label fx:id="interestsHintLabel" style="-fx-font-size: 11px; -fx-text-fill: -muted;" text="Pick up to 5 categories" wrapText="true" />
                                  <FlowPane fx:id="interestsFlowPane" hgap="8.0" vgap="8.0" />
                               </children>
                            </VBox>
@@ -123,7 +123,7 @@
                   </ScrollPane>
 
                   <!-- BOTTOM SECTION -->
-                  <VBox style="-fx-background-color: white; -fx-padding: 12 40 32 40; -fx-background-radius: 0 0 20 20;">
+                  <VBox style="-fx-background-color: -white; -fx-padding: 12 40 32 40; -fx-background-radius: 0 0 20 20;">
                      <children>
                         <Label fx:id="formMessageLabel" managed="false" visible="false" wrapText="true"
                                style="-fx-font-size: 12px;" />
@@ -131,24 +131,24 @@
                         <!-- Step 1 footer -->
                         <VBox fx:id="step1Footer" spacing="14.0">
                            <children>
-                              <Button onAction="#onNextClick" maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="Next →" />
+                              <Button onAction="#onNextClick" maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: -accent; -fx-text-fill: -white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="Next →" />
                               <Hyperlink onAction="#onLoginClick" alignment="CENTER" maxWidth="Infinity" style="-fx-font-size: 13px;" text="Login" />
                               <HBox alignment="CENTER" spacing="10.0">
                                  <children>
-                                    <Region maxHeight="-Infinity" prefHeight="1.0" style="-fx-background-color: #E2E2E2;" HBox.hgrow="ALWAYS" />
-                                    <Label style="-fx-text-fill: #999999; -fx-font-size: 11px;" text="or continue with" />
-                                    <Region maxHeight="-Infinity" prefHeight="1.0" style="-fx-background-color: #E2E2E2;" HBox.hgrow="ALWAYS" />
+                                    <Region maxHeight="-Infinity" prefHeight="1.0" style="-fx-background-color: -border;" HBox.hgrow="ALWAYS" />
+                                    <Label style="-fx-text-fill: -muted; -fx-font-size: 11px;" text="or continue with" />
+                                    <Region maxHeight="-Infinity" prefHeight="1.0" style="-fx-background-color: -border;" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" spacing="18.0">
                                  <children>
-                                    <Button onAction="#onFacebookClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-background-radius: 50px; -fx-padding: 0;">
+                                    <Button onAction="#onFacebookClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: -accent-light; -fx-background-radius: 50px; -fx-padding: 0;">
                                        <graphic><FontIcon iconLiteral="bi-facebook" iconSize="16" iconColor="#1877F2" /></graphic>
                                     </Button>
-                                    <Button onAction="#onInstagramClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-background-radius: 50px; -fx-padding: 0;">
+                                    <Button onAction="#onInstagramClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: -accent-light; -fx-background-radius: 50px; -fx-padding: 0;">
                                        <graphic><FontIcon iconLiteral="bi-instagram" iconSize="16" iconColor="#C13584" /></graphic>
                                     </Button>
-                                    <Button onAction="#onGoogleClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: #EAF1FD; -fx-background-radius: 50px; -fx-padding: 0;">
+                                    <Button onAction="#onGoogleClick" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" style="-fx-background-color: -accent-light; -fx-background-radius: 50px; -fx-padding: 0;">
                                        <graphic><FontIcon iconLiteral="bi-google" iconSize="16" iconColor="#4285F4" /></graphic>
                                     </Button>
                                  </children>
@@ -161,8 +161,8 @@
                            <children>
                               <HBox spacing="12.0">
                                  <children>
-                                    <Button onAction="#onBackClick" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #F0F0F0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="← Back" />
-                                    <Button onAction="#onSignUpClick" maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: #2E6BE8; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="Create Account" HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#onBackClick" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: -surface; -fx-text-fill: -text; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="← Back" />
+                                    <Button onAction="#onSignUpClick" maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: -accent; -fx-text-fill: -white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px;" text="Create Account" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>

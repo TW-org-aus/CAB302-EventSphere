@@ -14,11 +14,6 @@ import java.util.Set;
 
 /** Reusable category bubble-picker component used on sign-up and in settings to select event interests. */
 public class InterestPicker {
-    private static final String BUBBLE_DEFAULT_STYLE = "-fx-background-color: #F7F7F7; -fx-text-fill: #1A1A1A; -fx-border-color: #E5E7EB; " +
-            "-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-padding: 6 14 6 14; -fx-font-size: 12px;";
-    private static final String BUBBLE_SELECTED_STYLE = "-fx-background-color: #E3F0FF; -fx-text-fill: #2F80ED; -fx-border-color: #2F80ED; " +
-            "-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-padding: 6 14 6 14; -fx-font-size: 12px; -fx-font-weight: bold;";
-
     private final Label hint;
     private final Set<Category> selected = new LinkedHashSet<>();
 
@@ -30,7 +25,7 @@ public class InterestPicker {
             if (bubble.isSelected()) {
                 selected.add(category);
             }
-            bubble.setStyle(bubble.isSelected() ? BUBBLE_SELECTED_STYLE : BUBBLE_DEFAULT_STYLE);
+            bubble.getStyleClass().add("interest-bubble");
             bubble.setOnAction(e -> onToggled(bubble, category));
             bubbles.getChildren().add(bubble);
         }
@@ -46,10 +41,8 @@ public class InterestPicker {
                 return;
             }
             selected.add(category);
-            bubble.setStyle(BUBBLE_SELECTED_STYLE);
         } else {
             selected.remove(category);
-            bubble.setStyle(BUBBLE_DEFAULT_STYLE);
         }
         updateHint();
     }
