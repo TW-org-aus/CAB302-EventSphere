@@ -25,6 +25,7 @@ public class SignUpController {
     private String sessionToken = UUID.randomUUID().toString();
     private Double selectedLat;
     private Double selectedLng;
+    private boolean fillingAdress;
 
     public SignUpController(UserService userService, IPlacesClient places) {
         this.userService = userService;
@@ -71,7 +72,9 @@ public class SignUpController {
                 setText(empty || item == null ? null : item.getText());
             }
         });
-        addressField.textProperty().addListener((obs, oldText, newText) -> onAddressTyped(newText));
+        addressField.textProperty().addListener((obs, oldText, newText) -> {
+            if (!fillingAdress) onAddressTyped(newText);
+        });
         suggestionsList.setOnMouseClicked(e -> onSuggestionPicked());
 
         usernameField.focusedProperty().addListener((obs, wasFocused, isNow) -> {
@@ -170,7 +173,9 @@ public class SignUpController {
             PlaceLocation location = details.getValue();
             selectedLat = location.getLat();
             selectedLng = location.getLng();
+            fillingAdress = true;
             addressField.setText(picked.getText());
+            fillingAdress = false;
             hideSuggestions();
             sessionToken = UUID.randomUUID().toString();
         });

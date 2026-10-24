@@ -146,7 +146,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.eventsphere.app/com.eventsphere.app.HelloApplication</mainClass>
+                            <mainClass>com.eventsphere.app.HelloApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
