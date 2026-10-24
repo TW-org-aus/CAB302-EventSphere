@@ -1,1 +1,1 @@
-moduleSearchIndex = [{"l":"com.eventsphere.app"}];updateSearchResults();
+moduleSearchIndex = [];updateSearchResults();

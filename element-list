@@ -1,2 +1,10 @@
-module:com.eventsphere.app
 com.eventsphere.app
+com.eventsphere.app.ai
+com.eventsphere.app.config
+com.eventsphere.app.dao
+com.eventsphere.app.Database
+com.eventsphere.app.ingestion
+com.eventsphere.app.model
+com.eventsphere.app.places
+com.eventsphere.app.seeding
+com.eventsphere.app.service
